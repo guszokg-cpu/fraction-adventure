@@ -1,0 +1,172 @@
+import type { Lesson } from "@/types/lesson";
+
+export const mockLessons: Lesson[] = [
+  {
+    id: "intro-fraction",
+    order: 1,
+    title: "รู้จักเศษส่วน",
+    subtitle: "เข้าใจตัวเศษ ตัวส่วน และส่วนที่เท่ากัน",
+    gradeRange: "ป.4",
+    stars: 3,
+    progress: 100,
+    status: "completed",
+    icon: "🍕",
+    color: "green"
+  },
+  {
+    id: "read-write",
+    order: 2,
+    title: "อ่านและเขียนเศษส่วน",
+    subtitle: "ฝึกอ่าน เขียน และจับคู่คำอ่าน",
+    gradeRange: "ป.4-ป.5",
+    stars: 3,
+    progress: 100,
+    status: "completed",
+    icon: "📖",
+    color: "amber"
+  },
+  {
+    id: "picture-fraction",
+    order: 3,
+    title: "เศษส่วนจากภาพ",
+    subtitle: "มองภาพแล้วเขียนเป็นเศษส่วน",
+    gradeRange: "ป.4-ป.5",
+    stars: 3,
+    progress: 92,
+    status: "completed",
+    icon: "🧩",
+    color: "pink"
+  },
+  {
+    id: "number-line",
+    order: 4,
+    title: "เศษส่วนบนเส้นจำนวน",
+    subtitle: "ระบุตำแหน่งของเศษส่วนบนเส้นจำนวน",
+    gradeRange: "ป.5",
+    stars: 2,
+    progress: 100,
+    status: "completed",
+    icon: "📏",
+    color: "sky"
+  },
+  {
+    id: "compare",
+    order: 5,
+    title: "เปรียบเทียบเศษส่วน",
+    subtitle: "มากกว่า น้อยกว่า หรือเท่ากัน",
+    gradeRange: "ป.5-ป.6",
+    stars: 3,
+    progress: 100,
+    status: "completed",
+    icon: "⚖️",
+    color: "violet"
+  },
+  {
+    id: "equivalent",
+    order: 6,
+    title: "เศษส่วนเท่ากัน",
+    subtitle: "ย่อและขยายเศษส่วน",
+    gradeRange: "ป.5-ป.6",
+    stars: 3,
+    progress: 100,
+    status: "completed",
+    icon: "🔁",
+    color: "sky"
+  },
+  {
+    id: "simplify-expand",
+    order: 7,
+    title: "ย่อและขยายเศษส่วน",
+    subtitle: "หาค่าเท่ากันด้วยการคูณและหาร",
+    gradeRange: "ป.5-ป.6",
+    stars: 3,
+    progress: 100,
+    status: "completed",
+    icon: "🔎",
+    color: "green"
+  },
+  {
+    id: "mixed-improper",
+    order: 8,
+    title: "จำนวนคละและเศษเกิน",
+    subtitle: "แปลงเศษเกินเป็นจำนวนคละ และกลับกัน",
+    gradeRange: "ป.5-ป.6",
+    stars: 2,
+    progress: 60,
+    status: "current",
+    icon: "1¼",
+    color: "amber"
+  },
+  {
+    id: "add-fractions",
+    order: 9,
+    title: "บวกเศษส่วน",
+    subtitle: "บวกเศษส่วนตัวส่วนเท่ากันและต่างกัน",
+    gradeRange: "ป.5-ป.6",
+    stars: 0,
+    progress: 0,
+    status: "locked",
+    icon: "➕",
+    color: "slate"
+  },
+  {
+    id: "subtract-fractions",
+    order: 10,
+    title: "ลบเศษส่วน",
+    subtitle: "ลบเศษส่วนและตรวจคำตอบ",
+    gradeRange: "ป.5-ป.6",
+    stars: 0,
+    progress: 0,
+    status: "locked",
+    icon: "➖",
+    color: "slate"
+  },
+  {
+    id: "multiply-fractions",
+    order: 11,
+    title: "คูณเศษส่วน",
+    subtitle: "คูณเศษส่วนกับเศษส่วนและจำนวนเต็ม",
+    gradeRange: "ป.6",
+    stars: 0,
+    progress: 0,
+    status: "locked",
+    icon: "✖️",
+    color: "slate"
+  },
+  {
+    id: "divide-fractions",
+    order: 12,
+    title: "หารเศษส่วน",
+    subtitle: "กลับเศษส่วนแล้วคูณเพื่อหาคำตอบ",
+    gradeRange: "ป.6",
+    stars: 0,
+    progress: 0,
+    status: "locked",
+    icon: "➗",
+    color: "slate"
+  },
+  {
+    id: "word-problems",
+    order: 13,
+    title: "โจทย์ปัญหาเศษส่วน",
+    subtitle: "อ่านโจทย์ วิเคราะห์ และเลือกวิธีทำ",
+    gradeRange: "ป.6",
+    stars: 0,
+    progress: 0,
+    status: "locked",
+    icon: "🧠",
+    color: "slate"
+  },
+  {
+    id: "fraction-kingdom",
+    order: 14,
+    title: "พิชิตอาณาจักรเศษส่วน",
+    subtitle: "ภารกิจทบทวนรวมทุกบทเรียน",
+    gradeRange: "ป.4-ป.6",
+    stars: 0,
+    progress: 0,
+    status: "locked",
+    icon: "🏰",
+    color: "slate"
+  }
+];
