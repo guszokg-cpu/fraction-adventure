@@ -1,0 +1,69 @@
+import type { LessonMeta, LessonMissionItem } from "@/types/lessonContent";
+
+export const compareMeta: LessonMeta = {
+  order: 6,
+  total: 14,
+  progress: 50,
+  stars: 2,
+  maxStars: 3,
+  prevHref: "/lessons/number-line",
+  nextHref: "/lessons/equivalent",
+  nextLabel: "เศษส่วนที่เท่ากัน"
+};
+
+export const compareMissions: LessonMissionItem[] = [
+  { id: "m1", icon: "🖼️", title: "เปรียบเทียบจากภาพ 5 ข้อ", current: 3, target: 5 },
+  { id: "m2", icon: "📏", title: "เปรียบเทียบบนเส้นจำนวน 5 ข้อ", current: 2, target: 5 },
+  { id: "m3", icon: "🟰", title: "ทำส่วนให้เท่ากัน 5 ข้อ", current: 1, target: 5 }
+];
+
+export type CompareTipCase = {
+  id: string;
+  title: string;
+  rule: string;
+  left: { numerator: number; denominator: number };
+  right: { numerator: number; denominator: number };
+  sign: ">" | "<" | "=";
+};
+
+export const compareTipCases: CompareTipCase[] = [
+  {
+    id: "same-denominator",
+    title: "กรณี 1 ตัวส่วนเท่ากัน",
+    rule: "ดูตัวเศษ ตัวเศษมากกว่า ค่ามากกว่า",
+    left: { numerator: 3, denominator: 8 },
+    right: { numerator: 2, denominator: 8 },
+    sign: ">"
+  },
+  {
+    id: "same-numerator",
+    title: "กรณี 2 ตัวเศษเท่ากัน",
+    rule: "ตัวส่วนยิ่งน้อย ค่ายิ่งมาก",
+    left: { numerator: 1, denominator: 2 },
+    right: { numerator: 1, denominator: 4 },
+    sign: ">"
+  },
+  {
+    id: "different",
+    title: "กรณี 3 ไม่เท่ากันทั้งคู่",
+    rule: "ทำส่วนให้เท่ากัน หรือใช้เส้นจำนวน",
+    left: { numerator: 1, denominator: 2 },
+    right: { numerator: 3, denominator: 4 },
+    sign: "<"
+  }
+];
+
+export const compareHelperModes = [
+  { id: "visual", icon: "🟢", label: "โหมดภาพ" },
+  { id: "bar", icon: "🟥", label: "โหมดแท่ง" },
+  { id: "number-line", icon: "📏", label: "โหมดเส้นจำนวน" },
+  { id: "grid", icon: "▦", label: "โหมดตาราง" }
+];
+
+export const comparePracticeActivities = [
+  { id: "sign", icon: "⚖️", title: "เลือกเครื่องหมาย", desc: "เลือก > < = ให้ถูกต้อง" },
+  { id: "drag", icon: "🃏", title: "ลากการ์ดไปให้ถูก", desc: "ลากเศษส่วนไปยังช่องที่ถูก" },
+  { id: "order", icon: "🔢", title: "เรียงจากน้อยไปมาก", desc: "เรียงลำดับเศษส่วนให้ถูกต้อง" },
+  { id: "number-line", icon: "📏", title: "เปรียบเทียบบนเส้นจำนวน", desc: "ดูตำแหน่งบนเส้นแล้วเทียบค่า" },
+  { id: "timer", icon: "⏱️", title: "เกมจับเวลา 60 วินาที", desc: "ตอบให้ไวภายในเวลาที่กำหนด" }
+];

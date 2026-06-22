@@ -9,9 +9,10 @@ type AppShellProps = {
   eyebrow: string;
   description: string;
   activePath?: string;
+  aside?: React.ReactNode;
 };
 
-export function AppShell({ children, title, eyebrow, description, activePath }: AppShellProps) {
+export function AppShell({ children, title, eyebrow, description, activePath, aside }: AppShellProps) {
   return (
     <div className="flex min-h-screen bg-sky-50/70">
       <Sidebar activePath={activePath} />
@@ -21,7 +22,7 @@ export function AppShell({ children, title, eyebrow, description, activePath }: 
           <PageHeader title={title} eyebrow={eyebrow} description={description} />
           {children}
         </section>
-        <RightPanel />
+        {aside ? <aside className="w-[330px] shrink-0">{aside}</aside> : <RightPanel />}
       </main>
     </div>
   );

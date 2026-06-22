@@ -1,5 +1,5 @@
-import { RoutePage } from "@/components/layout/RoutePage";
+import { redirect } from "next/navigation";
 
 export default function FromImagesPage() {
-  return <RoutePage href="/lessons/from-images" />;
+  redirect("/lessons/fraction-from-image");
 }

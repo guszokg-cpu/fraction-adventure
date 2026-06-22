@@ -34,10 +34,10 @@ export const pageRoutes: PageRoute[] = [
   },
   {
     order: 4,
-    href: "/lessons/from-images",
+    href: "/lessons/fraction-from-image",
     title: "เศษส่วนจากภาพ",
     description: "มองภาพแล้วเขียนเป็นเศษส่วนอย่างถูกต้อง",
-    eyebrow: "Lesson 3",
+    eyebrow: "Lesson 4",
     icon: "🧩"
   },
   {

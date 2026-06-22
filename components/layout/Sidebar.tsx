@@ -29,7 +29,7 @@ const iconByHref = {
   "/": Map,
   "/lessons/fraction-intro": BookOpen,
   "/lessons/read-write": BookOpen,
-  "/lessons/from-images": Paintbrush,
+  "/lessons/fraction-from-image": Paintbrush,
   "/lessons/number-line": Split,
   "/lessons/compare": Sigma,
   "/lessons/equivalent": Equal,
