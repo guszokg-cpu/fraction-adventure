@@ -1,14 +1,16 @@
 import type { LessonMeta, LessonMissionItem } from "@/types/lessonContent";
 
 export const compareMeta: LessonMeta = {
-  order: 6,
-  total: 14,
+  order: 5,
+  total: 12,
   progress: 50,
   stars: 2,
   maxStars: 3,
   prevHref: "/lessons/number-line",
   nextHref: "/lessons/equivalent",
-  nextLabel: "เศษส่วนที่เท่ากัน"
+  nextLabel: "เศษส่วนที่เท่ากัน",
+  heroImage: "/images/heroes/compare.png",
+  themeColor: "emerald",
 };
 
 export const compareMissions: LessonMissionItem[] = [

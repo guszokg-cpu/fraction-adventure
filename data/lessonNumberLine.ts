@@ -7,14 +7,16 @@ import type {
 } from "@/types/lessonContent";
 
 export const numberLineMeta: LessonMeta = {
-  order: 5,
+  order: 4,
   total: 12,
   progress: 42,
   stars: 1,
   maxStars: 4,
   prevHref: "/lessons/fraction-from-image",
   nextHref: "/lessons/compare",
-  nextLabel: "เปรียบเทียบเศษส่วน"
+  nextLabel: "เปรียบเทียบเศษส่วน",
+  heroImage: "/images/heroes/number-line.png",
+  themeColor: "violet",
 };
 
 export const numberLineTips: LessonTip[] = [

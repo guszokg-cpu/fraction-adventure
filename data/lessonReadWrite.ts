@@ -2,13 +2,15 @@ import type { LessonExample, LessonMeta, LessonMissionItem, LessonTip } from "@/
 
 export const readWriteMeta: LessonMeta = {
   order: 2,
-  total: 13,
+  total: 12,
   progress: 30,
   stars: 1,
   maxStars: 3,
   prevHref: "/lessons/fraction-intro",
-  nextHref: "/lessons/from-images",
-  nextLabel: "เศษส่วนจากภาพ"
+  nextHref: "/lessons/fraction-from-image",
+  nextLabel: "เศษส่วนจากภาพ",
+  heroImage: "/images/heroes/read-write.png",
+  themeColor: "violet",
 };
 
 export const readWriteTips: LessonTip[] = [

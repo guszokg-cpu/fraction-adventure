@@ -11,9 +11,11 @@ export default function MixedImproperPage() {
   return (
     <AppShell
       title="จำนวนคละและเศษเกิน"
-      eyebrow="Lesson 9"
+      eyebrow="Lesson 8"
       description="เมื่อมีมากกว่า 1 หน่วย"
       activePath="/lessons/mixed-improper"
+      heroImage={mixedImproperMeta.heroImage}
+      themeColor={mixedImproperMeta.themeColor}
       aside={
         <div className="space-y-4">
           <MixedTipsPanel />

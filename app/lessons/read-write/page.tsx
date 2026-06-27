@@ -2,7 +2,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { ReadWriteContent } from "@/components/lessons/read-write/ReadWriteContent";
 import { LessonTipsCard } from "@/components/lessons/LessonTipsCard";
 import { LessonMissionCard } from "@/components/lessons/LessonMissionCard";
-import { readWriteExamples, readWriteMissions, readWriteTips } from "@/data/lessonReadWrite";
+import { readWriteExamples, readWriteMeta, readWriteMissions, readWriteTips } from "@/data/lessonReadWrite";
 
 export default function ReadWritePage() {
   return (
@@ -11,6 +11,8 @@ export default function ReadWritePage() {
       eyebrow="Lesson 2"
       description="เรียนรู้การอ่านและเขียนเศษส่วนอย่างถูกต้อง"
       activePath="/lessons/read-write"
+      heroImage={readWriteMeta.heroImage}
+      themeColor={readWriteMeta.themeColor}
       aside={
         <div className="space-y-4">
           <LessonTipsCard tips={readWriteTips} examples={readWriteExamples} />

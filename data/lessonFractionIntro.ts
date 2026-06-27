@@ -9,13 +9,15 @@ import type {
 
 export const fractionIntroMeta: LessonMeta = {
   order: 1,
-  total: 13,
+  total: 12,
   progress: 40,
   stars: 2,
   maxStars: 3,
   prevHref: "/",
   nextHref: "/lessons/read-write",
-  nextLabel: "อ่านและเขียนเศษส่วน"
+  nextLabel: "อ่านและเขียนเศษส่วน",
+  heroImage: "/images/heroes/fraction-intro.png",
+  themeColor: "blue",
 };
 
 export const fractionIntroTips: LessonTip[] = [

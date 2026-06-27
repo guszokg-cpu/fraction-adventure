@@ -7,6 +7,7 @@ import { ProgressBar } from "@/components/ui/ProgressBar";
 import { pageRoutes } from "@/data/pageRoutes";
 import { cn } from "@/lib/cn";
 import { toPercent } from "@/lib/progress";
+import { SidebarBrandCard } from "@/components/layout/SidebarBrandCard";
 
 const routeMap = Object.fromEntries(pageRoutes.map((r) => [r.href, r]));
 
@@ -44,16 +45,9 @@ export function Sidebar({ activePath }: { activePath?: string }) {
   return (
     <aside className="hidden sticky top-0 h-screen w-[280px] shrink-0 flex-col bg-gradient-to-b from-[#17156f] via-[#3024a9] to-[#4f36d8] text-white lg:flex">
 
-      {/* ─── Header: Logo + Profile + Stats ─── */}
+      {/* ─── Header: Brand Card + Profile + Stats ─── */}
       <div className="shrink-0 space-y-3 px-3 pt-3">
-        <div className="flex items-center gap-2.5">
-          <div className="grid h-14 w-14 place-items-center rounded-xl bg-white/12 text-3xl shadow-inner">🍕</div>
-          <div>
-            <div className="text-lg font-extrabold leading-tight">ผจญภัย</div>
-            <div className="text-xl font-extrabold leading-tight text-accent-400">ดินแดนเศษส่วน</div>
-            <div className="text-[10px] font-semibold text-white/70">เรียนเศษส่วน ป.4-ป.6</div>
-          </div>
-        </div>
+        <SidebarBrandCard />
 
         <div className="rounded-xl bg-white/12 p-3">
           <div className="flex items-center gap-2.5">

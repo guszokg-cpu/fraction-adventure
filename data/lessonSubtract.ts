@@ -1,14 +1,16 @@
 import type { LessonMeta, LessonMissionItem } from "@/types/lessonContent";
 
 export const subtractLessonMeta: LessonMeta = {
-  order: 11,
-  total: 14,
+  order: 10,
+  total: 12,
   progress: 65,
   stars: 2,
   maxStars: 3,
   prevHref: "/lessons/add",
   nextHref: "/lessons/multiply",
-  nextLabel: "คูณเศษส่วน"
+  nextLabel: "คูณเศษส่วน",
+  heroImage: "/images/heroes/subtract.png",
+  themeColor: "emerald",
 };
 
 export const subtractTypeOptions = [

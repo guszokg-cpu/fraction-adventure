@@ -1,14 +1,16 @@
 import type { LessonMeta, LessonMissionItem } from "@/types/lessonContent";
 
 export const addLessonMeta: LessonMeta = {
-  order: 10,
-  total: 14,
+  order: 9,
+  total: 12,
   progress: 60,
   stars: 2,
   maxStars: 3,
   prevHref: "/lessons/mixed-improper",
   nextHref: "/lessons/subtract",
-  nextLabel: "ลบเศษส่วน"
+  nextLabel: "ลบเศษส่วน",
+  heroImage: "/images/heroes/add.png",
+  themeColor: "blue",
 };
 
 export const addTypeOptions = [

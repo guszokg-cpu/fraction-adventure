@@ -4,6 +4,7 @@ import { LessonMissionCard } from "@/components/lessons/LessonMissionCard";
 import { LessonTipsCard } from "@/components/lessons/LessonTipsCard";
 import {
   fractionFromImageExamples,
+  fractionFromImageMeta,
   fractionFromImageMissions,
   fractionFromImageTips
 } from "@/data/lessonFractionFromImage";
@@ -12,9 +13,11 @@ export default function FractionFromImagePage() {
   return (
     <AppShell
       title="เศษส่วนจากภาพ"
-      eyebrow="Lesson 4"
+      eyebrow="Lesson 3"
       description="มองภาพแล้วเขียนเป็นเศษส่วน"
       activePath="/lessons/fraction-from-image"
+      heroImage={fractionFromImageMeta.heroImage}
+      themeColor={fractionFromImageMeta.themeColor}
       aside={
         <div className="space-y-4">
           <LessonTipsCard tips={fractionFromImageTips} examples={fractionFromImageExamples} />

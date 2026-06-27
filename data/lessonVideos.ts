@@ -9,7 +9,7 @@
 export const lessonVideos: Record<string, string> = {
   "/lessons/fraction-intro":   "",   // รู้จักเศษส่วน
   "/lessons/number-line":      "",   // เศษส่วนบนเส้นจำนวน
-  "/lessons/compare":          "",   // เปรียบเทียบเศษส่วน
+  "/lessons/compare":          "https://www.youtube.com/watch?v=tAS2JmECfmA",   // เปรียบเทียบเศษส่วน
   "/lessons/mixed-improper":   "",   // จำนวนคละและเศษเกิน
   "/lessons/add":              "",   // บวกเศษส่วน
   "/lessons/subtract":         "",   // ลบเศษส่วน

@@ -1,14 +1,16 @@
 import type { LessonMeta, LessonMissionItem } from "@/types/lessonContent";
 
 export const simplifyExpandMeta: LessonMeta = {
-  order: 8,
-  total: 14,
+  order: 7,
+  total: 12,
   progress: 60,
   stars: 3,
   maxStars: 4,
   prevHref: "/lessons/equivalent",
   nextHref: "/lessons/mixed-improper",
-  nextLabel: "จำนวนคละและเศษเกิน"
+  nextLabel: "จำนวนคละและเศษเกิน",
+  heroImage: "/images/heroes/simplify-expand.png",
+  themeColor: "indigo",
 };
 
 export const simplifyExpandMissions: LessonMissionItem[] = [

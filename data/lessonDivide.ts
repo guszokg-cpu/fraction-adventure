@@ -1,14 +1,16 @@
 import type { LessonMeta, LessonMissionItem } from "@/types/lessonContent";
 
 export const divideLessonMeta: LessonMeta = {
-  order: 13,
-  total: 14,
+  order: 12,
+  total: 12,
   progress: 78,
   stars: 2,
   maxStars: 3,
   prevHref: "/lessons/multiply",
   nextHref: "/lessons/word-problems",
-  nextLabel: "รับรางวัล"
+  nextLabel: "รับรางวัล",
+  heroImage: "/images/heroes/divide.png",
+  themeColor: "violet",
 };
 
 export const divideTypeOptions = [

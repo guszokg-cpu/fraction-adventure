@@ -12,9 +12,11 @@ export default function SimplifyExpandPage() {
   return (
     <AppShell
       title="ย่อและขยายเศษส่วน"
-      eyebrow="Lesson 8"
+      eyebrow="Lesson 7"
       description="ทำให้เท่ากัน โดยค่าไม่เปลี่ยน"
       activePath="/lessons/simplify-expand"
+      heroImage={simplifyExpandMeta.heroImage}
+      themeColor={simplifyExpandMeta.themeColor}
       aside={
         <div className="space-y-4">
           <SimplifyTipsPanel />

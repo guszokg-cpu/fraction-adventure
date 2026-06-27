@@ -1,14 +1,16 @@
 import type { LessonMeta, LessonMissionItem } from "@/types/lessonContent";
 
 export const multiplyLessonMeta: LessonMeta = {
-  order: 12,
-  total: 14,
+  order: 11,
+  total: 12,
   progress: 62,
   stars: 2,
   maxStars: 3,
   prevHref: "/lessons/subtract",
   nextHref: "/lessons/divide",
-  nextLabel: "หารเศษส่วน"
+  nextLabel: "หารเศษส่วน",
+  heroImage: "/images/heroes/multiply.png",
+  themeColor: "orange",
 };
 
 export const multiplyTypeOptions = [

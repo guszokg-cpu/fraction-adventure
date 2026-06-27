@@ -1,14 +1,16 @@
 import type { LessonExample, LessonMeta, LessonMissionItem, LessonTip } from "@/types/lessonContent";
 
 export const fractionFromImageMeta: LessonMeta = {
-  order: 4,
+  order: 3,
   total: 12,
   progress: 33,
   stars: 1,
   maxStars: 4,
   prevHref: "/lessons/read-write",
   nextHref: "/lessons/number-line",
-  nextLabel: "เศษส่วนบนเส้นจำนวน"
+  nextLabel: "เศษส่วนบนเส้นจำนวน",
+  heroImage: "/images/heroes/fraction-from-image.png",
+  themeColor: "sky",
 };
 
 export const fractionFromImageTips: LessonTip[] = [

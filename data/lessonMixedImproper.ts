@@ -1,14 +1,16 @@
 import type { LessonMeta, LessonMissionItem } from "@/types/lessonContent";
 
 export const mixedImproperMeta: LessonMeta = {
-  order: 9,
-  total: 14,
+  order: 8,
+  total: 12,
   progress: 55,
   stars: 2,
   maxStars: 4,
   prevHref: "/lessons/simplify-expand",
   nextHref: "/lessons/add",
-  nextLabel: "บวกเศษส่วน"
+  nextLabel: "บวกเศษส่วน",
+  heroImage: "/images/heroes/mixed-improper.png",
+  themeColor: "orange",
 };
 
 export const mixedImproperMissions: LessonMissionItem[] = [

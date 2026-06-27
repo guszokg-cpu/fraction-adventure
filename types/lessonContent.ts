@@ -33,6 +33,8 @@ export type LessonMeta = {
   prevHref: string;
   nextHref: string;
   nextLabel: string;
+  heroImage?: string;
+  themeColor?: string;
 };
 
 export type FractionQuizQuestion = {
