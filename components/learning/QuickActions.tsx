@@ -13,7 +13,7 @@ const toneClasses: Record<string, string> = {
 
 export function QuickActions() {
   return (
-    <div className="grid grid-cols-5 gap-4">
+    <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
       {quickActions.map((action) => (
         <Link
           key={action.title}

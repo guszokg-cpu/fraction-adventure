@@ -99,5 +99,9 @@ export const builderDenominators: number[] = [2, 3, 4, 5, 6, 8, 10, 12];
 export const builderShapes: { id: FractionShapeKind; label: string; icon: string }[] = [
   { id: "circle", label: "วงกลม", icon: "⏺" },
   { id: "bar", label: "แท่ง", icon: "▭" },
-  { id: "grid", label: "ตาราง", icon: "▦" }
+  { id: "grid", label: "ตาราง", icon: "▦" },
+  { id: "pizza", label: "พิซซา", icon: "🍕" },
+  { id: "watermelon", label: "แตงโม", icon: "🍉" },
+  { id: "glass", label: "แก้วน้ำ", icon: "🥛" },
+  { id: "chocolate", label: "ช็อกโกแลต", icon: "🍫" }
 ];

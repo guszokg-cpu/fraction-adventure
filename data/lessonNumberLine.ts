@@ -73,8 +73,8 @@ export type NumberLineExampleStrip = {
 };
 
 export const numberLineExampleStrips: NumberLineExampleStrip[] = [
-  { id: "s-1-2", numerator: 1, denominator: 2, tone: "sky", caption: "1/2 อยู่กึ่งกลางระหว่าง 0 กับ 1" },
-  { id: "s-3-4", numerator: 3, denominator: 4, tone: "pink", caption: "3/4 อยู่ใกล้เลข 1" },
-  { id: "s-2-5", numerator: 2, denominator: 5, tone: "emerald", caption: "2/5 อยู่ก่อนกึ่งกลางเล็กน้อย" },
-  { id: "s-5-6", numerator: 5, denominator: 6, tone: "violet", caption: "5/6 เกือบถึงเลข 1" }
+  { id: "s-1-2", numerator: 1, denominator: 2, tone: "sky", caption: "อยู่กึ่งกลางระหว่าง 0 กับ 1" },
+  { id: "s-3-4", numerator: 3, denominator: 4, tone: "pink", caption: "อยู่ใกล้เลข 1" },
+  { id: "s-2-5", numerator: 2, denominator: 5, tone: "emerald", caption: "อยู่ก่อนกึ่งกลางเล็กน้อย" },
+  { id: "s-5-6", numerator: 5, denominator: 6, tone: "violet", caption: "เกือบถึงเลข 1" }
 ];

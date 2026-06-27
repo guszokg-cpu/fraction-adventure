@@ -121,14 +121,6 @@ export const pageRoutes: PageRoute[] = [
     icon: "🧠"
   },
   {
-    order: 15,
-    href: "/teacher/worksheet-factory",
-    title: "สร้างใบงาน",
-    description: "เตรียมพื้นที่สำหรับสร้างใบงานเศษส่วนในระยะถัดไป",
-    eyebrow: "Teacher Tool",
-    icon: "📝"
-  },
-  {
     order: 16,
     href: "/teacher/reports",
     title: "รายงานผลนักเรียน",
@@ -138,9 +130,9 @@ export const pageRoutes: PageRoute[] = [
   },
   {
     order: 17,
-    href: "/teacher/library",
+    href: "/media-library",
     title: "คลังสื่อการสอน",
-    description: "เตรียมพื้นที่สำหรับจัดเก็บใบงาน ภาพ และสื่อประกอบ",
+    description: "จัดเก็บใบงาน ภาพ และลิงก์สื่อการสอนให้ค้นหาและใช้งานได้ง่าย",
     eyebrow: "Media Library",
     icon: "🗂️"
   },

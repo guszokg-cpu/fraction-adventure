@@ -58,15 +58,20 @@ export function NumberLineCompare() {
 
             {points.map((point) => {
               const x = LEFT + point.value * USABLE;
-              const labelY = point.above ? BASE_Y - 18 : BASE_Y + 24;
+              const labelY = point.above ? BASE_Y - 20 : BASE_Y + 26;
               const lineY2 = point.above ? BASE_Y - 12 : BASE_Y + 12;
+              const [pn, pd] = point.label.split("/");
               return (
                 <g key={point.label}>
                   <line x1={x} y1={BASE_Y} x2={x} y2={lineY2} stroke={point.color} strokeWidth={2} strokeDasharray="3 3" />
                   <circle cx={x} cy={BASE_Y} r={7} fill={point.color} stroke="#ffffff" strokeWidth={2.4} />
-                  <rect x={x - 16} y={labelY - 13} width={32} height={17} rx={5} fill={point.color} />
-                  <text x={x} y={labelY - 1} textAnchor="middle" fontSize={11} fontWeight={800} fill="#ffffff">
-                    {point.label}
+                  <rect x={x - 11} y={labelY - 15} width={22} height={24} rx={6} fill={point.color} />
+                  <text x={x} y={labelY - 5} textAnchor="middle" fontSize={9} fontWeight={800} fill="#ffffff">
+                    {pn}
+                  </text>
+                  <line x1={x - 6} y1={labelY - 2} x2={x + 6} y2={labelY - 2} stroke="#ffffff" strokeWidth={1} />
+                  <text x={x} y={labelY + 8} textAnchor="middle" fontSize={9} fontWeight={800} fill="#ffffff">
+                    {pd}
                   </text>
                 </g>
               );
@@ -74,9 +79,10 @@ export function NumberLineCompare() {
           </svg>
         </div>
 
-        <p className="mt-4 text-center text-sm font-bold text-slate-600">
-          จุด <span className="font-extrabold text-sky-600">1/2</span> อยู่ทางขวาของจุด{" "}
-          <span className="font-extrabold text-emerald-600">1/3</span> แสดงว่า 1/2 มีค่ามากกว่า
+        <p className="mt-4 flex flex-wrap items-center justify-center gap-1 text-center text-sm font-bold text-slate-600">
+          จุด <StackedFraction numerator={1} denominator={2} className="text-sm" toneClassName="text-sky-600" /> อยู่ทางขวาของจุด{" "}
+          <StackedFraction numerator={1} denominator={3} className="text-sm" toneClassName="text-emerald-600" /> แสดงว่า{" "}
+          <StackedFraction numerator={1} denominator={2} className="text-sm" toneClassName="text-sky-600" /> มีค่ามากกว่า
         </p>
 
         <div className="mt-3 flex items-center justify-center gap-3 rounded-xl bg-emerald-50 px-4 py-3 text-emerald-700">

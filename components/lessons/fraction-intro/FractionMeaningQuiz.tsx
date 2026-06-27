@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { FractionShape } from "@/components/fractions/FractionShape";
+import { FractionStack } from "@/components/fractions/FractionStack";
 import { Card } from "@/components/ui/Card";
 import { fractionIntroQuiz } from "@/data/lessonFractionIntro";
 import { cn } from "@/lib/cn";
@@ -67,7 +68,15 @@ export function FractionMeaningQuiz() {
                         selected && correctChoice && "border-emerald-300 bg-emerald-50 text-emerald-700"
                       )}
                     >
-                      <span>{choice}</span>
+                      {/^\d+\/\d+$/.test(choice) ? (
+                        <FractionStack
+                          top={choice.split("/")[0]}
+                          bottom={choice.split("/")[1]}
+                          className="text-base"
+                        />
+                      ) : (
+                        <span>{choice}</span>
+                      )}
                       {selected && correctChoice && <span>✓</span>}
                       {active && !isCorrect && <span>×</span>}
                     </button>

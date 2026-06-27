@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { MousePointerClick } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { cn } from "@/lib/cn";
-import { NumberLineStrip } from "@/components/lessons/number-line/NumberLineStrip";
+import { FractionStack } from "@/components/fractions/FractionStack";
+import { DraggableNumberLine } from "@/components/lessons/number-line/DraggableNumberLine";
 
 const denominatorOptions = [2, 3, 4, 5, 6, 8];
 
@@ -68,20 +70,25 @@ export function NumberLineBuilder() {
             </div>
           </div>
 
-          <div className="rounded-xl bg-amber-50 px-4 py-3 text-sm font-bold text-amber-700">
-            {numerator}/{denominator} หมายถึง นับจาก 0 ไป {numerator} ช่อง จากทั้งหมด {denominator} ช่องที่เท่ากัน
+          <div className="flex flex-wrap items-center gap-1 rounded-xl bg-amber-50 px-4 py-3 text-sm font-bold text-amber-700">
+            <FractionStack top={numerator} bottom={denominator} className="text-base" />
+            หมายถึง นับจาก 0 ไป {numerator} ช่อง จากทั้งหมด {denominator} ช่องที่เท่ากัน
           </div>
         </div>
 
         <div className="flex flex-col items-center justify-center rounded-2xl border border-brand-100 bg-teal-50/40 p-5">
-          <NumberLineStrip
+          <div className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-xs font-extrabold text-emerald-700">
+            <MousePointerClick size={14} /> คลิกหรือลากจุดบนเส้นเพื่อเลื่อน
+          </div>
+          <DraggableNumberLine
             denominator={denominator}
-            marker={numerator}
+            value={numerator}
+            onChange={setNumerator}
             tone="emerald"
-            className="h-36 w-full max-w-lg"
+            className="w-full max-w-lg"
           />
-          <div className="mt-3 text-5xl font-extrabold text-emerald-600">
-            {numerator}/{denominator}
+          <div className="mt-3 flex justify-center text-5xl font-extrabold text-emerald-600">
+            <FractionStack top={numerator} bottom={denominator} />
           </div>
         </div>
       </div>

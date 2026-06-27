@@ -29,13 +29,6 @@ export const quickActions = [
     tone: "purple"
   },
   {
-    title: "สร้างใบงาน",
-    description: "สร้างใบงานตามต้องการ",
-    href: "/teacher/worksheet-factory",
-    icon: "📝",
-    tone: "orange"
-  },
-  {
     title: "ดูรายงานผล",
     description: "ดูคะแนนและพัฒนาการ",
     href: "/teacher/reports",

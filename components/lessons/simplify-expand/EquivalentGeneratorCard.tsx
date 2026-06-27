@@ -85,8 +85,10 @@ export function EquivalentGeneratorCard() {
           ))}
         </div>
 
-        <div className="mt-4 rounded-xl bg-amber-50 px-4 py-3 text-center text-sm font-bold text-amber-700">
-          ทุกคำตอบมีค่าเท่ากับ {numerator}/{denominator} เพราะคูณตัวเศษและตัวส่วนด้วยจำนวนเดียวกัน
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-1 rounded-xl bg-amber-50 px-4 py-3 text-center text-sm font-bold text-amber-700">
+          ทุกคำตอบมีค่าเท่ากับ
+          <FractionText numerator={numerator} denominator={denominator} className="text-base" toneClassName="text-amber-700" />
+          เพราะคูณตัวเศษและตัวส่วนด้วยจำนวนเดียวกัน
         </div>
       </div>
     </Card>

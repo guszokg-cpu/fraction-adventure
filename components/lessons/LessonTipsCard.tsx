@@ -35,8 +35,10 @@ export function LessonTipsCard({ tips, examples }: LessonTipsCardProps) {
               tone={example.tone}
               className="h-11 w-11"
             />
-            <div className="text-2xl font-extrabold leading-none text-brand-900">
-              {example.numerator}/{example.denominator}
+            <div className="inline-flex flex-col items-center text-2xl font-extrabold leading-none text-brand-900">
+              <span>{example.numerator}</span>
+              <span className="my-0.5 h-0.5 w-full min-w-[1.2rem] rounded-full bg-current" />
+              <span>{example.denominator}</span>
             </div>
             <div className="text-sm font-bold text-slate-600">{example.label}</div>
           </div>

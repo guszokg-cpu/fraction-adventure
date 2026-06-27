@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { FractionShape } from "@/components/fractions/FractionShape";
+import { FractionStack } from "@/components/fractions/FractionStack";
 import { Card } from "@/components/ui/Card";
 import { cn } from "@/lib/cn";
 
@@ -68,15 +69,16 @@ export function ColorYourOwn() {
             </div>
           </div>
 
-          <div className="rounded-xl bg-amber-50 px-4 py-3 text-sm font-bold text-amber-700">
-            {numerator}/{denominator} หมายถึง ระบายสี {numerator} ส่วน จากทั้งหมด {denominator} ส่วนที่เท่ากัน
+          <div className="flex flex-wrap items-center gap-1 rounded-xl bg-amber-50 px-4 py-3 text-sm font-bold text-amber-700">
+            <FractionStack top={numerator} bottom={denominator} className="text-base" />
+            หมายถึง ระบายสี {numerator} ส่วน จากทั้งหมด {denominator} ส่วนที่เท่ากัน
           </div>
         </div>
 
         <div className="flex flex-col items-center justify-center rounded-2xl border border-brand-100 bg-brand-50/50 p-5">
           <FractionShape numerator={numerator} denominator={denominator} shape="bar" tone="accent" className="h-24 w-56" />
-          <div className="mt-4 text-5xl font-extrabold text-pink-600">
-            {numerator}/{denominator}
+          <div className="mt-4 flex justify-center text-5xl font-extrabold text-pink-600">
+            <FractionStack top={numerator} bottom={denominator} />
           </div>
         </div>
       </div>

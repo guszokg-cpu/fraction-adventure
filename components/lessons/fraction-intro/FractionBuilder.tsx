@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { FractionShape } from "@/components/fractions/FractionShape";
+import { FractionStack } from "@/components/fractions/FractionStack";
 import { Card } from "@/components/ui/Card";
 import { cn } from "@/lib/cn";
 import { builderDenominators, builderShapes } from "@/data/lessonFractionIntro";
@@ -102,14 +103,15 @@ export function FractionBuilder() {
             tone="emerald"
             className="h-40 w-40"
           />
-          <div className="mt-4 text-center text-5xl font-extrabold leading-none text-emerald-600">
-            {numerator}/{denominator}
+          <div className="mt-4 flex justify-center text-5xl font-extrabold leading-none text-emerald-600">
+            <FractionStack top={numerator} bottom={denominator} />
           </div>
         </div>
       </div>
 
-      <div className="mt-4 rounded-lg bg-emerald-50 px-4 py-3 text-center text-sm font-bold text-emerald-700">
-        {numerator}/{denominator} หมายถึง ระบาย {numerator} ส่วน จากทั้งหมด {denominator} ส่วนที่เท่า ๆ กัน
+      <div className="mt-4 flex flex-wrap items-center justify-center gap-1 rounded-lg bg-emerald-50 px-4 py-3 text-center text-sm font-bold text-emerald-700">
+        <FractionStack top={numerator} bottom={denominator} className="text-base" />
+        หมายถึง ระบาย {numerator} ส่วน จากทั้งหมด {denominator} ส่วนที่เท่า ๆ กัน
       </div>
     </Card>
   );

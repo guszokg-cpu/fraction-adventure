@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { Check, RefreshCw, Volume2, X } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { FractionShape } from "@/components/fractions/FractionShape";
@@ -17,6 +17,26 @@ function speak(text: string) {
   utterance.rate = 0.9;
   window.speechSynthesis.cancel();
   window.speechSynthesis.speak(utterance);
+}
+
+function FracStack({
+  top,
+  bottom,
+  className,
+  lineClassName,
+}: {
+  top: ReactNode;
+  bottom: ReactNode;
+  className?: string;
+  lineClassName?: string;
+}) {
+  return (
+    <span className={cn("inline-flex flex-col items-center leading-none", className)}>
+      <span>{top}</span>
+      <span className={cn("my-1 h-0.5 w-full min-w-[1.4rem] rounded-full bg-current", lineClassName)} />
+      <span>{bottom}</span>
+    </span>
+  );
 }
 
 function SpeakButton({ text, className }: { text: string; className?: string }) {
@@ -109,10 +129,8 @@ export function ReadWriteStudio() {
           <FractionShape numerator={3} denominator={4} tone="accent" className="mx-auto h-36 w-36" />
           <div>
             <div className="flex items-center gap-4">
-              <div className="text-6xl font-extrabold leading-none text-brand-900">
-                <span className="text-rose-500">3</span>
-                <span className="mx-1 text-slate-300">/</span>
-                <span className="text-brand-600">4</span>
+              <div className="text-6xl font-extrabold leading-none text-slate-300">
+                <FracStack top={<span className="text-rose-500">3</span>} bottom={<span className="text-brand-600">4</span>} />
               </div>
               <div className="space-y-2 text-sm font-bold">
                 <div className="rounded-lg bg-rose-50 px-3 py-1.5 text-rose-600">ตัวเศษ = ส่วนที่เลือก</div>
@@ -152,9 +170,7 @@ export function ReadWriteStudio() {
             </div>
             <div className="mt-3 flex items-center justify-center gap-3 rounded-lg bg-white p-2">
               <FractionShape numerator={safeNumerator} denominator={denominator} tone="emerald" className="h-12 w-12" />
-              <span className="text-3xl font-extrabold text-brand-900">
-                {safeNumerator}/{denominator}
-              </span>
+              <FracStack top={safeNumerator} bottom={denominator} className="text-3xl font-extrabold text-brand-900" />
             </div>
             <div className="mt-2 text-center text-sm font-bold text-slate-700">
               อ่านว่า {readThaiFraction(safeNumerator, denominator)}
@@ -171,19 +187,19 @@ export function ReadWriteStudio() {
                   key={`${fraction.numerator}-${fraction.denominator}`}
                   onClick={() => setPickIndex(index)}
                   className={cn(
-                    "rounded-lg border py-1.5 text-sm font-extrabold transition",
+                    "flex justify-center rounded-lg border py-1.5 font-extrabold transition",
                     index === pickIndex
                       ? "border-brand-600 bg-brand-600 text-white"
                       : "border-brand-100 bg-white text-brand-700 hover:bg-brand-50"
                   )}
                 >
-                  {fraction.numerator}/{fraction.denominator}
+                  <FracStack top={fraction.numerator} bottom={fraction.denominator} className="text-[13px]" />
                 </button>
               ))}
             </div>
             <div className="mt-3 rounded-lg bg-white p-3 text-center">
-              <div className="text-3xl font-extrabold text-brand-900">
-                {picked.numerator}/{picked.denominator}
+              <div className="flex justify-center">
+                <FracStack top={picked.numerator} bottom={picked.denominator} className="text-3xl font-extrabold text-brand-900" />
               </div>
               <div className="mt-1 text-sm font-bold text-violet-700">
                 {readThaiFraction(picked.numerator, picked.denominator)}
@@ -201,7 +217,7 @@ export function ReadWriteStudio() {
             <div className="mt-3 rounded-lg bg-violet-50 px-3 py-3 text-center text-lg font-extrabold text-violet-700">
               {readThaiFraction(target.numerator, target.denominator)}
             </div>
-            <div className="mt-3 flex items-center justify-center gap-2">
+            <div className="mt-3 flex flex-col items-center gap-1.5">
               <input
                 type="number"
                 value={answerNumerator}
@@ -210,9 +226,9 @@ export function ReadWriteStudio() {
                   setChecked(false);
                 }}
                 aria-label="ตัวเศษ"
-                className="h-12 w-14 rounded-lg border border-brand-100 text-center text-2xl font-extrabold text-brand-900 outline-none focus:border-brand-500"
+                className="h-12 w-16 rounded-lg border border-brand-100 text-center text-2xl font-extrabold text-brand-900 outline-none focus:border-brand-500 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
               />
-              <span className="text-2xl font-extrabold text-slate-300">/</span>
+              <span className="h-[3px] w-16 rounded-full bg-slate-300" />
               <input
                 type="number"
                 value={answerDenominator}
@@ -221,7 +237,7 @@ export function ReadWriteStudio() {
                   setChecked(false);
                 }}
                 aria-label="ตัวส่วน"
-                className="h-12 w-14 rounded-lg border border-brand-100 text-center text-2xl font-extrabold text-brand-900 outline-none focus:border-brand-500"
+                className="h-12 w-16 rounded-lg border border-brand-100 text-center text-2xl font-extrabold text-brand-900 outline-none focus:border-brand-500 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
               />
             </div>
             <div className="mt-3 flex gap-2">

@@ -85,3 +85,79 @@ select {
   border: 1px solid hsl(var(--line));
   box-shadow: 0 18px 60px rgba(44, 54, 114, 0.1);
 }
+
+/* ---------- Sidebar thin scrollbar ---------- */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255 255 255 / 0.25) transparent;
+}
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(255 255 255 / 0.25);
+  border-radius: 9999px;
+}
+
+/* ---------- Learning interaction animations ---------- */
+
+/* เด้งดีใจตอนตอบถูก */
+@keyframes fa-pop {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.18) rotate(-2deg); }
+  70%  { transform: scale(0.96); }
+  100% { transform: scale(1); }
+}
+.fa-pop { animation: fa-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+/* สั่นตอนตอบผิด */
+@keyframes fa-shake {
+  0%, 100% { transform: translateX(0); }
+  20%      { transform: translateX(-7px); }
+  40%      { transform: translateX(6px); }
+  60%      { transform: translateX(-4px); }
+  80%      { transform: translateX(3px); }
+}
+.fa-shake { animation: fa-shake 0.4s ease-in-out; }
+
+/* คำใบ้/ฟีดแบ็กค่อย ๆ ปรากฏ */
+@keyframes fa-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fa-rise { animation: fa-rise 0.32s ease-out both; }
+
+/* กระดิ่งดึงดูดความสนใจปุ่มคำใบ้ */
+@keyframes fa-wiggle {
+  0%, 60%, 100% { transform: rotate(0deg); }
+  70%  { transform: rotate(-9deg); }
+  80%  { transform: rotate(9deg); }
+  90%  { transform: rotate(-5deg); }
+}
+/* เล่นจำกัดรอบเพื่อดึงความสนใจตอนแรก แล้วหยุด (ไม่กวนสายตา) */
+.fa-wiggle { animation: fa-wiggle 1.6s ease-in-out 3; }
+
+/* กระดาษเศษฉลอง (confetti) */
+@keyframes fa-confetti {
+  0%   { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+  100% { transform: translate(var(--fa-x), var(--fa-y)) rotate(var(--fa-r)); opacity: 0; }
+}
+.fa-confetti-piece {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 9px;
+  height: 14px;
+  border-radius: 2px;
+  animation: fa-confetti 1s ease-out forwards;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fa-pop, .fa-shake, .fa-rise, .fa-wiggle, .fa-confetti-piece {
+    animation: none;
+  }
+}

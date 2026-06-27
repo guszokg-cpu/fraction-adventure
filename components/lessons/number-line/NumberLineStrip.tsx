@@ -82,9 +82,15 @@ export function NumberLineStrip({
                   {i / safeDenominator}
                 </text>
               ) : (
-                <text x={x} y={BASE_Y + 24} textAnchor="middle" fontSize={10} fontWeight={700} fill="#64748b">
-                  {i}/{safeDenominator}
-                </text>
+                <g>
+                  <text x={x} y={BASE_Y + 16} textAnchor="middle" fontSize={9} fontWeight={700} fill="#64748b">
+                    {i}
+                  </text>
+                  <line x1={x - 5} y1={BASE_Y + 19} x2={x + 5} y2={BASE_Y + 19} stroke="#94a3b8" strokeWidth={1} />
+                  <text x={x} y={BASE_Y + 30} textAnchor="middle" fontSize={9} fontWeight={700} fill="#64748b">
+                    {safeDenominator}
+                  </text>
+                </g>
               ))}
           </g>
         );
@@ -92,12 +98,16 @@ export function NumberLineStrip({
 
       {hasMarker && (
         <g>
-          <line x1={markerX} y1={BASE_Y} x2={markerX} y2={20} stroke={color} strokeWidth={2} strokeDasharray="3 3" />
+          <line x1={markerX} y1={BASE_Y} x2={markerX} y2={30} stroke={color} strokeWidth={2} strokeDasharray="3 3" />
           {showMarkerLabel && (
             <g>
-              <rect x={markerX - 18} y={4} width={36} height={17} rx={5} fill={color} />
-              <text x={markerX} y={16} textAnchor="middle" fontSize={11} fontWeight={800} fill="#ffffff">
-                {marker}/{safeDenominator}
+              <rect x={markerX - 11} y={1} width={22} height={26} rx={6} fill={color} />
+              <text x={markerX} y={11} textAnchor="middle" fontSize={9} fontWeight={800} fill="#ffffff">
+                {marker}
+              </text>
+              <line x1={markerX - 6} y1={14} x2={markerX + 6} y2={14} stroke="#ffffff" strokeWidth={1} />
+              <text x={markerX} y={25} textAnchor="middle" fontSize={9} fontWeight={800} fill="#ffffff">
+                {safeDenominator}
               </text>
             </g>
           )}

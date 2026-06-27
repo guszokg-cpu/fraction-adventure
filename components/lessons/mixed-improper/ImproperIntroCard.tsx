@@ -31,8 +31,8 @@ export function ImproperIntroCard() {
           <FractionText numerator={5} denominator={4} className="text-4xl" toneClassName="text-pink-600" />
         </div>
 
-        <p className="mt-2 text-center text-sm font-bold text-slate-600">
-          <span className="font-extrabold text-pink-600">4/4</span> = 1 หน่วย
+        <p className="mt-2 flex items-center justify-center gap-1 text-center text-sm font-bold text-slate-600">
+          <FractionText numerator={4} denominator={4} className="text-base" toneClassName="text-pink-600" /> = 1 หน่วย
         </p>
 
         <div className="mt-3 rounded-xl bg-gradient-to-r from-pink-500 to-fuchsia-500 p-4 text-white">

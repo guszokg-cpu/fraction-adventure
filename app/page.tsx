@@ -7,6 +7,7 @@ export default function HomePage() {
       title="ผจญภัยดินแดนเศษส่วน"
       eyebrow="Learning Map"
       description="เรียนเศษส่วน ป.4-ป.6 ด้วยภาพ เกม และภารกิจ"
+      hideHeader
     >
       <DashboardOverview />
     </AppShell>
