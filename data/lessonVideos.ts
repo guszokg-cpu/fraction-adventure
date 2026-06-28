@@ -11,8 +11,8 @@ export const lessonVideos: Record<string, string> = {
   "/lessons/number-line":      "",   // เศษส่วนบนเส้นจำนวน
   "/lessons/compare":          "https://www.youtube.com/watch?v=tAS2JmECfmA",   // เปรียบเทียบเศษส่วน
   "/lessons/mixed-improper":   "",   // จำนวนคละและเศษเกิน
-  "/lessons/add":              "",   // บวกเศษส่วน
-  "/lessons/subtract":         "",   // ลบเศษส่วน
+  "/lessons/add":              "https://www.youtube.com/watch?v=P9trAPTXiuc",   // บวกเศษส่วน
+  "/lessons/subtract":         "https://www.youtube.com/watch?v=XgrsYUkkIxE",   // ลบเศษส่วน
   "/lessons/multiply":         "",   // คูณเศษส่วน
   "/lessons/divide":           "",   // หารเศษส่วน
   "/lessons/equivalent":       "",   // เศษส่วนที่เท่ากัน

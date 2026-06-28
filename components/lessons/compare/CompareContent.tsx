@@ -45,14 +45,14 @@ function HelperModesCard() {
 const VIDEO_URL = lessonVideos["/lessons/compare"] ?? "";
 
 const STEPS = [
-  { id: 1, title: "ดูวิดีโอ" },
-  { id: 2, title: "โจทย์เปรียบเทียบ" },
-  { id: 3, title: "เปรียบเทียบด้วยภาพ" },
-  { id: 4, title: "บนเส้นจำนวน" },
-  { id: 5, title: "ทำส่วนเท่ากัน" },
-  { id: 6, title: "วิธีช่วยคิด" },
-  { id: 7, title: "ฝึกทำ" },
-  { id: 8, title: "แบบทดสอบ" },
+  { id: 1, title: "ดูวิดีโอ",          icon: "📹" },
+  { id: 2, title: "โจทย์เปรียบเทียบ",  icon: "📋" },
+  { id: 3, title: "เปรียบเทียบด้วยภาพ", icon: "🖼️" },
+  { id: 4, title: "บนเส้นจำนวน",       icon: "↔️" },
+  { id: 5, title: "ทำส่วนเท่ากัน",      icon: "🍪" },
+  { id: 6, title: "วิธีช่วยคิด",        icon: "💡" },
+  { id: 7, title: "ฝึกทำ",             icon: "✏️" },
+  { id: 8, title: "แบบทดสอบ",          icon: "🏆" },
 ];
 
 const COMPONENTS = [
