@@ -1,6 +1,8 @@
 import { AppShell } from "@/components/layout/AppShell";
 import { EquivalentLessonContent } from "@/components/lessons/equivalent/EquivalentLessonContent";
 import { EquivalentTipsPanel } from "@/components/lessons/equivalent/EquivalentTipsPanel";
+import { LessonTipsImageWrapper } from "@/components/lessons/shared/LessonTipsImageWrapper";
+import { LessonWorksheetsPanel } from "@/components/lessons/shared/LessonWorksheetsPanel";
 import { equivalentLessonMeta } from "@/data/lessonEquivalent";
 
 export default function EquivalentPage() {
@@ -12,7 +14,14 @@ export default function EquivalentPage() {
       activePath="/lessons/equivalent"
       heroImage={equivalentLessonMeta.heroImage}
       themeColor={equivalentLessonMeta.themeColor}
-      aside={<EquivalentTipsPanel />}
+      aside={
+        <div className="space-y-4">
+          <LessonTipsImageWrapper lessonSlug="equivalent">
+            <EquivalentTipsPanel />
+          </LessonTipsImageWrapper>
+          <LessonWorksheetsPanel lessonSlug="equivalent" />
+        </div>
+      }
     >
       <EquivalentLessonContent />
     </AppShell>

@@ -1,6 +1,8 @@
 import { AppShell } from "@/components/layout/AppShell";
 import { SubtractLessonContent } from "@/components/lessons/subtract/SubtractLessonContent";
 import { SubtractTipsPanel } from "@/components/lessons/subtract/SubtractTipsPanel";
+import { LessonTipsImageWrapper } from "@/components/lessons/shared/LessonTipsImageWrapper";
+import { LessonWorksheetsPanel } from "@/components/lessons/shared/LessonWorksheetsPanel";
 import { subtractLessonMeta } from "@/data/lessonSubtract";
 
 export default function SubtractPage() {
@@ -12,7 +14,14 @@ export default function SubtractPage() {
       activePath="/lessons/subtract"
       heroImage={subtractLessonMeta.heroImage}
       themeColor={subtractLessonMeta.themeColor}
-      aside={<SubtractTipsPanel />}
+      aside={
+        <div className="space-y-4">
+          <LessonTipsImageWrapper lessonSlug="subtract">
+            <SubtractTipsPanel />
+          </LessonTipsImageWrapper>
+          <LessonWorksheetsPanel lessonSlug="subtract" />
+        </div>
+      }
     >
       <SubtractLessonContent />
     </AppShell>

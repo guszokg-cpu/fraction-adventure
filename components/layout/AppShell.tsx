@@ -39,7 +39,9 @@ export function AppShell({ children, title, eyebrow, description, activePath, as
           )}
           {children}
         </section>
-        {aside ? <aside className="w-full shrink-0 lg:w-[330px]">{aside}</aside> : <RightPanel />}
+        {aside !== undefined
+          ? aside && <aside className="w-full shrink-0 lg:w-[330px]">{aside}</aside>
+          : <RightPanel />}
       </main>
       <MobileNav activePath={activePath} />
     </div>

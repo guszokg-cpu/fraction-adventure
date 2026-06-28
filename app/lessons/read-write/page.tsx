@@ -1,7 +1,9 @@
 import { AppShell } from "@/components/layout/AppShell";
 import { ReadWriteContent } from "@/components/lessons/read-write/ReadWriteContent";
 import { LessonTipsCard } from "@/components/lessons/LessonTipsCard";
+import { LessonTipsImageWrapper } from "@/components/lessons/shared/LessonTipsImageWrapper";
 import { LessonMissionCard } from "@/components/lessons/LessonMissionCard";
+import { LessonWorksheetsPanel } from "@/components/lessons/shared/LessonWorksheetsPanel";
 import { readWriteExamples, readWriteMeta, readWriteMissions, readWriteTips } from "@/data/lessonReadWrite";
 
 export default function ReadWritePage() {
@@ -15,8 +17,11 @@ export default function ReadWritePage() {
       themeColor={readWriteMeta.themeColor}
       aside={
         <div className="space-y-4">
-          <LessonTipsCard tips={readWriteTips} examples={readWriteExamples} />
+          <LessonTipsImageWrapper lessonSlug="read-write">
+            <LessonTipsCard tips={readWriteTips} examples={readWriteExamples} />
+          </LessonTipsImageWrapper>
           <LessonMissionCard missions={readWriteMissions} />
+          <LessonWorksheetsPanel lessonSlug="read-write" />
         </div>
       }
     >

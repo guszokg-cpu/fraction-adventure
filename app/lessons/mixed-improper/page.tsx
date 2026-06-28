@@ -4,6 +4,8 @@ import { FractionText } from "@/components/fractions/FractionText";
 import { LessonMissionCard } from "@/components/lessons/LessonMissionCard";
 import { MixedImproperContent } from "@/components/lessons/mixed-improper/MixedImproperContent";
 import { MixedTipsPanel } from "@/components/lessons/mixed-improper/MixedTipsPanel";
+import { LessonTipsImageWrapper } from "@/components/lessons/shared/LessonTipsImageWrapper";
+import { LessonWorksheetsPanel } from "@/components/lessons/shared/LessonWorksheetsPanel";
 import { Card } from "@/components/ui/Card";
 import { mixedImproperMeta, mixedImproperMissions } from "@/data/lessonMixedImproper";
 
@@ -18,7 +20,9 @@ export default function MixedImproperPage() {
       themeColor={mixedImproperMeta.themeColor}
       aside={
         <div className="space-y-4">
-          <MixedTipsPanel />
+          <LessonTipsImageWrapper lessonSlug="mixed-improper">
+            <MixedTipsPanel />
+          </LessonTipsImageWrapper>
           <LessonMissionCard missions={mixedImproperMissions} />
 
           {/* กล่อง มากกว่า 1 หน่วย */}
@@ -54,6 +58,7 @@ export default function MixedImproperPage() {
               </div>
             </div>
           </Card>
+          <LessonWorksheetsPanel lessonSlug="mixed-improper" />
         </div>
       }
     >

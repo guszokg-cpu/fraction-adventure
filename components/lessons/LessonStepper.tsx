@@ -233,7 +233,7 @@ export function LessonStepper({ steps, renderStep, renderAll, footer }: LessonSt
         <div ref={contentRef} className={cn(
           "flex flex-col bg-white transition-all duration-300",
           isFullView
-            ? "fixed inset-0 z-50 overflow-hidden rounded-none bg-slate-50 shadow-none"
+            ? "fixed inset-0 z-[9999] h-screen w-screen overflow-hidden rounded-none bg-slate-50 shadow-none"
             : "overflow-hidden rounded-2xl border border-slate-200 shadow-sm"
         )}>
 

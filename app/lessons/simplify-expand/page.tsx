@@ -5,6 +5,8 @@ import { FractionText } from "@/components/fractions/FractionText";
 import { LessonMissionCard } from "@/components/lessons/LessonMissionCard";
 import { SimplifyExpandContent } from "@/components/lessons/simplify-expand/SimplifyExpandContent";
 import { SimplifyTipsPanel } from "@/components/lessons/simplify-expand/SimplifyTipsPanel";
+import { LessonTipsImageWrapper } from "@/components/lessons/shared/LessonTipsImageWrapper";
+import { LessonWorksheetsPanel } from "@/components/lessons/shared/LessonWorksheetsPanel";
 import { Card } from "@/components/ui/Card";
 import { simplifyExpandMeta, simplifyExpandMissions } from "@/data/lessonSimplifyExpand";
 
@@ -19,7 +21,9 @@ export default function SimplifyExpandPage() {
       themeColor={simplifyExpandMeta.themeColor}
       aside={
         <div className="space-y-4">
-          <SimplifyTipsPanel />
+          <LessonTipsImageWrapper lessonSlug="simplify-expand">
+            <SimplifyTipsPanel />
+          </LessonTipsImageWrapper>
           <LessonMissionCard missions={simplifyExpandMissions} />
 
           <Card className="overflow-hidden p-0">
@@ -40,6 +44,7 @@ export default function SimplifyExpandPage() {
               </Link>
             </div>
           </Card>
+          <LessonWorksheetsPanel lessonSlug="simplify-expand" />
         </div>
       }
     >

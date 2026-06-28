@@ -1,6 +1,8 @@
 import { AppShell } from "@/components/layout/AppShell";
 import { AddLessonContent } from "@/components/lessons/add/AddLessonContent";
 import { AddTipsPanel } from "@/components/lessons/add/AddTipsPanel";
+import { LessonTipsImageWrapper } from "@/components/lessons/shared/LessonTipsImageWrapper";
+import { LessonWorksheetsPanel } from "@/components/lessons/shared/LessonWorksheetsPanel";
 import { addLessonMeta } from "@/data/lessonAdd";
 
 export default function AddPage() {
@@ -12,7 +14,14 @@ export default function AddPage() {
       activePath="/lessons/add"
       heroImage={addLessonMeta.heroImage}
       themeColor={addLessonMeta.themeColor}
-      aside={<AddTipsPanel />}
+      aside={
+        <div className="space-y-4">
+          <LessonTipsImageWrapper lessonSlug="add">
+            <AddTipsPanel />
+          </LessonTipsImageWrapper>
+          <LessonWorksheetsPanel lessonSlug="add" />
+        </div>
+      }
     >
       <AddLessonContent />
     </AppShell>

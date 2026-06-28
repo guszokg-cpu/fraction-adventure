@@ -151,7 +151,15 @@ export const pageRoutes: PageRoute[] = [
     description: "ตั้งค่าระบบให้เหมาะกับห้องเรียนของคุณ",
     eyebrow: "Control Center",
     icon: "⚙️"
-  }
+  },
+  {
+    order: 20,
+    href: "/admin/worksheets",
+    title: "จัดการใบงาน",
+    description: "เพิ่ม แก้ไข ซ่อน/เผยแพร่ใบงานประกอบบทเรียน",
+    eyebrow: "Admin",
+    icon: "📋"
+  },
 ];
 
 export function getPageRoute(href: string) {

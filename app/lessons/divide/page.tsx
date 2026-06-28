@@ -1,6 +1,8 @@
 import { AppShell } from "@/components/layout/AppShell";
 import { DivideLessonContent } from "@/components/lessons/divide/DivideLessonContent";
 import { DivideTipsPanel } from "@/components/lessons/divide/DivideTipsPanel";
+import { LessonTipsImageWrapper } from "@/components/lessons/shared/LessonTipsImageWrapper";
+import { LessonWorksheetsPanel } from "@/components/lessons/shared/LessonWorksheetsPanel";
 import { divideLessonMeta } from "@/data/lessonDivide";
 
 export default function DividePage() {
@@ -12,7 +14,14 @@ export default function DividePage() {
       activePath="/lessons/divide"
       heroImage={divideLessonMeta.heroImage}
       themeColor={divideLessonMeta.themeColor}
-      aside={<DivideTipsPanel />}
+      aside={
+        <div className="space-y-4">
+          <LessonTipsImageWrapper lessonSlug="divide">
+            <DivideTipsPanel />
+          </LessonTipsImageWrapper>
+          <LessonWorksheetsPanel lessonSlug="divide" />
+        </div>
+      }
     >
       <DivideLessonContent />
     </AppShell>
