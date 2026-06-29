@@ -489,7 +489,7 @@ export function SettingsContent() {
                     {isOpen && (
                       <div className="mx-3 mb-3 overflow-hidden rounded-xl border border-violet-100 bg-violet-50/50">
                         <div className="border-b border-violet-100 px-4 py-2.5">
-                          <p className="text-xs font-extrabold text-violet-700">📷 ภาพ "จำง่าย ๆ" สำหรับ {r.title}</p>
+                          <p className="text-xs font-extrabold text-violet-700">📷 ภาพ &ldquo;จำง่าย ๆ&rdquo; สำหรับ {r.title}</p>
                           <p className="mt-0.5 text-[11px] text-slate-500">อัปโหลดภาพสรุป เช่น อินโฟกราฟิก หรือสูตรจำ — แทนที่การ์ดจำง่ายอัตโนมัติ</p>
                         </div>
                         <div className="p-4">
