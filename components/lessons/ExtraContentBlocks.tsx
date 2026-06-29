@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getVisibleBlocksForStep, type ExtraContentBlock } from "@/lib/extraContent";
+import { fetchStore, type ExtraContentBlock } from "@/lib/extraContentApi";
 
 type Props = {
   lessonSlug: string;
@@ -12,10 +12,23 @@ export function ExtraContentBlocks({ lessonSlug, stepIndex }: Props) {
   const [blocks, setBlocks] = useState<ExtraContentBlock[]>([]);
 
   useEffect(() => {
-    const load = () => setBlocks(getVisibleBlocksForStep(lessonSlug, stepIndex));
+    let cancelled = false;
+
+    async function load() {
+      const store = await fetchStore();
+      if (cancelled) return;
+      const visible = store.blocks
+        .filter((b) => b.lessonSlug === lessonSlug && b.stepIndex === stepIndex && b.visible)
+        .sort((a, b) => a.createdAt - b.createdAt);
+      setBlocks(visible);
+    }
+
     load();
-    const id = setInterval(load, 1500);
-    return () => clearInterval(id);
+    const id = setInterval(load, 2000);
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
   }, [lessonSlug, stepIndex]);
 
   if (blocks.length === 0) return null;

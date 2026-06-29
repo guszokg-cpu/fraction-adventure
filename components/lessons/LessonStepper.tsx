@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, type ReactNode } from "react";
 import { ArrowLeft, ArrowRight, Check, Maximize2, Minimize2, List, X } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { ExtraContentBlocks } from "@/components/lessons/ExtraContentBlocks";
-import { isStepHidden } from "@/lib/extraContent";
+import { isStepHiddenApi } from "@/lib/extraContentApi";
 
 export type StepDef = {
   id: number;
@@ -32,10 +32,14 @@ export function LessonStepper({ steps, renderStep, renderAll, footer, lessonSlug
 
   useEffect(() => {
     if (!lessonSlug) return;
-    const check = () => setStepHidden(isStepHidden(lessonSlug, currentStep));
+    let cancelled = false;
+    async function check() {
+      const hidden = await isStepHiddenApi(lessonSlug!, currentStep);
+      if (!cancelled) setStepHidden(hidden);
+    }
     check();
-    const id = setInterval(check, 1000);
-    return () => clearInterval(id);
+    const id = setInterval(check, 2000);
+    return () => { cancelled = true; clearInterval(id); };
   }, [lessonSlug, currentStep]);
 
   // Lock body scroll when in full-view mode
