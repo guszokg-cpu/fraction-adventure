@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { Card } from "@/components/ui/Card";
 import { FractionShape } from "@/components/fractions/FractionShape";
@@ -162,7 +162,7 @@ export function FractionFromImageContent() {
             />
           </>
         )}
-        footer={<LessonActionBar meta={fractionFromImageMeta} practiceCount={10} />}
+        footer={<LessonActionBar meta={fractionFromImageMeta} />}
       />
     </div>
   );

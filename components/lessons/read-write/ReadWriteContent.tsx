@@ -1,4 +1,4 @@
-import { Card } from "@/components/ui/Card";
+﻿import { Card } from "@/components/ui/Card";
 import { LessonProgressHeader } from "@/components/lessons/LessonProgressHeader";
 import { LessonActionBar } from "@/components/lessons/LessonActionBar";
 import { ReadWriteStudio } from "@/components/lessons/read-write/ReadWriteStudio";
@@ -42,7 +42,7 @@ export function ReadWriteContent() {
         </div>
       </Card>
 
-      <LessonActionBar meta={readWriteMeta} practiceCount={10} />
+      <LessonActionBar meta={readWriteMeta} />
     </div>
   );
 }

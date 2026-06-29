@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { Card } from "@/components/ui/Card";
 import { FractionStack } from "@/components/fractions/FractionStack";
@@ -168,7 +168,7 @@ export function NumberLineContent() {
             />
           </>
         )}
-        footer={<LessonActionBar meta={numberLineMeta} practiceCount={10} />}
+        footer={<LessonActionBar meta={numberLineMeta} />}
       />
     </div>
   );

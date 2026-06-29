@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { LessonActionBar } from "@/components/lessons/LessonActionBar";
 import { LessonProgressHeader } from "@/components/lessons/LessonProgressHeader";
@@ -76,7 +76,7 @@ export function SimplifyExpandContent() {
             />
           </>
         )}
-        footer={<LessonActionBar meta={simplifyExpandMeta} practiceCount={10} />}
+        footer={<LessonActionBar meta={simplifyExpandMeta} />}
       />
     </div>
   );

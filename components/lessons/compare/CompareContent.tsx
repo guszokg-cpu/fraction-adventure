@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { Card } from "@/components/ui/Card";
 import { LessonActionBar } from "@/components/lessons/LessonActionBar";
@@ -97,7 +97,7 @@ export function CompareContent() {
             />
           </>
         )}
-        footer={<LessonActionBar meta={compareMeta} practiceCount={10} />}
+        footer={<LessonActionBar meta={compareMeta} />}
       />
     </div>
   );

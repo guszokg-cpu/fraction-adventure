@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { LessonActionBar } from "@/components/lessons/LessonActionBar";
 import { LessonProgressHeader } from "@/components/lessons/LessonProgressHeader";
@@ -112,7 +112,7 @@ export function MultiplyLessonContent() {
             />
           </>
         )}
-        footer={<LessonActionBar meta={multiplyLessonMeta} practiceCount={10} />}
+        footer={<LessonActionBar meta={multiplyLessonMeta} />}
       />
     </div>
   );

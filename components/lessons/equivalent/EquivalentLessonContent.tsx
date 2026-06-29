@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { LessonActionBar } from "@/components/lessons/LessonActionBar";
 import { LessonProgressHeader } from "@/components/lessons/LessonProgressHeader";
@@ -106,7 +106,7 @@ export function EquivalentLessonContent() {
             />
           </>
         )}
-        footer={<LessonActionBar meta={equivalentLessonMeta} practiceCount={10} />}
+        footer={<LessonActionBar meta={equivalentLessonMeta} />}
       />
     </div>
   );
