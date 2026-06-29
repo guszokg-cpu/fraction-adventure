@@ -1,12 +1,25 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import { toEmbedUrl } from "@/data/lessonVideos";
+import { fetchVideosConfig } from "@/lib/videosConfigApi";
 
 type LessonVideoCardProps = {
   lessonPath: string;
-  videoUrl: string;
+  videoUrl?: string;
   title?: string;
 };
 
-export function LessonVideoCard({ videoUrl, title = "วิดีโอประกอบบทเรียน" }: LessonVideoCardProps) {
+export function LessonVideoCard({ lessonPath, videoUrl: fallbackUrl = "", title = "วิดีโอประกอบบทเรียน" }: LessonVideoCardProps) {
+  const [videoUrl, setVideoUrl] = useState(fallbackUrl);
+
+  useEffect(() => {
+    fetchVideosConfig().then((config) => {
+      const url = config[lessonPath];
+      if (url !== undefined) setVideoUrl(url);
+    });
+  }, [lessonPath]);
+
   const embedUrl = toEmbedUrl(videoUrl);
 
   return (
@@ -18,7 +31,6 @@ export function LessonVideoCard({ videoUrl, title = "วิดีโอประ
       </div>
 
       {embedUrl ? (
-        /* ─── มีวิดีโอ: แสดง YouTube embed ─── */
         <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
           <iframe
             src={embedUrl}
@@ -29,7 +41,6 @@ export function LessonVideoCard({ videoUrl, title = "วิดีโอประ
           />
         </div>
       ) : (
-        /* ─── ยังไม่มีวิดีโอ: แสดง placeholder ─── */
         <div className="flex flex-col items-center justify-center gap-4 bg-slate-50 py-14">
           <div className="grid h-20 w-20 place-items-center rounded-full bg-red-50 text-5xl shadow-inner">
             🎬
@@ -37,16 +48,12 @@ export function LessonVideoCard({ videoUrl, title = "วิดีโอประ
           <div className="text-center">
             <p className="text-base font-extrabold text-slate-600">วิดีโอยังไม่พร้อม</p>
             <p className="mt-1 text-sm font-semibold text-slate-400">
-              แอดมินสามารถเพิ่มลิงก์ YouTube ในไฟล์{" "}
-              <code className="rounded bg-slate-200 px-1.5 py-0.5 text-xs text-slate-600">
-                data/lessonVideos.ts
-              </code>
+              แอดมินสามารถเพิ่มลิงก์ได้ที่ แผงแอดมิน → จัดการวิดีโอ
             </p>
           </div>
         </div>
       )}
 
-      {/* Footer note */}
       <div className="flex items-center gap-2 border-t border-slate-100 px-5 py-2.5 text-xs font-semibold text-slate-400">
         <span>📌</span>
         <span>ดูวิดีโอแล้วค่อยทำแบบฝึกหัดในขั้นถัดไป</span>

@@ -2,29 +2,26 @@
 
 import { useEffect, useState } from "react";
 import { FileText, Download, ExternalLink, BookOpen } from "lucide-react";
-import { getWorksheetsBySlug } from "@/data/worksheets";
-import { getPublishedBySlug } from "@/lib/worksheetStore";
-import type { Worksheet, WorksheetLevel, WorksheetFileType } from "@/types/worksheet";
+import { fetchWorksheetsConfig, type WsItem } from "@/lib/worksheetsConfigApi";
 
 type Props = { lessonSlug: string };
 
-const LEVEL_STYLES: Record<WorksheetLevel, string> = {
+const LEVEL_STYLES: Record<string, string> = {
   พื้นฐาน: "bg-sky-50 text-sky-700 border-sky-200",
   ฝึกทักษะ: "bg-amber-50 text-amber-700 border-amber-200",
   ท้าทาย: "bg-rose-50 text-rose-700 border-rose-200",
 };
 
-const FILE_ICONS: Record<WorksheetFileType, string> = {
+const FILE_ICONS: Record<string, string> = {
   PDF: "📄",
   Word: "📝",
   PNG: "🖼️",
   Link: "🔗",
 };
 
-function WorksheetCard({ ws, isLast }: { ws: Worksheet; isLast: boolean }) {
+function WorksheetCard({ ws, isLast }: { ws: WsItem; isLast: boolean }) {
   return (
     <div className={`flex items-start gap-3 py-3 ${!isLast ? "border-b border-slate-100" : ""}`}>
-      {/* Thumbnail: A4 ratio (1:√2 ≈ 1:1.414) or fallback icon */}
       <div className="shrink-0">
         {ws.previewImage ? (
           <div
@@ -39,7 +36,7 @@ function WorksheetCard({ ws, isLast }: { ws: Worksheet; isLast: boolean }) {
           </div>
         ) : (
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-50 text-xl">
-            {FILE_ICONS[ws.fileType]}
+            {FILE_ICONS[ws.fileType] ?? "📄"}
           </div>
         )}
       </div>
@@ -50,12 +47,13 @@ function WorksheetCard({ ws, isLast }: { ws: Worksheet; isLast: boolean }) {
           <p className="mt-0.5 text-[11px] text-slate-500 leading-relaxed">{ws.description}</p>
         )}
         <div className="mt-1.5 flex items-center gap-1.5">
-          <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-bold ${LEVEL_STYLES[ws.level]}`}>
+          <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-bold ${LEVEL_STYLES[ws.level] ?? ""}`}>
             {ws.level}
           </span>
           <span className="text-[10px] text-slate-400">{ws.fileType}</span>
         </div>
       </div>
+
       {ws.fileUrl ? (
         <a
           href={ws.fileUrl}
@@ -77,14 +75,21 @@ function WorksheetCard({ ws, isLast }: { ws: Worksheet; isLast: boolean }) {
 }
 
 export function LessonWorksheetsPanel({ lessonSlug }: Props) {
-  // ค่าเริ่มต้นจาก mock data (ทำงานได้ทั้ง server + client โดยไม่มี flash)
-  const [worksheets, setWorksheets] = useState<Worksheet[]>(() =>
-    getWorksheetsBySlug(lessonSlug)
-  );
+  const [worksheets, setWorksheets] = useState<WsItem[]>([]);
 
-  // อัปเดตจาก localStorage หลัง mount
   useEffect(() => {
-    setWorksheets(getPublishedBySlug(lessonSlug));
+    let cancelled = false;
+    async function load() {
+      const config = await fetchWorksheetsConfig();
+      if (cancelled) return;
+      const items = (config[lessonSlug] ?? [])
+        .filter((ws) => ws.visible)
+        .sort((a, b) => a.sortOrder - b.sortOrder);
+      setWorksheets(items);
+    }
+    load();
+    const id = setInterval(load, 3000);
+    return () => { cancelled = true; clearInterval(id); };
   }, [lessonSlug]);
 
   return (

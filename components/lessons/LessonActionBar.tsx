@@ -1,15 +1,14 @@
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, PencilLine, Save } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import type { LessonMeta } from "@/types/lessonContent";
 
 type LessonActionBarProps = {
   meta: LessonMeta;
-  practiceCount?: number;
 };
 
-export function LessonActionBar({ meta, practiceCount = 5 }: LessonActionBarProps) {
+export function LessonActionBar({ meta }: LessonActionBarProps) {
   return (
     <Card className="flex flex-wrap items-center justify-between gap-3">
       <Link href={meta.prevHref}>
@@ -19,23 +18,12 @@ export function LessonActionBar({ meta, practiceCount = 5 }: LessonActionBarProp
         </Button>
       </Link>
 
-      <div className="flex flex-wrap items-center gap-3">
-        {/* ฝึกทำ และ บันทึกคะแนน จะเชื่อมต่อระบบจริงใน Phase ถัดไป (Exercises and Games) */}
-        <Button>
-          <PencilLine size={18} />
-          ฝึกทำ {practiceCount} ข้อ
+      <Link href={meta.nextHref}>
+        <Button className="bg-violet-600 hover:bg-violet-700">
+          ไปต่อ: {meta.nextLabel}
+          <ArrowRight size={18} />
         </Button>
-        <Button variant="success">
-          <Save size={18} />
-          บันทึกคะแนน
-        </Button>
-        <Link href={meta.nextHref}>
-          <Button className="bg-violet-600 hover:bg-violet-700">
-            ไปต่อ: {meta.nextLabel}
-            <ArrowRight size={18} />
-          </Button>
-        </Link>
-      </div>
+      </Link>
     </Card>
   );
 }

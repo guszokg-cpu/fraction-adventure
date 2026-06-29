@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Settings, X, LogOut, Lock, BookOpen, Users, Info, ImagePlus, Eye, EyeOff } from "lucide-react";
+import { Settings, X, LogOut, Lock, BookOpen, Users, Info, ImagePlus, Eye, EyeOff, Video, FileText } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { AdminContentManager } from "@/components/admin/AdminContentManager";
+import { AdminVideosManager } from "@/components/admin/AdminVideosManager";
+import { AdminWorksheetsManager } from "@/components/admin/AdminWorksheetsManager";
 
 const ADMIN_KEY = "fa_admin_mode";
 const ADMIN_PASSWORD = "obec2567";
@@ -13,6 +15,8 @@ export function AdminWidget() {
   const [showModal, setShowModal] = useState(false);
   const [showPanel, setShowPanel] = useState(false);
   const [showContentManager, setShowContentManager] = useState(false);
+  const [showVideosManager, setShowVideosManager] = useState(false);
+  const [showWorksheetsManager, setShowWorksheetsManager] = useState(false);
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
@@ -132,9 +136,15 @@ function handleGearClick() {
         </div>
       )}
 
-      {/* Content Manager */}
+      {/* Managers */}
       {showContentManager && isAdmin && (
         <AdminContentManager onClose={() => setShowContentManager(false)} />
+      )}
+      {showVideosManager && isAdmin && (
+        <AdminVideosManager onClose={() => setShowVideosManager(false)} />
+      )}
+      {showWorksheetsManager && isAdmin && (
+        <AdminWorksheetsManager onClose={() => setShowWorksheetsManager(false)} />
       )}
 
       {/* Admin panel */}
@@ -182,13 +192,37 @@ function handleGearClick() {
 
               {/* Manage content */}
               <button
-                onClick={() => { setShowPanel(false); setShowContentManager(true); }}
+                onClick={() => { setShowPanel(false); setShowVideosManager(false); setShowWorksheetsManager(false); setShowContentManager(true); }}
                 className="flex w-full items-center gap-3 rounded-xl border-2 border-violet-100 bg-violet-50 px-4 py-3 text-left transition hover:border-violet-300 hover:bg-violet-100"
               >
                 <ImagePlus size={18} className="shrink-0 text-violet-600" />
                 <div>
                   <div className="text-sm font-extrabold text-violet-700">จัดการเนื้อหาบทเรียน</div>
                   <div className="text-xs text-violet-400">เพิ่ม / ซ่อน ภาพในแต่ละขั้น</div>
+                </div>
+              </button>
+
+              {/* Manage videos */}
+              <button
+                onClick={() => { setShowPanel(false); setShowContentManager(false); setShowWorksheetsManager(false); setShowVideosManager(true); }}
+                className="flex w-full items-center gap-3 rounded-xl border-2 border-red-100 bg-red-50 px-4 py-3 text-left transition hover:border-red-300 hover:bg-red-100"
+              >
+                <Video size={18} className="shrink-0 text-red-600" />
+                <div>
+                  <div className="text-sm font-extrabold text-red-700">จัดการวิดีโอบทเรียน</div>
+                  <div className="text-xs text-red-400">เพิ่ม / เปลี่ยน YouTube URL</div>
+                </div>
+              </button>
+
+              {/* Manage worksheets */}
+              <button
+                onClick={() => { setShowPanel(false); setShowContentManager(false); setShowVideosManager(false); setShowWorksheetsManager(true); }}
+                className="flex w-full items-center gap-3 rounded-xl border-2 border-pink-100 bg-pink-50 px-4 py-3 text-left transition hover:border-pink-300 hover:bg-pink-100"
+              >
+                <FileText size={18} className="shrink-0 text-pink-600" />
+                <div>
+                  <div className="text-sm font-extrabold text-pink-700">จัดการใบงาน</div>
+                  <div className="text-xs text-pink-400">เพิ่ม / ซ่อน ใบงานแต่ละบทเรียน</div>
                 </div>
               </button>
 
