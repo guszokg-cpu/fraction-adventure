@@ -1,6 +1,4 @@
-import { LessonMissionCard } from "@/components/lessons/LessonMissionCard";
 import { Card } from "@/components/ui/Card";
-import { equivalentMissions } from "@/data/lessonEquivalent";
 import { FractionStack } from "@/components/lessons/equivalent/EquivalentMath";
 
 export function EquivalentTipsPanel() {
@@ -34,13 +32,6 @@ export function EquivalentTipsPanel() {
           </div>
         </div>
       </Card>
-
-      <div>
-        <LessonMissionCard missions={equivalentMissions} />
-        <div className="rounded-b-xl border border-t-0 border-brand-100 bg-white px-5 pb-4 text-center text-sm font-extrabold text-brand-700">
-          ผ่านเกณฑ์ 80% ขึ้นไป รับ 3 ดาว
-        </div>
-      </div>
 
       <Card className="text-center">
         <div className="text-5xl">🐰</div>

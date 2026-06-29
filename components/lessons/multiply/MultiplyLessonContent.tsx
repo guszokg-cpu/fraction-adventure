@@ -59,6 +59,7 @@ const COMPONENTS = [
       title="แบบทดสอบ: คูณเศษส่วน"
       gradient="bg-gradient-to-r from-orange-600 to-amber-400"
       makeQuestion={makeMultiplyQuestion}
+      lessonSlug="multiply"
     />
   ),
 ];
@@ -66,8 +67,9 @@ const COMPONENTS = [
 export function MultiplyLessonContent() {
   return (
     <div className="space-y-5">
-      <LessonProgressHeader meta={multiplyLessonMeta} />
+      <LessonProgressHeader meta={multiplyLessonMeta} lessonSlug="multiply" />
       <LessonStepper
+        lessonSlug="multiply"
         steps={STEPS}
         renderStep={(step) => {
           const Comp = COMPONENTS[step - 1];
@@ -106,6 +108,7 @@ export function MultiplyLessonContent() {
               title="แบบทดสอบ: คูณเศษส่วน"
               gradient="bg-gradient-to-r from-orange-600 to-amber-400"
               makeQuestion={makeMultiplyQuestion}
+      lessonSlug="multiply"
             />
           </>
         )}

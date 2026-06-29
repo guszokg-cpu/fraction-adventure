@@ -59,6 +59,7 @@ const COMPONENTS = [
       title="แบบทดสอบ: ลบเศษส่วน"
       gradient="bg-gradient-to-r from-emerald-700 to-green-500"
       makeQuestion={makeSubtractQuestion}
+      lessonSlug="subtract"
     />
   ),
 ];
@@ -66,8 +67,9 @@ const COMPONENTS = [
 export function SubtractLessonContent() {
   return (
     <div className="space-y-5">
-      <LessonProgressHeader meta={subtractLessonMeta} />
+      <LessonProgressHeader meta={subtractLessonMeta} lessonSlug="subtract" />
       <LessonStepper
+        lessonSlug="subtract"
         steps={STEPS}
         renderStep={(step) => {
           const Comp = COMPONENTS[step - 1];
@@ -108,6 +110,7 @@ export function SubtractLessonContent() {
               title="แบบทดสอบ: ลบเศษส่วน"
               gradient="bg-gradient-to-r from-emerald-700 to-green-500"
               makeQuestion={makeSubtractQuestion}
+      lessonSlug="subtract"
             />
           </>
         )}

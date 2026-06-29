@@ -47,6 +47,7 @@ const COMPONENTS = [
       title="แบบทดสอบ: จำนวนคละและเศษเกิน"
       gradient="bg-gradient-to-r from-orange-600 to-amber-500"
       makeQuestion={makeMixedImproperQuestion}
+      lessonSlug="mixed-improper"
     />
   ),
 ];
@@ -54,8 +55,9 @@ const COMPONENTS = [
 export function MixedImproperContent() {
   return (
     <div className="space-y-5">
-      <LessonProgressHeader meta={mixedImproperMeta} />
+      <LessonProgressHeader meta={mixedImproperMeta} lessonSlug="mixed-improper" />
       <LessonStepper
+        lessonSlug="mixed-improper"
         steps={STEPS}
         renderStep={(step) => {
           const Comp = COMPONENTS[step - 1];
@@ -87,6 +89,7 @@ export function MixedImproperContent() {
               title="แบบทดสอบ: จำนวนคละและเศษเกิน"
               gradient="bg-gradient-to-r from-orange-600 to-amber-500"
               makeQuestion={makeMixedImproperQuestion}
+      lessonSlug="mixed-improper"
             />
           </>
         )}

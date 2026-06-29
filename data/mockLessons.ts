@@ -105,7 +105,7 @@ export const mockLessons: Lesson[] = [
     gradeRange: "ป.5-ป.6",
     stars: 0,
     progress: 0,
-    status: "locked",
+    status: "available",
     icon: "➕",
     color: "slate"
   },
@@ -117,7 +117,7 @@ export const mockLessons: Lesson[] = [
     gradeRange: "ป.5-ป.6",
     stars: 0,
     progress: 0,
-    status: "locked",
+    status: "available",
     icon: "➖",
     color: "slate"
   },
@@ -129,7 +129,7 @@ export const mockLessons: Lesson[] = [
     gradeRange: "ป.6",
     stars: 0,
     progress: 0,
-    status: "locked",
+    status: "available",
     icon: "✖️",
     color: "slate"
   },
@@ -141,7 +141,7 @@ export const mockLessons: Lesson[] = [
     gradeRange: "ป.6",
     stars: 0,
     progress: 0,
-    status: "locked",
+    status: "available",
     icon: "➗",
     color: "slate"
   },
@@ -153,7 +153,7 @@ export const mockLessons: Lesson[] = [
     gradeRange: "ป.6",
     stars: 0,
     progress: 0,
-    status: "locked",
+    status: "available",
     icon: "🧠",
     color: "slate"
   },
@@ -165,7 +165,7 @@ export const mockLessons: Lesson[] = [
     gradeRange: "ป.4-ป.6",
     stars: 0,
     progress: 0,
-    status: "locked",
+    status: "available",
     icon: "🏰",
     color: "slate"
   }

@@ -5,6 +5,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, LayoutGrid, X } from "lucide-react";
 import { pageRoutes } from "@/data/pageRoutes";
+
+const LESSON_HREFS = new Set([
+  "/", "/lessons/fraction-intro", "/lessons/read-write", "/lessons/fraction-from-image",
+  "/lessons/number-line", "/lessons/compare", "/lessons/equivalent", "/lessons/simplify-expand",
+  "/lessons/mixed-improper", "/lessons/add", "/lessons/subtract", "/lessons/multiply",
+  "/lessons/divide", "/lessons/word-problems",
+]);
+const lessonRoutes = pageRoutes.filter((r) => LESSON_HREFS.has(r.href));
 import { cn } from "@/lib/cn";
 
 export function MobileNav({ activePath }: { activePath?: string }) {
@@ -62,7 +70,7 @@ export function MobileNav({ activePath }: { activePath?: string }) {
               </button>
             </div>
             <div className="grid grid-cols-2 gap-2">
-              {pageRoutes.map((item) => {
+              {lessonRoutes.map((item) => {
                 const active = currentPath === item.href;
                 return (
                   <Link

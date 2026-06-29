@@ -7,7 +7,6 @@ import { FractionStack } from "@/components/fractions/FractionStack";
 import { Confetti } from "@/components/ui/Confetti";
 import { cn } from "@/lib/cn";
 import type { QuizQuestion } from "@/lib/quizGenerators";
-
 export type { QuizQuestion };
 
 const LABELS = ["ก", "ข", "ค", "ง"];
@@ -56,6 +55,7 @@ type LessonQuizProps = {
   gradient?: string;
   makeQuestion: () => QuizQuestion;
   count?: number;
+  lessonSlug?: string;
 };
 
 export function LessonQuiz({

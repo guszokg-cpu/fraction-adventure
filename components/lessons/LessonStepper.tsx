@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useEffect, useRef, type ReactNode } from "react";
-import { ArrowLeft, ArrowRight, EyeOff, Check, Lock, Maximize2, Minimize2, List, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Maximize2, Minimize2, List, X } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { ExtraContentBlocks } from "@/components/lessons/ExtraContentBlocks";
+import { isStepHidden } from "@/lib/extraContent";
 
 export type StepDef = {
   id: number;
@@ -15,16 +17,26 @@ type LessonStepperProps = {
   renderStep: (step: number) => ReactNode;
   renderAll: () => ReactNode;
   footer: ReactNode;
+  lessonSlug?: string;
 };
 
 const DEFAULT_ICONS = ["📹", "📖", "🖼️", "📏", "🧩", "💡", "✏️", "🏆", "⭐", "🎮"];
 
-export function LessonStepper({ steps, renderStep, renderAll, footer }: LessonStepperProps) {
+export function LessonStepper({ steps, renderStep, renderAll, footer, lessonSlug }: LessonStepperProps) {
   const [currentStep, setCurrentStep] = useState(1);
   const [visited, setVisited] = useState<Set<number>>(new Set([1]));
   const [showAll, setShowAll] = useState(false);
   const [isFullView, setIsFullView] = useState(false);
+  const [stepHidden, setStepHidden] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!lessonSlug) return;
+    const check = () => setStepHidden(isStepHidden(lessonSlug, currentStep));
+    check();
+    const id = setInterval(check, 1000);
+    return () => clearInterval(id);
+  }, [lessonSlug, currentStep]);
 
   // Lock body scroll when in full-view mode
   useEffect(() => {
@@ -146,7 +158,7 @@ export function LessonStepper({ steps, renderStep, renderAll, footer }: LessonSt
             {steps.map((s, idx) => {
               const isCurrent = s.id === currentStep;
               const isDone = visited.has(s.id) && !isCurrent;
-              const isLocked = !visited.has(s.id) && !isCurrent;
+              const isNew = !visited.has(s.id) && !isCurrent;
               const icon = s.icon ?? DEFAULT_ICONS[(s.id - 1) % DEFAULT_ICONS.length];
 
               return (
@@ -159,7 +171,7 @@ export function LessonStepper({ steps, renderStep, renderAll, footer }: LessonSt
                       "flex w-[148px] flex-col items-center gap-2.5 rounded-xl border-2 px-3 py-4 text-center transition-all duration-200 hover:-translate-y-0.5",
                       isCurrent && "border-pink-300 bg-pink-50/60 shadow-[0_0_0_4px_rgba(244,114,182,0.10)] hover:shadow-[0_4px_16px_rgba(244,114,182,0.20)]",
                       isDone && "border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm",
-                      isLocked && "border-slate-100 bg-slate-50/60 opacity-55 hover:opacity-80"
+                      isNew && "border-slate-200 bg-white hover:border-violet-200 hover:shadow-sm"
                     )}
                   >
                     {/* Number circle */}
@@ -167,16 +179,13 @@ export function LessonStepper({ steps, renderStep, renderAll, footer }: LessonSt
                       "flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-extrabold",
                       isCurrent && "bg-gradient-to-br from-pink-500 to-violet-600 text-white shadow-[0_4px_12px_rgba(168,85,247,0.35)]",
                       isDone && "bg-slate-800 text-white",
-                      isLocked && "bg-slate-200 text-slate-400"
+                      isNew && "bg-slate-100 text-slate-500"
                     )}>
                       {isDone ? <Check size={15} strokeWidth={3} /> : s.id}
                     </div>
 
                     {/* Emoji icon */}
-                    <span
-                      className={cn("text-2xl leading-none", isLocked && "grayscale opacity-50")}
-                      aria-hidden
-                    >
+                    <span className="text-2xl leading-none" aria-hidden>
                       {icon}
                     </span>
 
@@ -185,7 +194,7 @@ export function LessonStepper({ steps, renderStep, renderAll, footer }: LessonSt
                       "text-[12px] font-semibold leading-snug",
                       isCurrent && "text-slate-800",
                       isDone && "text-slate-700",
-                      isLocked && "text-slate-400"
+                      isNew && "text-slate-500"
                     )}>
                       {s.title}
                     </span>
@@ -203,10 +212,9 @@ export function LessonStepper({ steps, renderStep, renderAll, footer }: LessonSt
                         เรียนแล้ว
                       </span>
                     )}
-                    {isLocked && (
+                    {isNew && (
                       <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-2.5 py-[3px] text-[10px] font-semibold text-slate-400">
-                        <Lock size={10} />
-                        ยังไม่เปิด
+                        ยังไม่ได้เรียน
                       </span>
                     )}
                   </button>
@@ -276,7 +284,17 @@ export function LessonStepper({ steps, renderStep, renderAll, footer }: LessonSt
               ? "flex-1 overflow-y-auto p-6 lg:p-10"
               : "min-h-[70vh] p-5 md:p-6 lg:p-8"
           )}>
-            {renderStep(currentStep)}
+            {stepHidden ? (
+              <div className="flex flex-col items-center justify-center gap-3 py-16 text-center text-slate-400">
+                <span className="text-5xl">🙈</span>
+                <p className="text-base font-bold">เนื้อหาหลักถูกซ่อนโดยแอดมิน</p>
+              </div>
+            ) : (
+              renderStep(currentStep)
+            )}
+            {lessonSlug && (
+              <ExtraContentBlocks lessonSlug={lessonSlug} stepIndex={currentStep} />
+            )}
           </div>
 
           {/* Footer nav */}

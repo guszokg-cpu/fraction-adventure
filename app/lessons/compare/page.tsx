@@ -2,9 +2,8 @@ import { AppShell } from "@/components/layout/AppShell";
 import { CompareContent } from "@/components/lessons/compare/CompareContent";
 import { CompareTipsPanel } from "@/components/lessons/compare/CompareTipsPanel";
 import { LessonTipsImageWrapper } from "@/components/lessons/shared/LessonTipsImageWrapper";
-import { LessonMissionCard } from "@/components/lessons/LessonMissionCard";
 import { LessonWorksheetsPanel } from "@/components/lessons/shared/LessonWorksheetsPanel";
-import { compareMeta, compareMissions } from "@/data/lessonCompare";
+import { compareMeta } from "@/data/lessonCompare";
 
 export default function ComparePage() {
   return (
@@ -20,7 +19,6 @@ export default function ComparePage() {
           <LessonTipsImageWrapper lessonSlug="compare">
             <CompareTipsPanel />
           </LessonTipsImageWrapper>
-          <LessonMissionCard missions={compareMissions} />
           <LessonWorksheetsPanel lessonSlug="compare" />
         </div>
       }

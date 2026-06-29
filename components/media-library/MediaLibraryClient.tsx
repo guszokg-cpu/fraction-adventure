@@ -12,6 +12,8 @@ import { gradeMatches, initialMedia, type MediaItem, type MediaType } from "@/co
 const STORAGE_KEY = "fa-media-library";
 type SortValue = "latest" | "popular" | "az";
 
+const ADMIN_KEY = "fa_admin_mode";
+
 export function MediaLibraryClient() {
   const [items, setItems] = useState<MediaItem[]>(initialMedia);
   const [search, setSearch] = useState("");
@@ -24,6 +26,15 @@ export function MediaLibraryClient() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<MediaItem | null>(null);
   const [loaded, setLoaded] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsAdmin(sessionStorage.getItem(ADMIN_KEY) === "1");
+    check();
+    window.addEventListener("storage", check);
+    const id = setInterval(check, 1000);
+    return () => { window.removeEventListener("storage", check); clearInterval(id); };
+  }, []);
 
   // โหลดจาก localStorage หลัง mount (เลี่ยง hydration mismatch)
   useEffect(() => {
@@ -113,7 +124,7 @@ export function MediaLibraryClient() {
 
   return (
     <div className="space-y-5">
-      <MediaHeader onAdd={openAdd} />
+      <MediaHeader onAdd={openAdd} isAdmin={isAdmin} />
 
       <MediaFilters
         search={search}
@@ -128,7 +139,7 @@ export function MediaLibraryClient() {
         onSort={setSort}
       />
 
-      <MediaGrid items={visible} onToggleFavorite={toggleFavorite} onEdit={openEdit} onDelete={handleDelete} />
+      <MediaGrid items={visible} onToggleFavorite={toggleFavorite} onEdit={openEdit} onDelete={handleDelete} isAdmin={isAdmin} />
 
       {/* แถบเลขหน้า */}
       <div className="flex flex-wrap items-center justify-between gap-3">

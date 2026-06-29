@@ -135,6 +135,7 @@ const COMPONENTS = [
       title="แบบทดสอบ: เศษส่วนบนเส้นจำนวน"
       gradient="bg-gradient-to-r from-violet-600 to-purple-500"
       makeQuestion={makeNumberLineQuestion}
+      lessonSlug="number-line"
     />
   ),
 ];
@@ -142,8 +143,9 @@ const COMPONENTS = [
 export function NumberLineContent() {
   return (
     <div className="space-y-5">
-      <LessonProgressHeader meta={numberLineMeta} />
+      <LessonProgressHeader meta={numberLineMeta} lessonSlug="number-line" />
       <LessonStepper
+        lessonSlug="number-line"
         steps={STEPS}
         renderStep={(step) => {
           const Comp = COMPONENTS[step - 1];
@@ -162,6 +164,7 @@ export function NumberLineContent() {
               title="แบบทดสอบ: เศษส่วนบนเส้นจำนวน"
               gradient="bg-gradient-to-r from-violet-600 to-purple-500"
               makeQuestion={makeNumberLineQuestion}
+      lessonSlug="number-line"
             />
           </>
         )}

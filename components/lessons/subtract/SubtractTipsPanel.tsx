@@ -1,9 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { LessonMissionCard } from "@/components/lessons/LessonMissionCard";
 import { FractionStack } from "@/components/lessons/subtract/SubtractMath";
 import { Card } from "@/components/ui/Card";
-import { subtractLessonMissions } from "@/data/lessonSubtract";
 
 export function SubtractTipsPanel() {
   return (
@@ -43,13 +41,6 @@ export function SubtractTipsPanel() {
           </div>
         </div>
       </Card>
-
-      <div>
-        <LessonMissionCard missions={subtractLessonMissions} />
-        <div className="rounded-b-xl border border-t-0 border-brand-100 bg-white px-5 pb-4 text-center text-sm font-extrabold text-brand-700">
-          ผ่านเกณฑ์ 80% ขึ้นไป รับ 3 ดาว
-        </div>
-      </div>
 
       <Card className="bg-emerald-50">
         <div className="text-center text-sm font-extrabold text-emerald-700">ต่อไปบทที่ 12</div>

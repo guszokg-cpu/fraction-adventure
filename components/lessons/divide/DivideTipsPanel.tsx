@@ -1,6 +1,4 @@
-import { LessonMissionCard } from "@/components/lessons/LessonMissionCard";
 import { Card } from "@/components/ui/Card";
-import { divideLessonMissions } from "@/data/lessonDivide";
 import { FractionStack } from "@/components/lessons/divide/DivideMath";
 
 export function DivideTipsPanel() {
@@ -39,13 +37,6 @@ export function DivideTipsPanel() {
           </div>
         </div>
       </Card>
-
-      <div>
-        <LessonMissionCard missions={divideLessonMissions} />
-        <div className="rounded-b-xl border border-t-0 border-brand-100 bg-white px-5 pb-4 text-center text-sm font-extrabold text-brand-700">
-          ผ่านเกณฑ์ 80% ขึ้นไป รับ 3 ดาว
-        </div>
-      </div>
 
       <Card className="bg-violet-50 text-center">
         <h2 className="text-lg font-extrabold text-violet-700">ยินดีด้วย! ผ่านบทที่ 13 แล้ว</h2>

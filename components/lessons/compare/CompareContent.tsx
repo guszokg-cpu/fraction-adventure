@@ -64,6 +64,7 @@ const COMPONENTS = [
       title="แบบทดสอบ: เปรียบเทียบเศษส่วน"
       gradient="bg-gradient-to-r from-emerald-600 to-green-500"
       makeQuestion={makeCompareQuestion}
+      lessonSlug="compare"
     />
   ),
 ];
@@ -71,8 +72,9 @@ const COMPONENTS = [
 export function CompareContent() {
   return (
     <div className="space-y-5">
-      <LessonProgressHeader meta={compareMeta} />
+      <LessonProgressHeader meta={compareMeta} lessonSlug="compare" />
       <LessonStepper
+        lessonSlug="compare"
         steps={STEPS}
         renderStep={(step) => {
           const Comp = COMPONENTS[step - 1];
@@ -91,6 +93,7 @@ export function CompareContent() {
               title="แบบทดสอบ: เปรียบเทียบเศษส่วน"
               gradient="bg-gradient-to-r from-emerald-600 to-green-500"
               makeQuestion={makeCompareQuestion}
+      lessonSlug="compare"
             />
           </>
         )}

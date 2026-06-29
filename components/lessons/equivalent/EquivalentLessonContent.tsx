@@ -55,6 +55,7 @@ const COMPONENTS = [
       title="แบบทดสอบ: เศษส่วนที่เท่ากัน"
       gradient="bg-gradient-to-r from-teal-600 to-violet-500"
       makeQuestion={makeEquivalentQuestion}
+      lessonSlug="equivalent"
     />
   ),
 ];
@@ -62,8 +63,9 @@ const COMPONENTS = [
 export function EquivalentLessonContent() {
   return (
     <div className="space-y-5">
-      <LessonProgressHeader meta={equivalentLessonMeta} />
+      <LessonProgressHeader meta={equivalentLessonMeta} lessonSlug="equivalent" />
       <LessonStepper
+        lessonSlug="equivalent"
         steps={STEPS}
         renderStep={(step) => {
           const Comp = COMPONENTS[step - 1];
@@ -100,6 +102,7 @@ export function EquivalentLessonContent() {
               title="แบบทดสอบ: เศษส่วนที่เท่ากัน"
               gradient="bg-gradient-to-r from-teal-600 to-violet-500"
               makeQuestion={makeEquivalentQuestion}
+      lessonSlug="equivalent"
             />
           </>
         )}

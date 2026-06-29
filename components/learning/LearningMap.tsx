@@ -107,26 +107,10 @@ function IslandCard({ lesson }: { lesson: Lesson }) {
             {lesson.order}
           </div>
 
-          {/* Stars + status — bottom of image (in the blank space user designed) */}
-          <div className="absolute bottom-3 left-0 right-0 z-10 flex flex-col items-center gap-1">
-            <div className="flex gap-0.5">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <span
-                  key={i}
-                  className={cn(
-                    "text-base leading-none drop-shadow",
-                    i < lesson.stars ? "text-amber-400" : "text-white/40",
-                  )}
-                >
-                  ★
-                </span>
-              ))}
-            </div>
-            <div className="flex h-5 items-center justify-center">
-              {completed && <CheckCircle size={17} className="text-emerald-400 drop-shadow" />}
-              {current   && <PlayCircle  size={19} className="text-amber-400  drop-shadow" />}
-              {locked    && <Lock        size={14} className="text-slate-300"               />}
-            </div>
+          {/* Status icon — bottom of image */}
+          <div className="absolute bottom-3 left-0 right-0 z-10 flex items-center justify-center">
+            {completed && <CheckCircle size={17} className="text-emerald-400 drop-shadow" />}
+            {current   && <PlayCircle  size={19} className="text-amber-400  drop-shadow" />}
           </div>
         </div>
 

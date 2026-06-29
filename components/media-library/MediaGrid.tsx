@@ -8,9 +8,10 @@ type Props = {
   onToggleFavorite: (id: string) => void;
   onEdit: (item: MediaItem) => void;
   onDelete: (id: string) => void;
+  isAdmin: boolean;
 };
 
-export function MediaGrid({ items, onToggleFavorite, onEdit, onDelete }: Props) {
+export function MediaGrid({ items, onToggleFavorite, onEdit, onDelete, isAdmin }: Props) {
   if (items.length === 0) {
     return (
       <div className="rounded-2xl border border-dashed border-brand-200 bg-white/60 py-16 text-center">
@@ -30,6 +31,7 @@ export function MediaGrid({ items, onToggleFavorite, onEdit, onDelete }: Props) 
           onToggleFavorite={onToggleFavorite}
           onEdit={onEdit}
           onDelete={onDelete}
+          isAdmin={isAdmin}
         />
       ))}
     </div>

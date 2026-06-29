@@ -2,9 +2,8 @@ import { AppShell } from "@/components/layout/AppShell";
 import { FractionIntroContent } from "@/components/lessons/fraction-intro/FractionIntroContent";
 import { LessonTipsCard } from "@/components/lessons/LessonTipsCard";
 import { LessonTipsImageWrapper } from "@/components/lessons/shared/LessonTipsImageWrapper";
-import { LessonMissionCard } from "@/components/lessons/LessonMissionCard";
 import { LessonWorksheetsPanel } from "@/components/lessons/shared/LessonWorksheetsPanel";
-import { fractionIntroExamples, fractionIntroMeta, fractionIntroMissions, fractionIntroTips } from "@/data/lessonFractionIntro";
+import { fractionIntroExamples, fractionIntroMeta, fractionIntroTips } from "@/data/lessonFractionIntro";
 
 export default function FractionIntroPage() {
   return (
@@ -20,7 +19,6 @@ export default function FractionIntroPage() {
           <LessonTipsImageWrapper lessonSlug="fraction-intro">
             <LessonTipsCard tips={fractionIntroTips} examples={fractionIntroExamples} />
           </LessonTipsImageWrapper>
-          <LessonMissionCard missions={fractionIntroMissions} />
           <LessonWorksheetsPanel lessonSlug="fraction-intro" />
         </div>
       }

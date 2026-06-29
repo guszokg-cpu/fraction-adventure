@@ -61,6 +61,7 @@ const COMPONENTS = [
       title="แบบทดสอบ: หารเศษส่วน"
       gradient="bg-gradient-to-r from-violet-700 to-purple-500"
       makeQuestion={makeDivideQuestion}
+      lessonSlug="divide"
     />
   ),
 ];
@@ -68,8 +69,9 @@ const COMPONENTS = [
 export function DivideLessonContent() {
   return (
     <div className="space-y-5">
-      <LessonProgressHeader meta={divideLessonMeta} />
+      <LessonProgressHeader meta={divideLessonMeta} lessonSlug="divide" />
       <LessonStepper
+        lessonSlug="divide"
         steps={STEPS}
         renderStep={(step) => {
           const Comp = COMPONENTS[step - 1];
@@ -111,6 +113,7 @@ export function DivideLessonContent() {
               title="แบบทดสอบ: หารเศษส่วน"
               gradient="bg-gradient-to-r from-violet-700 to-purple-500"
               makeQuestion={makeDivideQuestion}
+      lessonSlug="divide"
             />
           </>
         )}

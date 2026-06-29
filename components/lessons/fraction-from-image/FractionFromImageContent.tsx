@@ -131,6 +131,7 @@ const COMPONENTS = [
       title="แบบทดสอบ: อ่านเศษส่วนจากภาพ"
       gradient="bg-gradient-to-r from-sky-600 to-blue-500"
       makeQuestion={makeFractionFromImageQuestion}
+      lessonSlug="fraction-from-image"
     />
   ),
 ];
@@ -138,8 +139,9 @@ const COMPONENTS = [
 export function FractionFromImageContent() {
   return (
     <div className="space-y-5">
-      <LessonProgressHeader meta={fractionFromImageMeta} />
+      <LessonProgressHeader meta={fractionFromImageMeta} lessonSlug="fraction-from-image" />
       <LessonStepper
+        lessonSlug="fraction-from-image"
         steps={STEPS}
         renderStep={(step) => {
           const Comp = COMPONENTS[step - 1];
@@ -156,6 +158,7 @@ export function FractionFromImageContent() {
               title="แบบทดสอบ: อ่านเศษส่วนจากภาพ"
               gradient="bg-gradient-to-r from-sky-600 to-blue-500"
               makeQuestion={makeFractionFromImageQuestion}
+      lessonSlug="fraction-from-image"
             />
           </>
         )}

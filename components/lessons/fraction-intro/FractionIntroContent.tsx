@@ -182,6 +182,7 @@ const COMPONENTS = [
       title="แบบทดสอบ: รู้จักเศษส่วน"
       gradient="bg-gradient-to-r from-brand-700 to-indigo-500"
       makeQuestion={makeFractionIntroQuestion}
+      lessonSlug="fraction-intro"
     />
   ),
 ];
@@ -189,8 +190,9 @@ const COMPONENTS = [
 export function FractionIntroContent() {
   return (
     <div className="space-y-5">
-      <LessonProgressHeader meta={fractionIntroMeta} />
+      <LessonProgressHeader meta={fractionIntroMeta} lessonSlug="fraction-intro" />
       <LessonStepper
+        lessonSlug="fraction-intro"
         steps={STEPS}
         renderStep={(step) => {
           const Comp = COMPONENTS[step - 1];
@@ -210,6 +212,7 @@ export function FractionIntroContent() {
               title="แบบทดสอบ: รู้จักเศษส่วน"
               gradient="bg-gradient-to-r from-brand-700 to-indigo-500"
               makeQuestion={makeFractionIntroQuestion}
+              lessonSlug="fraction-intro"
             />
           </>
         )}

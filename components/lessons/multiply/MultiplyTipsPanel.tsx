@@ -1,8 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { LessonMissionCard } from "@/components/lessons/LessonMissionCard";
 import { Card } from "@/components/ui/Card";
-import { multiplyLessonMissions } from "@/data/lessonMultiply";
 import { FractionStack } from "@/components/lessons/multiply/MultiplyMath";
 
 export function MultiplyTipsPanel() {
@@ -41,13 +39,6 @@ export function MultiplyTipsPanel() {
           </div>
         </div>
       </Card>
-
-      <div>
-        <LessonMissionCard missions={multiplyLessonMissions} />
-        <div className="rounded-b-xl border border-t-0 border-brand-100 bg-white px-5 pb-4 text-center text-sm font-extrabold text-brand-700">
-          ผ่านเกณฑ์ 80% ขึ้นไป รับ 3 ดาว
-        </div>
-      </div>
 
       <Card className="bg-orange-50">
         <div className="text-center text-sm font-extrabold text-orange-700">ต่อไปบทที่ 13</div>

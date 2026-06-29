@@ -37,6 +37,7 @@ const COMPONENTS = [
       title="แบบทดสอบ: ย่อและขยายเศษส่วน"
       gradient="bg-gradient-to-r from-indigo-600 to-blue-500"
       makeQuestion={makeSimplifyQuestion}
+      lessonSlug="simplify-expand"
     />
   ),
 ];
@@ -44,8 +45,9 @@ const COMPONENTS = [
 export function SimplifyExpandContent() {
   return (
     <div className="space-y-5">
-      <LessonProgressHeader meta={simplifyExpandMeta} />
+      <LessonProgressHeader meta={simplifyExpandMeta} lessonSlug="simplify-expand" />
       <LessonStepper
+        lessonSlug="simplify-expand"
         steps={STEPS}
         renderStep={(step) => {
           const Comp = COMPONENTS[step - 1];
@@ -70,6 +72,7 @@ export function SimplifyExpandContent() {
               title="แบบทดสอบ: ย่อและขยายเศษส่วน"
               gradient="bg-gradient-to-r from-indigo-600 to-blue-500"
               makeQuestion={makeSimplifyQuestion}
+      lessonSlug="simplify-expand"
             />
           </>
         )}

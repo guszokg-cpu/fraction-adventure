@@ -2,13 +2,12 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { FractionText } from "@/components/fractions/FractionText";
-import { LessonMissionCard } from "@/components/lessons/LessonMissionCard";
 import { SimplifyExpandContent } from "@/components/lessons/simplify-expand/SimplifyExpandContent";
 import { SimplifyTipsPanel } from "@/components/lessons/simplify-expand/SimplifyTipsPanel";
 import { LessonTipsImageWrapper } from "@/components/lessons/shared/LessonTipsImageWrapper";
 import { LessonWorksheetsPanel } from "@/components/lessons/shared/LessonWorksheetsPanel";
 import { Card } from "@/components/ui/Card";
-import { simplifyExpandMeta, simplifyExpandMissions } from "@/data/lessonSimplifyExpand";
+import { simplifyExpandMeta } from "@/data/lessonSimplifyExpand";
 
 export default function SimplifyExpandPage() {
   return (
@@ -24,7 +23,6 @@ export default function SimplifyExpandPage() {
           <LessonTipsImageWrapper lessonSlug="simplify-expand">
             <SimplifyTipsPanel />
           </LessonTipsImageWrapper>
-          <LessonMissionCard missions={simplifyExpandMissions} />
 
           <Card className="overflow-hidden p-0">
             <div className="bg-gradient-to-r from-orange-500 to-amber-500 px-5 py-3 text-white">

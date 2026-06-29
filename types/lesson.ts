@@ -1,4 +1,4 @@
-export type LessonStatus = "completed" | "current" | "locked";
+export type LessonStatus = "completed" | "current" | "locked" | "available";
 
 export type Lesson = {
   id: string;

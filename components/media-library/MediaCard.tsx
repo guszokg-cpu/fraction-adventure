@@ -11,9 +11,10 @@ type Props = {
   onToggleFavorite: (id: string) => void;
   onEdit: (item: MediaItem) => void;
   onDelete: (id: string) => void;
+  isAdmin: boolean;
 };
 
-export function MediaCard({ item, onToggleFavorite, onEdit, onDelete }: Props) {
+export function MediaCard({ item, onToggleFavorite, onEdit, onDelete, isAdmin }: Props) {
   const meta = TYPE_META[item.type];
   const [copied, setCopied] = useState(false);
 
@@ -90,20 +91,24 @@ export function MediaCard({ item, onToggleFavorite, onEdit, onDelete }: Props) {
           >
             {copied ? <Check size={14} /> : <Copy size={14} />}
           </button>
-          <button
-            onClick={() => onEdit(item)}
-            aria-label="แก้ไข"
-            className="grid h-8 w-8 place-items-center rounded-lg border border-slate-200 text-slate-500 transition hover:bg-slate-50"
-          >
-            <Pencil size={14} />
-          </button>
-          <button
-            onClick={() => onDelete(item.id)}
-            aria-label="ลบ"
-            className="grid h-8 w-8 place-items-center rounded-lg border border-rose-200 text-rose-500 transition hover:bg-rose-50"
-          >
-            <Trash2 size={14} />
-          </button>
+          {isAdmin && (
+            <>
+              <button
+                onClick={() => onEdit(item)}
+                aria-label="แก้ไข"
+                className="grid h-8 w-8 place-items-center rounded-lg border border-slate-200 text-slate-500 transition hover:bg-slate-50"
+              >
+                <Pencil size={14} />
+              </button>
+              <button
+                onClick={() => onDelete(item.id)}
+                aria-label="ลบ"
+                className="grid h-8 w-8 place-items-center rounded-lg border border-rose-200 text-rose-500 transition hover:bg-rose-50"
+              >
+                <Trash2 size={14} />
+              </button>
+            </>
+          )}
         </div>
       </div>
     </Card>

@@ -14,7 +14,7 @@ const activities = [
 export function ReadWriteContent() {
   return (
     <div className="space-y-5">
-      <LessonProgressHeader meta={readWriteMeta} />
+      <LessonProgressHeader meta={readWriteMeta} lessonSlug="read-write" />
 
       <ReadWriteStudio />
 

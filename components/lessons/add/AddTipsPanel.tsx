@@ -1,7 +1,5 @@
 import { FractionStack } from "@/components/lessons/add/FractionMath";
-import { LessonMissionCard } from "@/components/lessons/LessonMissionCard";
 import { Card } from "@/components/ui/Card";
-import { addLessonMissions } from "@/data/lessonAdd";
 
 export function AddTipsPanel() {
   return (
@@ -48,13 +46,6 @@ export function AddTipsPanel() {
           </div>
         </div>
       </Card>
-
-      <div>
-        <LessonMissionCard missions={addLessonMissions} />
-        <div className="rounded-b-xl border border-t-0 border-brand-100 bg-white px-5 pb-4 text-center text-sm font-extrabold text-brand-700">
-          ผ่านเกณฑ์ 80% ขึ้นไป รับ 3 ดาว
-        </div>
-      </div>
 
       <Card className="border-amber-200 bg-amber-50/80">
         <h2 className="text-lg font-extrabold text-amber-700">ข้อผิดพลาดที่พบบ่อย</h2>

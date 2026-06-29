@@ -48,10 +48,6 @@ export function ContinueLessonCard() {
             <span className="rounded-full bg-violet-600 px-3 py-0.5 text-sm font-extrabold text-white shadow-sm">
               ด่าน {lesson.order}
             </span>
-            <span className="text-base leading-none">
-              {"⭐".repeat(lesson.stars)}
-              <span className="text-slate-200">{"☆".repeat(Math.max(0, 3 - lesson.stars))}</span>
-            </span>
           </div>
           <h2 className="mt-2 text-2xl font-extrabold text-brand-900">{lesson.title}</h2>
           <p className="mt-0.5 text-sm font-bold text-slate-500">{lesson.subtitle}</p>
