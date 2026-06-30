@@ -15,24 +15,10 @@ export const quickActions = [
     tone: "green"
   },
   {
-    title: "ทำแบบฝึกหัด",
-    description: "ฝึกโจทย์เพิ่มเติม",
-    href: "/games",
-    icon: "📋",
-    tone: "blue"
-  },
-  {
     title: "สร้างภาพเศษส่วน",
     description: "สร้างภาพได้หลายรูปแบบ",
     href: "/lessons/from-images",
     icon: "🎨",
     tone: "purple"
-  },
-  {
-    title: "ดูรายงานผล",
-    description: "ดูคะแนนและพัฒนาการ",
-    href: "/teacher/reports",
-    icon: "🔍",
-    tone: "pink"
   }
 ];

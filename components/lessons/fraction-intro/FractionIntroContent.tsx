@@ -7,10 +7,12 @@ import { LessonProgressHeader } from "@/components/lessons/LessonProgressHeader"
 import { LessonActionBar } from "@/components/lessons/LessonActionBar";
 import { LessonStepper } from "@/components/lessons/LessonStepper";
 import { FractionBuilder } from "@/components/lessons/fraction-intro/FractionBuilder";
+import { ThreeImportantSteps } from "@/components/lessons/fraction-intro/ThreeImportantSteps";
+import { InteractiveFractionExamples } from "@/components/lessons/fraction-intro/InteractiveFractionExamples";
 import { FractionWorldCard } from "@/components/lessons/fraction-intro/FractionWorldCard";
 import { FractionMeaningQuiz } from "@/components/lessons/fraction-intro/FractionMeaningQuiz";
 import { LessonVideoCard } from "@/components/lessons/LessonVideoCard";
-import { fractionIntroExamples, fractionIntroMeta, fractionMeaningSteps } from "@/data/lessonFractionIntro";
+import { fractionIntroMeta } from "@/data/lessonFractionIntro";
 import { lessonVideos } from "@/data/lessonVideos";
 import { LessonQuiz } from "@/components/lessons/LessonQuiz";
 import { makeFractionIntroQuestion } from "@/lib/quizGenerators";
@@ -75,47 +77,6 @@ function ConceptCard() {
   );
 }
 
-function MeaningStepsCard() {
-  return (
-    <div className="grid gap-5 md:grid-cols-3">
-      {fractionMeaningSteps.map((step) => (
-        <Card key={step.id}>
-          <div className="grid h-11 w-11 place-items-center rounded-full bg-brand-600 text-lg font-extrabold text-white">
-            {step.icon}
-          </div>
-          <h3 className="mt-3 text-lg font-extrabold text-brand-900">{step.title}</h3>
-          <p className="mt-2 text-sm font-bold leading-relaxed text-slate-600">{step.description}</p>
-        </Card>
-      ))}
-    </div>
-  );
-}
-
-function ExamplesCard() {
-  return (
-    <Card>
-      <h2 className="text-xl font-extrabold text-brand-900">ตัวอย่างที่พบบ่อย</h2>
-      <div className="mt-4 grid gap-4 md:grid-cols-3">
-        {fractionIntroExamples.map((example, i) => (
-          <div key={example.id} className="rounded-xl border border-brand-100 bg-white p-4 text-center">
-            <FractionShape
-              numerator={example.numerator}
-              denominator={example.denominator}
-              shape={(["pizza", "watermelon", "chocolate"] as const)[i % 3]}
-              tone={example.tone}
-              className="mx-auto h-28 w-28"
-            />
-            <div className="mt-3 flex justify-center text-3xl font-extrabold text-brand-900">
-              <FractionStack top={example.numerator} bottom={example.denominator} />
-            </div>
-            <div className="text-sm font-bold text-slate-600">{example.label}</div>
-          </div>
-        ))}
-      </div>
-    </Card>
-  );
-}
-
 function EqualUnequalCard() {
   return (
     <div className="grid gap-5 md:grid-cols-2">
@@ -174,7 +135,7 @@ const STEPS = [
 
 const COMPONENTS = [
   () => <LessonVideoCard lessonPath="/lessons/fraction-intro" videoUrl={VIDEO_URL} title="วิดีโอ: รู้จักเศษส่วน" />,
-  ConceptCard, MeaningStepsCard, ExamplesCard,
+  ConceptCard, ThreeImportantSteps, InteractiveFractionExamples,
   FractionBuilder, FractionWorldCard, EqualUnequalCard,
   FractionMeaningQuiz,
   () => (
@@ -202,8 +163,8 @@ export function FractionIntroContent() {
           <>
             <LessonVideoCard lessonPath="/lessons/fraction-intro" videoUrl={VIDEO_URL} title="วิดีโอ: รู้จักเศษส่วน" />
             <ConceptCard />
-            <MeaningStepsCard />
-            <ExamplesCard />
+            <ThreeImportantSteps />
+            <InteractiveFractionExamples />
             <FractionBuilder />
             <FractionWorldCard />
             <EqualUnequalCard />

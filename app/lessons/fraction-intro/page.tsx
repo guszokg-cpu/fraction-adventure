@@ -1,5 +1,6 @@
 import { AppShell } from "@/components/layout/AppShell";
 import { FractionIntroContent } from "@/components/lessons/fraction-intro/FractionIntroContent";
+import { FractionExamplesMiniQuiz } from "@/components/lessons/fraction-intro/FractionExamplesMiniQuiz";
 import { LessonTipsCard } from "@/components/lessons/LessonTipsCard";
 import { LessonTipsImageWrapper } from "@/components/lessons/shared/LessonTipsImageWrapper";
 import { LessonWorksheetsPanel } from "@/components/lessons/shared/LessonWorksheetsPanel";
@@ -19,6 +20,7 @@ export default function FractionIntroPage() {
           <LessonTipsImageWrapper lessonSlug="fraction-intro">
             <LessonTipsCard tips={fractionIntroTips} examples={fractionIntroExamples} />
           </LessonTipsImageWrapper>
+          <FractionExamplesMiniQuiz />
           <LessonWorksheetsPanel lessonSlug="fraction-intro" />
         </div>
       }
