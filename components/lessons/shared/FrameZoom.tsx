@@ -110,7 +110,7 @@ export function FrameZoomProvider({ children }: { children: ReactNode }) {
 
       {slide && current !== null && (
         <div
-          className="fixed inset-0 z-[9999] flex flex-col bg-slate-900/80 p-3 backdrop-blur-sm sm:p-6"
+          className="fixed inset-0 z-[9999] flex flex-col bg-slate-900/80 p-2 backdrop-blur-sm sm:p-4"
           onClick={(e) => e.target === e.currentTarget && close()}
           onTouchStart={(e) => (touchStartX.current = e.touches[0]?.clientX ?? null)}
           onTouchEnd={(e) => {
@@ -121,7 +121,7 @@ export function FrameZoomProvider({ children }: { children: ReactNode }) {
           }}
         >
           {/* แถบบน */}
-          <div className="mx-auto flex w-full max-w-3xl shrink-0 items-center justify-between gap-3 px-1 pb-3 text-white">
+          <div className="mx-auto flex w-full max-w-6xl shrink-0 items-center justify-between gap-3 px-1 pb-3 text-white">
             <span className="truncate text-base font-extrabold">{slide.title}</span>
             <div className="flex items-center gap-3">
               <span className="rounded-full bg-white/15 px-3 py-1 text-sm font-bold">
@@ -148,10 +148,10 @@ export function FrameZoomProvider({ children }: { children: ReactNode }) {
               <ChevronLeft size={22} />
             </button>
 
-            <div className="flex max-h-full min-w-0 flex-1 justify-center overflow-auto">
-              <div className="w-full max-w-2xl rounded-2xl bg-white p-5 shadow-2xl sm:p-8">
+            <div className="flex max-h-full min-w-0 flex-1 items-center justify-center overflow-auto py-1">
+              <div className="w-full max-w-6xl rounded-2xl bg-white p-6 shadow-2xl sm:p-8 md:p-10">
                 <div
-                  className="origin-top [&_*]:!cursor-default"
+                  className="[&_*]:!cursor-default"
                   dangerouslySetInnerHTML={{ __html: slide.html }}
                 />
               </div>

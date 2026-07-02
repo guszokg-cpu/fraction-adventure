@@ -14,15 +14,15 @@ export const readWriteMeta: LessonMeta = {
 };
 
 export const readWriteTips: LessonTip[] = [
-  { id: "tip-num", icon: "⭐", text: "ตัวเศษ = ส่วนที่เลือก" },
-  { id: "tip-den", icon: "⭐", text: "ตัวส่วน = ส่วนทั้งหมด" },
-  { id: "tip-read", icon: "🗣️", text: "อ่านว่า เศษ…ส่วน…" }
+  { id: "tip-proper", icon: "🟢", text: "เศษส่วนแท้: ตัวเศษน้อยกว่าตัวส่วน มีค่าน้อยกว่า 1" },
+  { id: "tip-improper", icon: "🟠", text: "เศษเกิน: ตัวเศษมากกว่าหรือเท่ากับตัวส่วน มีค่ามากกว่าหรือเท่ากับ 1" },
+  { id: "tip-mixed", icon: "🟣", text: "จำนวนคละ: มีจำนวนเต็มรวมกับเศษส่วนแท้" }
 ];
 
 export const readWriteExamples: LessonExample[] = [
-  { id: "ex-1-2", numerator: 1, denominator: 2, label: "เศษหนึ่งส่วนสอง", tone: "sky" },
-  { id: "ex-3-4", numerator: 3, denominator: 4, label: "เศษสามส่วนสี่", tone: "emerald" },
-  { id: "ex-5-8", numerator: 5, denominator: 8, label: "เศษห้าส่วนแปด", tone: "violet" }
+  { id: "ex-proper", numerator: 3, denominator: 4, label: "เศษส่วนแท้ 3/4", tone: "emerald" },
+  { id: "ex-improper", numerator: 5, denominator: 4, label: "เศษเกิน 5/4", tone: "sky" },
+  { id: "ex-mixed", numerator: 5, denominator: 4, label: "จำนวนคละ 1 1/4", tone: "violet" }
 ];
 
 export const readWriteMissions: LessonMissionItem[] = [

@@ -16,8 +16,8 @@ export const mockLessons: Lesson[] = [
   {
     id: "read-write",
     order: 2,
-    title: "อ่านและเขียนเศษส่วน",
-    subtitle: "ฝึกอ่าน เขียน และจับคู่คำอ่าน",
+    title: "ประเภทของเศษส่วน",
+    subtitle: "เรียนรู้เศษส่วนแท้ เศษเกิน และจำนวนคละ",
     gradeRange: "ป.4-ป.5",
     stars: 3,
     progress: 100,

@@ -1,4 +1,4 @@
-export type FractionShapeKind = "circle" | "bar" | "grid" | "pizza" | "watermelon" | "glass" | "chocolate";
+export type FractionShapeKind = "circle" | "bar" | "grid" | "pizza" | "watermelon" | "glass" | "chocolate" | "flower" | "window";
 
 export type FractionTone = "accent" | "emerald" | "violet" | "sky" | "pink";
 

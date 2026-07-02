@@ -16,11 +16,24 @@ type Props = {
   onChange: (next: number) => void;
   units?: number;
   tone?: FractionTone;
+  /** ซ่อนป้ายเศษส่วนใต้ขีดย่อย (ใช้ในโหมดเกมที่ไม่อยากเฉลยคำตอบ) */
+  showFractionLabels?: boolean;
+  /** ซ่อนป้ายเศษส่วนเหนือจุด */
+  showMarkerLabel?: boolean;
   className?: string;
 };
 
 /** เส้นจำนวนที่คลิกหรือลากเมาส์/นิ้วเพื่อเลื่อนจุดได้ (จุดจะดูดเข้าขีดที่ใกล้ที่สุด) */
-export function DraggableNumberLine({ denominator, value, onChange, units = 1, tone = "emerald", className }: Props) {
+export function DraggableNumberLine({
+  denominator,
+  value,
+  onChange,
+  units = 1,
+  tone = "emerald",
+  showFractionLabels = true,
+  showMarkerLabel = true,
+  className,
+}: Props) {
   const boxRef = useRef<HTMLDivElement>(null);
   const dragging = useRef(false);
   const segments = Math.max(1, denominator) * Math.max(1, units);
@@ -89,6 +102,8 @@ export function DraggableNumberLine({ denominator, value, onChange, units = 1, t
         marker={value}
         units={units}
         tone={tone}
+        showFractionLabels={showFractionLabels}
+        showMarkerLabel={showMarkerLabel}
         className="pointer-events-none absolute inset-0 h-full w-full"
       />
     </div>

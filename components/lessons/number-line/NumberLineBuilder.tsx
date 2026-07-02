@@ -21,10 +21,11 @@ export function NumberLineBuilder() {
 
   return (
     <Card className="overflow-hidden p-0">
-      <div className="bg-gradient-to-r from-teal-600 to-cyan-600 px-5 py-3 text-white">
-        <div className="flex items-center gap-2">
-          <span className="grid h-8 w-8 place-items-center rounded-full bg-white/20 text-sm font-extrabold">4</span>
-          <h2 className="text-xl font-extrabold">ลองวางจุดเอง</h2>
+      <div className="flex items-center gap-3 bg-gradient-to-r from-teal-600 to-cyan-600 px-6 py-5 text-white">
+        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/20 text-lg font-extrabold">3</span>
+        <div>
+          <h2 className="text-2xl font-extrabold">สร้างเส้นจำนวน</h2>
+          <p className="mt-0.5 text-sm font-bold text-teal-100">เลือกตัวส่วนกับตัวเศษ หรือลากจุดบนเส้นเองได้เลย</p>
         </div>
       </div>
 

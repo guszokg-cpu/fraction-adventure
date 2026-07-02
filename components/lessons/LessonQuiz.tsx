@@ -3,13 +3,65 @@
 import { useState, type ReactNode } from "react";
 import { CheckCircle, XCircle, ArrowRight, RotateCcw, Trophy } from "lucide-react";
 import { Card } from "@/components/ui/Card";
+import { FractionShape } from "@/components/fractions/FractionShape";
 import { FractionStack } from "@/components/fractions/FractionStack";
+import { NumberLineStrip } from "@/components/lessons/number-line/NumberLineStrip";
+import { UnequalCircle, UnequalBar, UnequalGrid } from "@/components/lessons/shared/UnequalShapes";
 import { Confetti } from "@/components/ui/Confetti";
 import { cn } from "@/lib/cn";
-import type { QuizQuestion } from "@/lib/quizGenerators";
+import { splitIntoShapeNumerators } from "@/lib/fractionUtils";
+import type { QuizQuestion, QuizImage } from "@/lib/quizGenerators";
 export type { QuizQuestion };
 
 const LABELS = ["ก", "ข", "ค", "ง"];
+
+/** แสดงภาพประกอบคำถาม/ตัวเลือก — เศษส่วนจริง, ภาพ "แบ่งไม่เท่ากัน", หรือหลายรูปรวมกัน */
+function QuizImageView({ image, className }: { image: QuizImage; className?: string }) {
+  if (image.kind === "unequal") {
+    if (image.variant === "bar") return <UnequalBar className={className} />;
+    if (image.variant === "grid") return <UnequalGrid className={className} />;
+    return <UnequalCircle className={className} />;
+  }
+  if (image.kind === "numberLine") {
+    // ซ่อนป้ายเศษส่วนใต้ขีดและเหนือจุด ไม่ให้เฉลยคำตอบ — เส้นจำนวนต้องกว้าง จึงไม่ใช้ className จตุรัสที่ส่งมา
+    return (
+      <NumberLineStrip
+        denominator={image.denominator}
+        marker={image.marker}
+        tone={image.tone}
+        showFractionLabels={false}
+        showMarkerLabel={false}
+        className="h-20 w-full min-w-[140px] max-w-sm"
+      />
+    );
+  }
+  if (image.kind === "multiFraction") {
+    const parts = splitIntoShapeNumerators(image.totalNumerator, image.denominator);
+    return (
+      <div className="flex flex-wrap items-center justify-center gap-2">
+        {parts.map((n, i) => (
+          <FractionShape
+            key={i}
+            numerator={n}
+            denominator={image.denominator}
+            shape={image.shape}
+            tone={image.tone}
+            className="h-16 w-16"
+          />
+        ))}
+      </div>
+    );
+  }
+  return (
+    <FractionShape
+      numerator={image.numerator}
+      denominator={image.denominator}
+      shape={image.shape}
+      tone={image.tone}
+      className={className}
+    />
+  );
+}
 
 /** Render "N/D" as FractionStack, "W N/D" as mixed number, else plain text */
 function ChoiceDisplay({ text }: { text: string }) {
@@ -187,8 +239,15 @@ export function LessonQuiz({
 
       <div className="p-5">
         {/* Question */}
-        <div className="mb-5 flex min-h-[4.5rem] flex-wrap items-center justify-center gap-1.5 rounded-xl bg-slate-50 px-5 py-4 text-center text-lg font-extrabold text-slate-800">
-          <PromptText text={q.prompt} />
+        <div className="mb-5 rounded-xl bg-slate-50 px-5 py-4 text-center">
+          {q.image && (
+            <div className="mb-3 flex justify-center">
+              <QuizImageView image={q.image} className="h-28 w-28" />
+            </div>
+          )}
+          <div className="flex min-h-[3rem] flex-wrap items-center justify-center gap-1.5 text-lg font-extrabold text-slate-800">
+            <PromptText text={q.prompt} />
+          </div>
         </div>
 
         {/* Choices 2 × 2 */}
@@ -196,6 +255,7 @@ export function LessonQuiz({
           {q.choices.map((choice, idx) => {
             const isChosen = selected === idx;
             const isRight = idx === q.correctIndex;
+            const choiceImage = q.choiceImages?.[idx];
             return (
               <button
                 key={idx}
@@ -213,7 +273,11 @@ export function LessonQuiz({
                 <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
                   {LABELS[idx]}
                 </span>
-                <ChoiceDisplay text={choice} />
+                {choiceImage ? (
+                  <QuizImageView image={choiceImage} className="h-16 w-16" />
+                ) : (
+                  <ChoiceDisplay text={choice} />
+                )}
                 {isAnswered && isRight && (
                   <CheckCircle size={14} className="text-emerald-500" />
                 )}

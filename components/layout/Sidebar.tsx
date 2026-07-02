@@ -11,7 +11,7 @@ const ADMIN_KEY = "fa_admin_mode";
 const LESSON_NAV = [
   { href: "/",                          icon: "🗺️",  title: "แผนที่การเรียนรู้" },
   { href: "/lessons/fraction-intro",    icon: "🍕",  title: "รู้จักเศษส่วน" },
-  { href: "/lessons/read-write",        icon: "📖",  title: "อ่านและเขียนเศษส่วน" },
+  { href: "/lessons/read-write",        icon: "📖",  title: "ประเภทของเศษส่วน" },
   { href: "/lessons/fraction-from-image", icon: "🧩", title: "เศษส่วนจากภาพ" },
   { href: "/lessons/number-line",       icon: "📏",  title: "เศษส่วนบนเส้นจำนวน" },
   { href: "/lessons/compare",           icon: "⚖️",  title: "เปรียบเทียบเศษส่วน" },

@@ -8,9 +8,9 @@ import { readWriteExamples, readWriteMeta, readWriteTips } from "@/data/lessonRe
 export default function ReadWritePage() {
   return (
     <AppShell
-      title="อ่านและเขียนเศษส่วน"
+      title="ประเภทของเศษส่วน"
       eyebrow="Lesson 2"
-      description="เรียนรู้การอ่านและเขียนเศษส่วนอย่างถูกต้อง"
+      description="เรียนรู้เศษส่วนแท้ เศษเกิน และจำนวนคละ"
       activePath="/lessons/read-write"
       heroImage={readWriteMeta.heroImage}
       themeColor={readWriteMeta.themeColor}

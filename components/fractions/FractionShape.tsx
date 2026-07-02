@@ -237,6 +237,89 @@ function ChocolateShape({ numerator, denominator }: { numerator: number; denomin
   );
 }
 
+function FlowerShape({ numerator, denominator, fill }: { numerator: number; denominator: number; fill: string }) {
+  const cols = Math.ceil(Math.sqrt(denominator));
+  const rows = Math.ceil(denominator / cols);
+  const S = 24;
+  const cells = Array.from({ length: denominator }, (_, i) => {
+    const col = i % cols;
+    const row = Math.floor(i / cols);
+    const x = col * S;
+    const y = row * S;
+    const filled = i < numerator;
+    const cx = x + S / 2;
+    const cy = y + S / 2;
+    return (
+      <g key={i}>
+        <rect x={x} y={y} width={S} height={S} fill={filled ? "#e3f5d8" : "#f1ede3"} stroke="#a8b99c" strokeWidth={1.2} />
+        {filled ? (
+          <g>
+            {[0, 72, 144, 216, 288].map((deg) => {
+              const rad = (deg * Math.PI) / 180;
+              const px = cx + 4.2 * Math.cos(rad);
+              const py = cy + 4.2 * Math.sin(rad);
+              return <circle key={deg} cx={px} cy={py} r={3.6} fill={fill} />;
+            })}
+            <circle cx={cx} cy={cy} r={2.6} fill="#fbbf24" />
+          </g>
+        ) : (
+          <circle cx={cx} cy={cy} r={1.4} fill="#bcae90" />
+        )}
+      </g>
+    );
+  });
+
+  return (
+    <svg
+      viewBox={`0 0 ${cols * S} ${rows * S}`}
+      className="h-full w-full"
+      role="img"
+      aria-label={`แปลงดอกไม้ ${numerator} ส่วนจาก ${denominator}`}
+    >
+      {cells}
+    </svg>
+  );
+}
+
+function WindowShape({ numerator, denominator, fill }: { numerator: number; denominator: number; fill: string }) {
+  const cols = Math.ceil(Math.sqrt(denominator));
+  const rows = Math.ceil(denominator / cols);
+  const S = 24;
+  const W = cols * S;
+  const H = rows * S;
+  const cells = Array.from({ length: denominator }, (_, i) => {
+    const col = i % cols;
+    const row = Math.floor(i / cols);
+    const x = col * S;
+    const y = row * S;
+    const filled = i < numerator;
+    return (
+      <rect
+        key={i}
+        x={x + 1.2}
+        y={y + 1.2}
+        width={S - 2.4}
+        height={S - 2.4}
+        fill={filled ? fill : "#eff6ff"}
+        stroke="#78350f"
+        strokeWidth={1.4}
+      />
+    );
+  });
+
+  return (
+    <svg
+      viewBox={`-5 -5 ${W + 10} ${H + 10}`}
+      className="h-full w-full"
+      role="img"
+      aria-label={`หน้าต่าง ${numerator} ส่วนจาก ${denominator}`}
+    >
+      <rect x={-5} y={-5} width={W + 10} height={H + 10} rx={3} fill="#92400e" />
+      {cells}
+    </svg>
+  );
+}
+
 export function FractionShape({ numerator, denominator, shape = "circle", tone = "emerald", className }: FractionShapeProps) {
   const fill = toneFill[tone];
   const safeDenominator = Math.max(1, denominator);
@@ -251,6 +334,8 @@ export function FractionShape({ numerator, denominator, shape = "circle", tone =
       {shape === "watermelon" && <WatermelonShape numerator={safeNumerator} denominator={safeDenominator} />}
       {shape === "glass" && <GlassShape numerator={safeNumerator} denominator={safeDenominator} />}
       {shape === "chocolate" && <ChocolateShape numerator={safeNumerator} denominator={safeDenominator} />}
+      {shape === "flower" && <FlowerShape numerator={safeNumerator} denominator={safeDenominator} fill={fill} />}
+      {shape === "window" && <WindowShape numerator={safeNumerator} denominator={safeDenominator} fill={fill} />}
     </div>
   );
 }

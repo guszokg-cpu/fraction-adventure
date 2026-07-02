@@ -10,36 +10,13 @@ import { FractionBuilder } from "@/components/lessons/fraction-intro/FractionBui
 import { ThreeImportantSteps } from "@/components/lessons/fraction-intro/ThreeImportantSteps";
 import { InteractiveFractionExamples } from "@/components/lessons/fraction-intro/InteractiveFractionExamples";
 import { FractionWorldCard } from "@/components/lessons/fraction-intro/FractionWorldCard";
+import { EqualPartsSection } from "@/components/lessons/fraction-intro/EqualPartsSection";
 import { FractionMeaningQuiz } from "@/components/lessons/fraction-intro/FractionMeaningQuiz";
 import { LessonVideoCard } from "@/components/lessons/LessonVideoCard";
 import { fractionIntroMeta } from "@/data/lessonFractionIntro";
 import { lessonVideos } from "@/data/lessonVideos";
 import { LessonQuiz } from "@/components/lessons/LessonQuiz";
 import { makeFractionIntroQuestion } from "@/lib/quizGenerators";
-
-function UnequalCircle() {
-  const angles = [0, 150, 240, 300, 360];
-  const stroke = "#312e81";
-  const fills = ["#fcd34d", "#ffffff", "#fcd34d", "#ffffff"];
-
-  function polar(angleDeg: number) {
-    const a = ((angleDeg - 90) * Math.PI) / 180;
-    return [50 + 46 * Math.cos(a), 50 + 46 * Math.sin(a)] as const;
-  }
-
-  return (
-    <svg viewBox="0 0 100 100" className="h-full w-full" role="img" aria-label="การแบ่งที่ไม่เท่ากัน">
-      {angles.slice(0, -1).map((start, i) => {
-        const end = angles[i + 1];
-        const [x1, y1] = polar(start);
-        const [x2, y2] = polar(end);
-        const largeArc = end - start > 180 ? 1 : 0;
-        const path = `M50 50 L ${x1.toFixed(2)} ${y1.toFixed(2)} A 46 46 0 ${largeArc} 1 ${x2.toFixed(2)} ${y2.toFixed(2)} Z`;
-        return <path key={i} d={path} fill={fills[i]} stroke={stroke} strokeWidth={1.5} />;
-      })}
-    </svg>
-  );
-}
 
 function ConceptCard() {
   return (
@@ -77,48 +54,6 @@ function ConceptCard() {
   );
 }
 
-function EqualUnequalCard() {
-  return (
-    <div className="grid gap-5 md:grid-cols-2">
-      <Card className="border-2 border-emerald-200">
-        <div className="flex items-center gap-2 text-lg font-extrabold text-emerald-700">
-          <span>✅</span> แบ่งเท่า ๆ กัน
-        </div>
-        <div className="mt-4 flex items-center gap-5">
-          <FractionShape numerator={1} denominator={4} tone="accent" className="h-28 w-28" />
-          <div>
-            <p className="text-sm font-bold text-slate-600">
-              แต่ละส่วนมีขนาดเท่ากันพอดี จึงเขียนเป็นเศษส่วนได้
-            </p>
-            <div className="mt-2 flex text-3xl font-extrabold text-brand-900">
-              <FractionStack top={1} bottom={4} />
-            </div>
-            <div className="text-sm font-bold text-emerald-600">อ่านว่า เศษหนึ่งส่วนสี่</div>
-          </div>
-        </div>
-      </Card>
-
-      <Card className="border-2 border-rose-200">
-        <div className="flex items-center gap-2 text-lg font-extrabold text-rose-600">
-          <span>⚠️</span> แบ่งไม่เท่ากัน
-        </div>
-        <div className="mt-4 flex items-center gap-5">
-          <div className="h-28 w-28">
-            <UnequalCircle />
-          </div>
-          <div>
-            <p className="text-sm font-bold text-slate-600">
-              แต่ละส่วนขนาดไม่เท่ากัน ยังเขียนเป็นเศษส่วนไม่ได้
-            </p>
-            <div className="mt-2 text-3xl font-extrabold text-rose-500">?</div>
-            <div className="text-sm font-bold text-rose-500">เพราะไม่ใช่การแบ่งเท่า ๆ กัน</div>
-          </div>
-        </div>
-      </Card>
-    </div>
-  );
-}
-
 const VIDEO_URL = lessonVideos["/lessons/fraction-intro"] ?? "";
 
 const STEPS = [
@@ -136,7 +71,7 @@ const STEPS = [
 const COMPONENTS = [
   () => <LessonVideoCard lessonPath="/lessons/fraction-intro" videoUrl={VIDEO_URL} title="วิดีโอ: รู้จักเศษส่วน" />,
   ConceptCard, ThreeImportantSteps, InteractiveFractionExamples,
-  FractionBuilder, FractionWorldCard, EqualUnequalCard,
+  FractionBuilder, FractionWorldCard, EqualPartsSection,
   FractionMeaningQuiz,
   () => (
     <LessonQuiz
@@ -167,7 +102,7 @@ export function FractionIntroContent() {
             <InteractiveFractionExamples />
             <FractionBuilder />
             <FractionWorldCard />
-            <EqualUnequalCard />
+            <EqualPartsSection />
             <FractionMeaningQuiz />
             <LessonQuiz
               title="แบบทดสอบ: รู้จักเศษส่วน"
