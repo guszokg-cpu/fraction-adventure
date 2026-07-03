@@ -55,17 +55,3 @@ export const compareTipCases: CompareTipCase[] = [
   }
 ];
 
-export const compareHelperModes = [
-  { id: "visual", icon: "🟢", label: "โหมดภาพ" },
-  { id: "bar", icon: "🟥", label: "โหมดแท่ง" },
-  { id: "number-line", icon: "📏", label: "โหมดเส้นจำนวน" },
-  { id: "grid", icon: "▦", label: "โหมดตาราง" }
-];
-
-export const comparePracticeActivities = [
-  { id: "sign", icon: "⚖️", title: "เลือกเครื่องหมาย", desc: "เลือก > < = ให้ถูกต้อง" },
-  { id: "drag", icon: "🃏", title: "ลากการ์ดไปให้ถูก", desc: "ลากเศษส่วนไปยังช่องที่ถูก" },
-  { id: "order", icon: "🔢", title: "เรียงจากน้อยไปมาก", desc: "เรียงลำดับเศษส่วนให้ถูกต้อง" },
-  { id: "number-line", icon: "📏", title: "เปรียบเทียบบนเส้นจำนวน", desc: "ดูตำแหน่งบนเส้นแล้วเทียบค่า" },
-  { id: "timer", icon: "⏱️", title: "เกมจับเวลา 60 วินาที", desc: "ตอบให้ไวภายในเวลาที่กำหนด" }
-];
