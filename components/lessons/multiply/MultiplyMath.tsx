@@ -60,29 +60,3 @@ export function MiniFractionBar({ numerator, denominator, tone = "accent", label
     </div>
   );
 }
-
-export function AreaModelGrid() {
-  return (
-    <div className="mx-auto grid w-full max-w-xs grid-cols-4 overflow-hidden rounded-xl border-2 border-orange-700 bg-white">
-      {Array.from({ length: 12 }, (_, index) => {
-        const row = Math.floor(index / 4);
-        const col = index % 4;
-        const vertical = col < 3;
-        const horizontal = row < 2;
-        const overlap = vertical && horizontal;
-
-        return (
-          <div
-            key={index}
-            className={cn(
-              "h-14 border border-orange-900/40",
-              vertical && "bg-sky-200",
-              horizontal && "bg-amber-200",
-              overlap && "bg-violet-300"
-            )}
-          />
-        );
-      })}
-    </div>
-  );
-}

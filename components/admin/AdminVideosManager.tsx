@@ -12,7 +12,7 @@ const LESSONS = [
   { path: "/lessons/number-line",         title: "เศษส่วนบนเส้นจำนวน" },
   { path: "/lessons/compare",             title: "เปรียบเทียบเศษส่วน" },
   { path: "/lessons/equivalent",          title: "เศษส่วนที่เท่ากัน" },
-  { path: "/lessons/simplify-expand",     title: "ย่อและขยายเศษส่วน" },
+  { path: "/lessons/simplify-expand",     title: "เศษส่วนอย่างต่ำ" },
   { path: "/lessons/mixed-improper",      title: "จำนวนคละและเศษเกิน" },
   { path: "/lessons/add",                 title: "บวกเศษส่วน" },
   { path: "/lessons/subtract",            title: "ลบเศษส่วน" },

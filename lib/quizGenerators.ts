@@ -738,76 +738,232 @@ export function makeCompareQuestion(_unused?: unknown, index = 0): QuizQuestion 
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
-// จำนวนคละและเศษเกิน
+// จำนวนคละและเศษเกิน — คลังคำถาม 5 แบบ
 // ──────────────────────────────────────────────────────────────────────────────
-export function makeMixedImproperQuestion(): QuizQuestion {
-  const toMixed = randInt(0, 1) === 0;
+
+function q_mi_toMixed(): QuizQuestion {
   const d = randInt(2, 6);
   const whole = randInt(1, 4);
   const r = randInt(1, d - 1);
   const num = whole * d + r;
+  const correct = `${whole} ${frac(r, d)}`;
+  const alt1 = `${whole + 1} ${frac(r, d)}`;
+  const alt2 = `${Math.max(1, whole - 1)} ${frac(r, d)}`;
+  const alt3 = `${whole} ${frac(r + 1 <= d - 1 ? r + 1 : r - 1 >= 1 ? r - 1 : r, d)}`;
+  const choices = shuffle([...new Set([correct, alt1, alt2, alt3])]);
+  return {
+    prompt: `แปลง ${frac(num, d)} เป็นจำนวนคละ`,
+    choices,
+    correctIndex: choices.indexOf(correct),
+    explanation: `${num} ÷ ${d} = ${whole} เศษ ${r} → จำนวนคละ = ${correct}`,
+  };
+}
 
-  if (toMixed) {
-    const correct = `${whole} ${frac(r, d)}`;
-    const alt1 = `${whole + 1} ${frac(r, d)}`;
-    const alt2 = `${Math.max(1, whole - 1)} ${frac(r, d)}`;
-    const alt3 = `${whole} ${frac(Math.min(r + 1, d - 1), d)}`;
-    const choices = shuffle([correct, alt1, alt2, alt3]);
-    return {
-      prompt: `แปลง ${frac(num, d)} เป็นจำนวนคละ`,
-      choices,
-      correctIndex: choices.indexOf(correct),
-      explanation: `${num} ÷ ${d} = ${whole} เศษ ${r} → จำนวนคละ = ${correct}`,
-    };
-  } else {
-    const correct = frac(num, d);
-    const choices = buildChoices(correct, [
-      frac(num + 1, d), frac(num - 1, d),
-      frac(whole * r, d), frac(whole + r, d),
-    ]);
-    return {
-      prompt: `แปลง ${whole} และ ${frac(r, d)} เป็นเศษเกิน`,
-      choices,
-      correctIndex: choices.indexOf(correct),
-      explanation: `(${whole} × ${d}) + ${r} = ${num} → ได้ ${correct}`,
-    };
+function q_mi_toImproper(): QuizQuestion {
+  const d = randInt(2, 6);
+  const whole = randInt(1, 4);
+  const r = randInt(1, d - 1);
+  const num = whole * d + r;
+  const correct = frac(num, d);
+  const choices = buildChoices(correct, [
+    frac(num + 1, d), frac(num - 1, d),
+    frac(whole * d, d), // กับดัก: ลืมบวกตัวเศษ
+    frac(whole + r, d),
+  ]);
+  return {
+    prompt: `แปลง ${whole} ${frac(r, d)} เป็นเศษเกิน`,
+    choices,
+    correctIndex: choices.indexOf(correct),
+    explanation: `(${whole} × ${d}) + ${r} = ${num} → ได้ ${correct} (อย่าลืมบวกตัวเศษ ${r})`,
+  };
+}
+
+/** ชี้ว่าข้อใดเป็นเศษเกิน — ตัวเลือกที่เหลือเป็นเศษส่วนแท้ */
+function q_mi_whichImproper(): QuizQuestion {
+  const d = randInt(3, 6);
+  const correct = frac(d + randInt(1, d), d);
+  const propers: string[] = [];
+  const seen = new Set([correct]);
+  let guard = 0;
+  while (propers.length < 3 && guard++ < 30) {
+    const dd = randInt(3, 8);
+    const nn = randInt(1, dd - 1);
+    const s = frac(nn, dd);
+    if (seen.has(s)) continue;
+    seen.add(s);
+    propers.push(s);
   }
+  const choices = shuffle([correct, ...propers]);
+  return {
+    prompt: "ข้อใดเป็น “เศษเกิน”?",
+    choices,
+    correctIndex: choices.indexOf(correct),
+    explanation: `เศษเกินคือเศษส่วนที่ตัวเศษมากกว่าหรือเท่ากับตัวส่วน — ${correct} ตัวเศษมากกว่าตัวส่วน ส่วนข้ออื่นตัวเศษน้อยกว่าตัวส่วน (เศษส่วนแท้)`,
+  };
+}
+
+const MIXED_IMPROPER_GENERATORS: Array<() => QuizQuestion> = [
+  q_mi_toMixed,
+  q_mi_toImproper,
+  q_mi_whichImproper,
+  q_improperFromMultiImage,
+  q_mixedFromMultiImage,
+];
+
+let mixedImproperOrder: number[] = [];
+
+export function makeMixedImproperQuestion(_unused?: unknown, index = 0): QuizQuestion {
+  if (index === 0 || mixedImproperOrder.length !== MIXED_IMPROPER_GENERATORS.length) {
+    mixedImproperOrder = shuffle(MIXED_IMPROPER_GENERATORS.map((_, i) => i));
+  }
+  const typeIdx = mixedImproperOrder[index % mixedImproperOrder.length];
+  return MIXED_IMPROPER_GENERATORS[typeIdx]();
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
 // บวกเศษส่วน
 // ──────────────────────────────────────────────────────────────────────────────
-export function makeAddQuestion(): QuizQuestion {
-  const den = randInt(2, 9);
+function q_add_same(): QuizQuestion {
+  const den = randInt(3, 9);
   const a = randInt(1, Math.max(1, den - 2));
   const b = randInt(1, Math.max(1, den - a - 1));
   const sum = a + b;
   const correct = frac(sum, den);
   const choices = buildChoices(correct, [
-    frac(sum + 1, den), frac(sum + 2, den),
-    frac(sum, den + 1), frac(a, b),
-    frac(sum - 1 > 0 ? sum - 1 : sum + 3, den),
+    frac(sum, den * 2), // กับดัก: บวกตัวส่วนด้วย
+    frac(sum + 1, den), frac(sum - 1 > 0 ? sum - 1 : sum + 2, den),
   ]);
   return {
     prompt: `${frac(a, den)} + ${frac(b, den)} = ?`,
     choices,
     correctIndex: choices.indexOf(correct),
-    explanation: `ตัวส่วนเท่ากัน → บวกตัวเศษ: ${a} + ${b} = ${sum}, ตัวส่วนคงเดิม ${den} → ได้ ${correct}`,
+    explanation: `ตัวส่วนเท่ากัน → บวกตัวเศษ: ${a} + ${b} = ${sum}, ตัวส่วนคงเดิม ${den} → ได้ ${correct} (ห้ามบวกตัวส่วน!)`,
   };
 }
 
+const ADD_DEN_PAIRS: [number, number][] = [[2, 3], [2, 4], [2, 5], [3, 4], [3, 6], [2, 6], [4, 8]];
+
+function q_add_diff(): QuizQuestion {
+  for (let guard = 0; guard < 50; guard++) {
+    const [da, db] = ADD_DEN_PAIRS[randInt(0, ADD_DEN_PAIRS.length - 1)];
+    const l = (da * db) / gcd(da, db);
+    const na = randInt(1, da - 1);
+    const nb = randInt(1, db - 1);
+    const sum = na * (l / da) + nb * (l / db);
+    // เอาเฉพาะโจทย์ที่คำตอบเป็นอย่างต่ำและไม่เกิน 1 — กันคำตอบถูกซ้ำสองรูป
+    if (sum > l || gcd(sum, l) !== 1) continue;
+    const correct = frac(sum, l);
+    const choices = buildChoices(correct, [
+      frac(na + nb, da + db), // กับดัก: บวกตรง ๆ ทั้งบนล่าง
+      frac(na + nb, l),
+      frac(sum + 1, l),
+    ]);
+    return {
+      prompt: `${frac(na, da)} + ${frac(nb, db)} = ?`,
+      choices,
+      correctIndex: choices.indexOf(correct),
+      explanation: `ตัวส่วนต่างกัน → ค.ร.น. ของ ${da} กับ ${db} คือ ${l}: ${frac(na, da)} = ${frac(na * (l / da), l)}, ${frac(nb, db)} = ${frac(nb * (l / db), l)} → บวกตัวเศษได้ ${correct}`,
+    };
+  }
+  return q_add_same();
+}
+
+function q_add_mixed(): QuizQuestion {
+  const den = randInt(3, 6);
+  const w1 = randInt(1, 3);
+  const w2 = randInt(1, 3);
+  const n1 = randInt(1, den - 1);
+  const n2 = randInt(1, den - 1);
+  const fracSum = n1 + n2;
+  const carry = fracSum >= den;
+  const finalWhole = w1 + w2 + (carry ? 1 : 0);
+  const finalNum = carry ? fracSum - den : fracSum;
+  const correct = finalNum > 0 ? `${finalWhole} ${frac(finalNum, den)}` : `${finalWhole}`;
+  // กับดัก: แยกเศษเกินแล้วแต่ลืมบวก 1 เข้าจำนวนเต็ม (ค่าน้อยไป 1 — ผิดจริง ไม่กำกวม)
+  const wrongNoCarry = finalNum > 0 ? `${w1 + w2} ${frac(finalNum, den)}` : `${w1 + w2}`;
+  const alt2 = finalNum > 0 ? `${finalWhole + 1} ${frac(finalNum, den)}` : `${finalWhole + 1}`;
+  const alt3 = `${finalWhole} ${frac(Math.min(finalNum + 1, den - 1) || 1, den)}`;
+  const choices = shuffle([...new Set([correct, carry ? wrongNoCarry : alt2, alt3, carry ? alt2 : `${Math.max(1, finalWhole - 1)} ${frac(finalNum || 1, den)}`])]);
+  return {
+    prompt: `${w1} ${frac(n1, den)} + ${w2} ${frac(n2, den)} = ?`,
+    choices,
+    correctIndex: choices.indexOf(correct),
+    explanation: carry
+      ? `เต็ม: ${w1}+${w2}=${w1 + w2}, เศษ: ${frac(fracSum, den)} เกิน 1 → ทดเป็น ${w1 + w2}+1=${finalWhole}${finalNum > 0 ? ` เหลือ ${frac(finalNum, den)}` : ""} → ${correct}`
+      : `เต็ม: ${w1}+${w2}=${finalWhole}, เศษ: ${n1}+${n2}=${fracSum} → ${correct}`,
+  };
+}
+
+function q_add_makeOne(): QuizQuestion {
+  const den = randInt(4, 10);
+  const a = randInt(1, den - 1);
+  const need = den - a;
+  const correct = frac(need, den);
+  const choices = buildChoices(correct, [
+    frac(need + 1, den), frac(Math.max(1, need - 1), den), frac(a, den),
+  ]);
+  return {
+    prompt: `${frac(a, den)} + ?/${den} = 1   ต้องเติมอีกเท่าไรจึงจะเต็ม 1 พอดี?`,
+    choices,
+    correctIndex: choices.indexOf(correct),
+    explanation: `1 เต็ม = ${frac(den, den)} → มีแล้ว ${a} ชิ้น ขาดอีก ${den} − ${a} = ${need} ชิ้น → ${correct}`,
+  };
+}
+
+function q_add_word(): QuizQuestion {
+  const den = randInt(4, 8);
+  const a = randInt(1, den - 2);
+  const b = randInt(1, den - 1 - a);
+  const sum = a + b;
+  const correct = frac(sum, den);
+  const contexts = [
+    { who1: "น้อง", who2: "พี่", obj: "พิซซ่า", unit: "ถาด" },
+    { who1: "ฟ้า", who2: "ต้นข้าว", obj: "เค้ก", unit: "ก้อน" },
+    { who1: "มะลิ", who2: "ภูผา", obj: "ช็อกโกแลต", unit: "แท่ง" },
+  ];
+  const c = contexts[randInt(0, contexts.length - 1)];
+  const choices = buildChoices(correct, [
+    frac(sum, den * 2), frac(sum + 1, den), frac(Math.max(1, sum - 1), den),
+  ]);
+  return {
+    prompt: `${c.who1}กิน${c.obj} ${frac(a, den)} ${c.unit} ${c.who2}กิน ${frac(b, den)} ${c.unit} รวมกันกินไปเท่าไรของ${c.unit}?`,
+    choices,
+    correctIndex: choices.indexOf(correct),
+    explanation: `${frac(a, den)} + ${frac(b, den)} = ${correct} (ตัวส่วนเท่ากัน บวกเฉพาะตัวเศษ)`,
+  };
+}
+
+const ADD_GENERATORS: Array<() => QuizQuestion> = [
+  q_add_same,
+  q_add_diff,
+  q_add_mixed,
+  q_add_makeOne,
+  q_add_word,
+];
+
+let addOrder: number[] = [];
+
+export function makeAddQuestion(_unused?: unknown, index = 0): QuizQuestion {
+  if (index === 0 || addOrder.length !== ADD_GENERATORS.length) {
+    addOrder = shuffle(ADD_GENERATORS.map((_, i) => i));
+  }
+  const typeIdx = addOrder[index % addOrder.length];
+  return ADD_GENERATORS[typeIdx]();
+}
+
 // ──────────────────────────────────────────────────────────────────────────────
-// ลบเศษส่วน
+// ลบเศษส่วน — คลังคำถาม 5 แบบ
 // ──────────────────────────────────────────────────────────────────────────────
-export function makeSubtractQuestion(): QuizQuestion {
-  const den = randInt(2, 9);
+
+function q_sub_same(): QuizQuestion {
+  const den = randInt(3, 9);
   const b = randInt(1, Math.max(1, den - 2));
   const a = b + randInt(1, Math.max(1, den - b));
   const diff = a - b;
   const correct = frac(diff, den);
   const choices = buildChoices(correct, [
-    frac(diff + 1, den), frac(diff + 2, den),
-    frac(a + b, den), frac(diff, den + 1),
+    frac(a + b, den), // กับดัก: เผลอบวกแทนลบ
+    frac(diff + 1, den), frac(diff, den + 1),
   ]);
   return {
     prompt: `${frac(a, den)} - ${frac(b, den)} = ?`,
@@ -817,46 +973,373 @@ export function makeSubtractQuestion(): QuizQuestion {
   };
 }
 
-// ──────────────────────────────────────────────────────────────────────────────
-// คูณเศษส่วน
-// ──────────────────────────────────────────────────────────────────────────────
-export function makeMultiplyQuestion(): QuizQuestion {
-  const n1 = randInt(1, 3), d1 = randInt(2, 5);
-  const n2 = randInt(1, 3), d2 = randInt(2, 5);
-  const rn = n1 * n2, rd = d1 * d2;
-  const correct = frac(rn, rd);
+const SUB_DEN_PAIRS: [number, number][] = [[2, 3], [2, 4], [2, 5], [3, 4], [3, 6], [2, 6], [4, 8]];
+
+function q_sub_diff(): QuizQuestion {
+  for (let guard = 0; guard < 60; guard++) {
+    const [da, db] = SUB_DEN_PAIRS[randInt(0, SUB_DEN_PAIRS.length - 1)];
+    const l = (da * db) / gcd(da, db);
+    const na = randInt(1, da - 1);
+    const nb = randInt(1, db - 1);
+    const ca = na * (l / da);
+    const cb = nb * (l / db);
+    const diff = ca - cb;
+    // เอาเฉพาะโจทย์ผลลัพธ์เป็นบวกและอย่างต่ำแล้ว — กันคำตอบถูกซ้ำสองรูป
+    if (diff <= 0 || gcd(diff, l) !== 1) continue;
+    const correct = frac(diff, l);
+    const choices = buildChoices(correct, [
+      Math.abs(da - db) > 1 && Math.abs(na - nb) > 0 ? frac(Math.abs(na - nb), Math.abs(da - db)) : frac(diff + 2, l), // กับดัก: ลบตรง ๆ ทั้งบนล่าง
+      frac(diff + 1, l),
+      frac(ca + cb, l),
+    ]);
+    return {
+      prompt: `${frac(na, da)} - ${frac(nb, db)} = ?`,
+      choices,
+      correctIndex: choices.indexOf(correct),
+      explanation: `ตัวส่วนต่างกัน → ค.ร.น. ของ ${da} กับ ${db} คือ ${l}: ${frac(na, da)} = ${frac(ca, l)}, ${frac(nb, db)} = ${frac(cb, l)} → ลบตัวเศษได้ ${correct}`,
+    };
+  }
+  return q_sub_same();
+}
+
+function q_sub_mixedBorrow(): QuizQuestion {
+  const den = randInt(3, 6);
+  const w2 = randInt(1, 2);
+  const w1 = w2 + randInt(1, 2);
+  const n2 = randInt(2, den - 1);
+  const n1 = randInt(1, n2 - 1); // n1 < n2 → ต้องยืมเสมอ
+  const resWhole = w1 - 1 - w2;
+  const resNum = n1 + den - n2;
+  const correct = resWhole > 0 ? `${resWhole} ${frac(resNum, den)}` : frac(resNum, den);
+  // กับดัก: เอาเลขใหญ่ลบเลขเล็กโดยไม่ยืม (สลับ n2−n1)
+  const trapSwap = w1 - w2 > 0 ? `${w1 - w2} ${frac(n2 - n1, den)}` : frac(n2 - n1, den);
+  const alt2 = resWhole + 1 > 0 ? `${resWhole + 1} ${frac(resNum, den)}` : frac(resNum, den);
+  const altNum = resNum + 1 <= den - 1 ? resNum + 1 : Math.max(1, resNum - 1);
+  const alt3 = resWhole > 0 ? `${resWhole} ${frac(altNum, den)}` : frac(altNum, den);
+  const choices = shuffle([...new Set([correct, trapSwap, alt2, alt3])]);
+  return {
+    prompt: `${w1} ${frac(n1, den)} - ${w2} ${frac(n2, den)} = ?`,
+    choices,
+    correctIndex: choices.indexOf(correct),
+    explanation: `${n1} ไม่พอลบ ${n2} → ยืม 1 จาก ${w1}: เหลือ ${w1 - 1} กับเศษ ${frac(n1 + den, den)} → เศษ: ${n1 + den}-${n2}=${resNum}, เต็ม: ${w1 - 1}-${w2}=${resWhole} → ${correct}`,
+  };
+}
+
+function q_sub_fromOne(): QuizQuestion {
+  const den = randInt(4, 10);
+  const a = randInt(1, den - 1);
+  const left = den - a;
+  const correct = frac(left, den);
   const choices = buildChoices(correct, [
-    frac(rn + 1, rd), frac(rn + 2, rd),
-    frac(n1 + n2, d1 + d2), frac(n1 * d2, d1 * n2),
-    frac(rn, rd + 1),
+    frac(left + 1, den), frac(Math.max(1, left - 1), den), frac(a, den),
+  ]);
+  return {
+    prompt: `1 - ${frac(a, den)} = ?   (คิดว่า 1 เต็ม = ${frac(den, den)})`,
+    choices,
+    correctIndex: choices.indexOf(correct),
+    explanation: `1 = ${frac(den, den)} → ${frac(den, den)} - ${frac(a, den)} = ${correct}`,
+  };
+}
+
+function q_sub_word(): QuizQuestion {
+  const den = randInt(4, 8);
+  const b = randInt(1, den - 2);
+  const a = b + randInt(1, den - 1 - b);
+  const diff = a - b;
+  const correct = frac(diff, den);
+  const contexts = [
+    { who: "น้อง", obj: "พิซซ่า", unit: "ถาด" },
+    { who: "ฟ้า", obj: "เค้ก", unit: "ก้อน" },
+    { who: "ภูผา", obj: "ช็อกโกแลต", unit: "แท่ง" },
+  ];
+  const c = contexts[randInt(0, contexts.length - 1)];
+  const choices = buildChoices(correct, [
+    frac(a + b, den), frac(diff + 1, den), frac(Math.max(1, diff - 1), den),
+  ]);
+  return {
+    prompt: `${c.who}มี${c.obj} ${frac(a, den)} ${c.unit} แบ่งให้เพื่อนไป ${frac(b, den)} ${c.unit} เหลือ${c.obj}เท่าไร?`,
+    choices,
+    correctIndex: choices.indexOf(correct),
+    explanation: `${frac(a, den)} - ${frac(b, den)} = ${correct} (ตัวส่วนเท่ากัน ลบเฉพาะตัวเศษ)`,
+  };
+}
+
+const SUBTRACT_GENERATORS: Array<() => QuizQuestion> = [
+  q_sub_same,
+  q_sub_diff,
+  q_sub_mixedBorrow,
+  q_sub_fromOne,
+  q_sub_word,
+];
+
+let subtractOrder: number[] = [];
+
+export function makeSubtractQuestion(_unused?: unknown, index = 0): QuizQuestion {
+  if (index === 0 || subtractOrder.length !== SUBTRACT_GENERATORS.length) {
+    subtractOrder = shuffle(SUBTRACT_GENERATORS.map((_, i) => i));
+  }
+  const typeIdx = subtractOrder[index % subtractOrder.length];
+  return SUBTRACT_GENERATORS[typeIdx]();
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// คูณเศษส่วน — คลังคำถาม 5 แบบ
+// ──────────────────────────────────────────────────────────────────────────────
+
+/** ย่อ "n/d" เป็นสตริงอย่างต่ำ */
+function fracLowest(n: number, d: number): string {
+  const g = gcd(n, d) || 1;
+  return frac(n / g, d / g);
+}
+
+function q_mul_direct(): QuizQuestion {
+  const d1 = randInt(2, 5), d2 = randInt(2, 5);
+  const n1 = randInt(1, d1 - 1), n2 = randInt(1, d2 - 1);
+  const rn = n1 * n2, rd = d1 * d2;
+  const correct = fracLowest(rn, rd);
+  const choices = buildChoices(correct, [
+    frac(n1 + n2, d1 + d2), // กับดัก: บวกแทนคูณ
+    fracLowest(rn + 1, rd), fracLowest(n1 * d2, d1 * n2),
   ]);
   return {
     prompt: `${frac(n1, d1)} × ${frac(n2, d2)} = ?`,
     choices,
     correctIndex: choices.indexOf(correct),
-    explanation: `คูณเศษ×เศษ: ${n1}×${n2}=${rn}, ส่วน×ส่วน: ${d1}×${d2}=${rd} → ได้ ${correct}`,
+    explanation: `คูณเศษ×เศษ: ${n1}×${n2}=${rn}, ส่วน×ส่วน: ${d1}×${d2}=${rd} → ${fracLowest(rn, rd)}`,
   };
 }
 
-// ──────────────────────────────────────────────────────────────────────────────
-// หารเศษส่วน
-// ──────────────────────────────────────────────────────────────────────────────
-export function makeDivideQuestion(): QuizQuestion {
-  const n1 = randInt(1, 4), d1 = randInt(2, 5);
-  const n2 = randInt(1, 3), d2 = randInt(2, 5);
-  const rn = n1 * d2, rd = d1 * n2;
-  const correct = frac(rn, rd);
+/** คูณแล้วต้องย่อ — จงใจให้ผลคูณย่อได้ */
+function q_mul_reduce(): QuizQuestion {
+  const pairs: [number, number, number, number][] = [
+    [2, 3, 3, 4], [3, 4, 2, 9], [4, 5, 5, 6], [2, 5, 5, 8],
+    [3, 8, 4, 9], [5, 6, 3, 10], [2, 3, 3, 8], [4, 9, 3, 8],
+  ];
+  const [n1, d1, n2, d2] = pairs[randInt(0, pairs.length - 1)];
+  const rn = n1 * n2, rd = d1 * d2;
+  const correct = fracLowest(rn, rd);
   const choices = buildChoices(correct, [
-    frac(rn + 1, rd), frac(rn + 2, rd),
-    frac(n1 * n2, d1 * d2), frac(rd, rn),
-    frac(rn, rd + 1),
+    frac(rn, rd), // กับดัก: ยังไม่ย่อ
+    frac(n1 + n2, d1 + d2),
+    fracLowest(rn + 1, rd),
+  ]);
+  return {
+    prompt: `${frac(n1, d1)} × ${frac(n2, d2)} = ?  (ตอบอย่างต่ำ)`,
+    choices,
+    correctIndex: choices.indexOf(correct),
+    explanation: `${n1}×${n2}=${rn}, ${d1}×${d2}=${rd} → ${frac(rn, rd)} = ${correct} (ย่อแล้ว)`,
+  };
+}
+
+function q_mul_whole(): QuizQuestion {
+  const w = randInt(2, 5);
+  const d = randInt(3, 6);
+  const n = randInt(1, d - 1);
+  const rn = w * n;
+  const correct = fracLowest(rn, d);
+  const choices = buildChoices(correct, [
+    fracLowest(n, w * d), // กับดัก: คูณตัวส่วนแทน
+    fracLowest(rn + 1, d), frac(w + n, d),
+  ]);
+  return {
+    prompt: `${w} × ${frac(n, d)} = ?`,
+    choices,
+    correctIndex: choices.indexOf(correct),
+    explanation: `จำนวนเต็มคูณตัวเศษ: ${w}×${n}=${rn} ตัวส่วนคงเดิม ${d} → ${correct}`,
+  };
+}
+
+function q_mul_mixed(): QuizQuestion {
+  const W = randInt(1, 3);
+  const d = randInt(2, 4);
+  const a = randInt(1, d - 1);
+  const q = randInt(2, 4);
+  const b = randInt(1, q - 1);
+  const improper = W * d + a;
+  const rn = improper * b, rd = d * q;
+  const correct = fracLowest(rn, rd);
+  const choices = buildChoices(correct, [
+    fracLowest(W * b, d * q), // กับดัก: ลืมแปลงจำนวนคละ
+    fracLowest(rn + b, rd),
+    frac(improper + b, d + q),
+  ]);
+  return {
+    prompt: `${W} ${frac(a, d)} × ${frac(b, q)} = ?`,
+    choices,
+    correctIndex: choices.indexOf(correct),
+    explanation: `แปลง ${W} ${frac(a, d)} = ${frac(improper, d)} → ${improper}×${b}=${rn}, ${d}×${q}=${rd} → ${correct}`,
+  };
+}
+
+function q_mul_word(): QuizQuestion {
+  const d1 = randInt(2, 4), d2 = randInt(2, 4);
+  const n1 = randInt(1, d1 - 1), n2 = randInt(1, d2 - 1);
+  const rn = n1 * n2, rd = d1 * d2;
+  const correct = fracLowest(rn, rd);
+  const contexts = [
+    { obj: "ที่ดิน", verb: "ปลูกผัก" },
+    { obj: "เค้ก", verb: "โรยหน้าช็อกโกแลต" },
+    { obj: "สวน", verb: "รดน้ำ" },
+  ];
+  const c = contexts[randInt(0, contexts.length - 1)];
+  const choices = buildChoices(correct, [
+    frac(n1 + n2, d1 + d2), fracLowest(rn + 1, rd), fracLowest(n1 * d2, d1 * n2),
+  ]);
+  return {
+    prompt: `มี${c.obj} ${frac(n1, d1)} ของทั้งหมด ใช้${c.verb} ${frac(n2, d2)} ของส่วนนั้น คิดเป็นเท่าไรของทั้งหมด?`,
+    choices,
+    correctIndex: choices.indexOf(correct),
+    explanation: `"${frac(n2, d2)} ของ ${frac(n1, d1)}" = ${frac(n2, d2)} × ${frac(n1, d1)} = ${correct}`,
+  };
+}
+
+const MULTIPLY_GENERATORS: Array<() => QuizQuestion> = [
+  q_mul_direct,
+  q_mul_reduce,
+  q_mul_whole,
+  q_mul_mixed,
+  q_mul_word,
+];
+
+let multiplyOrder: number[] = [];
+
+export function makeMultiplyQuestion(_unused?: unknown, index = 0): QuizQuestion {
+  if (index === 0 || multiplyOrder.length !== MULTIPLY_GENERATORS.length) {
+    multiplyOrder = shuffle(MULTIPLY_GENERATORS.map((_, i) => i));
+  }
+  const typeIdx = multiplyOrder[index % multiplyOrder.length];
+  return MULTIPLY_GENERATORS[typeIdx]();
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// หารเศษส่วน — คลังคำถาม 5 แบบ
+// ──────────────────────────────────────────────────────────────────────────────
+
+/** ย่อ "n/d" เป็นสตริงอย่างต่ำ (สำหรับบทหาร) */
+function divLowest(n: number, d: number): string {
+  const g = gcd(n, d) || 1;
+  return frac(n / g, d / g);
+}
+
+function q_div_direct(): QuizQuestion {
+  const d1 = randInt(2, 5), d2 = randInt(2, 5);
+  const n1 = randInt(1, d1 - 1), n2 = randInt(1, d2 - 1);
+  const rn = n1 * d2, rd = d1 * n2;
+  const correct = divLowest(rn, rd);
+  const choices = buildChoices(correct, [
+    divLowest(n1 * n2, d1 * d2), // กับดัก: คูณตรงไม่กลับ
+    divLowest(rd, rn), // กับดัก: กลับผลลัพธ์
+    divLowest(rn + 1, rd),
   ]);
   return {
     prompt: `${frac(n1, d1)} ÷ ${frac(n2, d2)} = ?`,
     choices,
     correctIndex: choices.indexOf(correct),
-    explanation: `กลับตัวหลัง แล้วคูณ: ${frac(n1, d1)} × ${frac(d2, n2)} → ${n1}×${d2}=${rn}, ${d1}×${n2}=${rd} ได้ ${correct}`,
+    explanation: `คงตัวหน้า กลับตัวหลัง แล้วคูณ: ${frac(n1, d1)} × ${frac(d2, n2)} → ${n1}×${d2}=${rn}, ${d1}×${n2}=${rd} = ${correct}`,
   };
+}
+
+function q_div_reduce(): QuizQuestion {
+  const pairs: [number, number, number, number][] = [
+    [1, 2, 1, 4], [3, 4, 1, 8], [2, 3, 1, 6], [1, 2, 1, 6],
+    [3, 4, 3, 8], [2, 5, 1, 10], [5, 6, 1, 6], [3, 4, 1, 4],
+  ];
+  const [n1, d1, n2, d2] = pairs[randInt(0, pairs.length - 1)];
+  const rn = n1 * d2, rd = d1 * n2;
+  const correct = divLowest(rn, rd);
+  const choices = buildChoices(correct, [
+    frac(rn, rd), // กับดัก: ยังไม่ย่อ
+    divLowest(n1 * n2, d1 * d2),
+    divLowest(rd, rn),
+  ]);
+  return {
+    prompt: `${frac(n1, d1)} ÷ ${frac(n2, d2)} = ?  (ตอบอย่างต่ำ)`,
+    choices,
+    correctIndex: choices.indexOf(correct),
+    explanation: `${frac(n1, d1)} × ${frac(d2, n2)} = ${frac(rn, rd)} = ${correct}`,
+  };
+}
+
+function q_div_wholeByFrac(): QuizQuestion {
+  const w = randInt(2, 5);
+  const q = randInt(2, 6);
+  const b = randInt(1, q - 1);
+  const rn = w * q, rd = b;
+  const correct = divLowest(rn, rd);
+  const choices = buildChoices(correct, [
+    divLowest(w * b, q), // กับดัก: ลืมกลับ
+    divLowest(b, w * q),
+    divLowest(rn + 1, rd),
+  ]);
+  return {
+    prompt: `${w} ÷ ${frac(b, q)} = ?`,
+    choices,
+    correctIndex: choices.indexOf(correct),
+    explanation: `${w} = ${frac(w, 1)} → ${frac(w, 1)} × ${frac(q, b)} = ${rn}/${rd} = ${correct}`,
+  };
+}
+
+function q_div_fracByWhole(): QuizQuestion {
+  const d = randInt(2, 6);
+  const n = randInt(1, d - 1);
+  const w = randInt(2, 5);
+  const rn = n, rd = d * w;
+  const correct = divLowest(rn, rd);
+  const choices = buildChoices(correct, [
+    divLowest(n * w, d), // กับดัก: คูณแทนหาร
+    divLowest(n + 1, d * w),
+    divLowest(d, n * w),
+  ]);
+  return {
+    prompt: `${frac(n, d)} ÷ ${w} = ?`,
+    choices,
+    correctIndex: choices.indexOf(correct),
+    explanation: `หารด้วย ${w} = คูณด้วย ${frac(1, w)} → ${frac(n, d)} × ${frac(1, w)} = ${rn}/${rd} = ${correct}`,
+  };
+}
+
+function q_div_word(): QuizQuestion {
+  // แบ่งของ a/p ให้คนละ 1/e → ได้กี่คน (จำนวนเต็มลงตัว)
+  const p = randInt(2, 4);
+  const a = randInt(1, p - 1);
+  const k = randInt(2, 3);
+  const e = p * k;
+  const answer = a * k; // (a/p) ÷ (1/e)
+  const contexts = [
+    { obj: "พิซซ่า", unit: "ถาด", per: "คน" },
+    { obj: "เค้ก", unit: "ก้อน", per: "จาน" },
+    { obj: "ริบบิ้น", unit: "เมตร", per: "เส้น" },
+  ];
+  const c = contexts[randInt(0, contexts.length - 1)];
+  const correct = String(answer);
+  const wrongChoices = uniqueWrongs(correct, [
+    String(answer + 1), String(Math.max(1, answer - 1)), String(a * (k + 1)), String(e),
+  ]);
+  const choices = shuffle([correct, ...wrongChoices]);
+  return {
+    prompt: `มี${c.obj} ${frac(a, p)} ${c.unit} แบ่งให้${c.per}ละ ${frac(1, e)} ${c.unit} ได้กี่${c.per}?`,
+    choices,
+    correctIndex: choices.indexOf(correct),
+    explanation: `${frac(a, p)} ÷ ${frac(1, e)} = ${frac(a, p)} × ${frac(e, 1)} = ${answer} ${c.per}`,
+  };
+}
+
+const DIVIDE_GENERATORS: Array<() => QuizQuestion> = [
+  q_div_direct,
+  q_div_reduce,
+  q_div_wholeByFrac,
+  q_div_fracByWhole,
+  q_div_word,
+];
+
+let divideOrder: number[] = [];
+
+export function makeDivideQuestion(_unused?: unknown, index = 0): QuizQuestion {
+  if (index === 0 || divideOrder.length !== DIVIDE_GENERATORS.length) {
+    divideOrder = shuffle(DIVIDE_GENERATORS.map((_, i) => i));
+  }
+  const typeIdx = divideOrder[index % divideOrder.length];
+  return DIVIDE_GENERATORS[typeIdx]();
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -873,7 +1356,7 @@ export function makeEquivalentQuestion(): QuizQuestion {
     frac(n + k, d + k), frac(n2, d2 + k),
   ]);
   return {
-    prompt: `${frac(n, d)} = ?/${d2}   ตัวเศษที่หายไปคือเท่าไร?  (คำตอบอยู่ในรูป ?/${d2})`,
+    prompt: `${frac(n, d)} = ?/${d2}   ตัวเศษในกล่องคือเท่าไร?`,
     choices,
     correctIndex: choices.indexOf(correct),
     explanation: `คูณบนล่างด้วย ${k}: ${n}×${k}=${n2}, ${d}×${k}=${d2} → ได้ ${correct}`,
@@ -881,16 +1364,21 @@ export function makeEquivalentQuestion(): QuizQuestion {
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
-// ย่อเศษส่วน
+// เศษส่วนอย่างต่ำ — คลังคำถาม 4 แบบ
 // ──────────────────────────────────────────────────────────────────────────────
-export function makeSimplifyQuestion(): QuizQuestion {
-  const k = randInt(2, 4);
+
+function randomCoprime(): { sn: number; sd: number } {
   let sn = randInt(1, 4), sd = randInt(sn + 1, 8);
-  // ensure sn and sd are coprime
   let tries = 0;
   while (gcd(sn, sd) > 1 && tries++ < 20) {
     sd = randInt(sn + 1, 8);
   }
+  return { sn, sd };
+}
+
+function q_simplify_reduce(): QuizQuestion {
+  const k = randInt(2, 4);
+  const { sn, sd } = randomCoprime();
   const n = sn * k, d = sd * k;
   const correct = frac(sn, sd);
   const choices = buildChoices(correct, [
@@ -904,6 +1392,90 @@ export function makeSimplifyQuestion(): QuizQuestion {
     correctIndex: choices.indexOf(correct),
     explanation: `หาร ${n} และ ${d} ด้วย ${k} พร้อมกัน → ${n}÷${k}=${sn}, ${d}÷${k}=${sd} ได้ ${correct}`,
   };
+}
+
+/** ตัวเลือกทั้งหมดมาจากเศษส่วนอย่างต่ำตัวเดียว — มีแค่ตัวเดียวที่ยังไม่ถูกขยาย จึงเป็นคำตอบ */
+function q_simplify_isLowest(): QuizQuestion {
+  const { sn, sd } = randomCoprime();
+  const correct = frac(sn, sd);
+  const multipliers = shuffle([2, 3, 4, 5]).slice(0, 3);
+  const choices = shuffle([correct, ...multipliers.map((k) => frac(sn * k, sd * k))]);
+  return {
+    prompt: `เศษส่วนใดต่อไปนี้เป็น "เศษส่วนอย่างต่ำ" แล้ว?`,
+    choices,
+    correctIndex: choices.indexOf(correct),
+    explanation: `${correct} หารทั้งเศษและส่วนต่อไม่ได้อีกแล้ว (ห.ร.ม. = 1) ส่วนข้ออื่นยังย่อได้อีก`,
+  };
+}
+
+function q_simplify_gcd(): QuizQuestion {
+  const g = randInt(2, 9);
+  const a = randInt(2, 4), b = randInt(2, 4);
+  let na = a, nb = b;
+  let tries = 0;
+  while (gcd(na, nb) > 1 && tries++ < 20) {
+    nb = randInt(2, 4);
+  }
+  const n = g * na, d = g * nb;
+  const correct = String(g);
+  const wrongChoices = uniqueWrongs(correct, [
+    String(g + 1), String(Math.max(1, g - 1)), String(na), String(nb), String(g * 2),
+  ]);
+  const choices = shuffle([correct, ...wrongChoices]);
+  return {
+    prompt: `ห.ร.ม. (ตัวหารร่วมมากที่สุด) ของ ${n} และ ${d} คือเท่าไร?`,
+    choices,
+    correctIndex: choices.indexOf(correct),
+    explanation: `${n} และ ${d} หารด้วย ${g} ได้ลงตัวทั้งคู่ และเป็นจำนวนมากที่สุดที่หารได้ทั้งสองตัว`,
+  };
+}
+
+/** เน้นย้ำว่าตัวหารร่วมต้องหารได้ทั้งเศษและส่วน ไม่ใช่แค่ตัวใดตัวหนึ่ง */
+function q_simplify_commonDivisor(): QuizQuestion {
+  const p = [2, 3, 5, 7][randInt(0, 3)];
+  const pairs: [number, number][] = [[2, 3], [3, 4], [2, 5], [4, 5], [3, 5], [2, 7], [3, 7]];
+  const [a, b] = pairs[randInt(0, pairs.length - 1)];
+  const n = p * a, d = p * b;
+
+  const both: number[] = [], onlyN: number[] = [], onlyD: number[] = [], neither: number[] = [];
+  for (let i = 2; i <= 12; i++) {
+    const inN = n % i === 0, inD = d % i === 0;
+    if (inN && inD) both.push(i);
+    else if (inN) onlyN.push(i);
+    else if (inD) onlyD.push(i);
+    else neither.push(i);
+  }
+  const correct = String(p);
+  const candidates = [
+    onlyN[randInt(0, Math.max(0, onlyN.length - 1))],
+    onlyD[randInt(0, Math.max(0, onlyD.length - 1))],
+    neither[randInt(0, Math.max(0, neither.length - 1))],
+  ].filter((v): v is number => v !== undefined);
+  const wrongChoices = uniqueWrongs(correct, candidates.map(String), 3);
+  const choices = shuffle([correct, ...wrongChoices]);
+  return {
+    prompt: `จำนวนใดหารทั้ง ${n} และ ${d} ได้ลงตัวพร้อมกัน?`,
+    choices,
+    correctIndex: choices.indexOf(correct),
+    explanation: `ตัวหารร่วมต้องหารทั้งเศษและส่วนได้ลงตัวพร้อมกัน — มีแค่ ${p} เท่านั้นที่หารทั้ง ${n} และ ${d} ได้`,
+  };
+}
+
+const SIMPLIFY_GENERATORS: Array<() => QuizQuestion> = [
+  q_simplify_reduce,
+  q_simplify_isLowest,
+  q_simplify_gcd,
+  q_simplify_commonDivisor,
+];
+
+let simplifyOrder: number[] = [];
+
+export function makeSimplifyQuestion(_unused?: unknown, index = 0): QuizQuestion {
+  if (index === 0 || simplifyOrder.length !== SIMPLIFY_GENERATORS.length) {
+    simplifyOrder = shuffle(SIMPLIFY_GENERATORS.map((_, i) => i));
+  }
+  const typeIdx = simplifyOrder[index % simplifyOrder.length];
+  return SIMPLIFY_GENERATORS[typeIdx]();
 }
 
 // ──────────────────────────────────────────────────────────────────────────────

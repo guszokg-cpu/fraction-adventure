@@ -8,6 +8,7 @@ import { ReadPointSection } from "@/components/lessons/number-line/ReadPointSect
 import { NumberLineBuilder } from "@/components/lessons/number-line/NumberLineBuilder";
 import { MultiPointCompare } from "@/components/lessons/number-line/MultiPointCompare";
 import { NumberLineGame } from "@/components/lessons/number-line/NumberLineGame";
+import { NumberLineBingo } from "@/components/lessons/number-line/NumberLineBingo";
 import { numberLineMeta } from "@/data/lessonNumberLine";
 import { LessonQuiz } from "@/components/lessons/LessonQuiz";
 import { makeNumberLineQuestion } from "@/lib/quizGenerators";
@@ -19,6 +20,7 @@ const STEPS = [
   { id: 4, title: "เทียบหลายจุด", icon: "⚖️" },
   { id: 5, title: "เกมกระโดดหาจุด", icon: "🎮" },
   { id: 6, title: "แบบทดสอบ", icon: "💡" },
+  { id: 7, title: "บิงโกเส้นจำนวน", icon: "🎯" },
 ];
 
 const COMPONENTS = [
@@ -31,6 +33,7 @@ const COMPONENTS = [
       lessonSlug="number-line"
     />
   ),
+  NumberLineBingo,
 ];
 
 export function NumberLineContent() {
@@ -57,6 +60,7 @@ export function NumberLineContent() {
               makeQuestion={makeNumberLineQuestion}
               lessonSlug="number-line"
             />
+            <NumberLineBingo />
           </>
         )}
         footer={<LessonActionBar meta={numberLineMeta} />}

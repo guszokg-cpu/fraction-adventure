@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
 
 type Size = "sm" | "md" | "lg";
@@ -12,6 +13,10 @@ type Props = {
   /** Tailwind color key used for border/focus/line */
   colorClass?: string;
   className?: string;
+  minNumerator?: number;
+  maxNumerator?: number;
+  minDenominator?: number;
+  maxDenominator?: number;
 };
 
 const sizes: Record<Size, { box: string; line: string }> = {
@@ -28,53 +33,71 @@ export function FractionInput({
   size = "md",
   colorClass = "border-pink-300 focus:border-pink-500 focus:ring-pink-100 bg-pink-600",
   className,
+  minNumerator = 1,
+  maxNumerator = 99,
+  minDenominator = 1,
+  maxDenominator = 20,
 }: Props) {
   const s = sizes[size];
 
+  // buffer ข้อความภายใน เพื่อให้ลบ/พิมพ์ทับได้ลื่น (ค่าที่ไม่ถูกต้องระหว่างพิมพ์จะไม่กระโดดกลับ)
+  const [numText, setNumText] = useState(String(numerator));
+  const [denText, setDenText] = useState(String(denominator));
+
+  // ซิงก์ buffer เมื่อค่าถูกเปลี่ยนจากภายนอก (เช่น กดสุ่มโจทย์)
+  useEffect(() => setNumText(String(numerator)), [numerator]);
+  useEffect(() => setDenText(String(denominator)), [denominator]);
+
   // Split colorClass into parts for input vs line
-  // Expect colorClass like "border-pink-300 focus:border-pink-500 focus:ring-pink-100 bg-pink-600"
-  // The bg-* part goes on the line div; rest goes on inputs
   const parts = colorClass.split(" ");
-  const lineBg = parts.find(p => p.startsWith("bg-")) ?? "bg-pink-600";
-  const inputColor = parts.filter(p => !p.startsWith("bg-")).join(" ");
+  const lineBg = parts.find((p) => p.startsWith("bg-")) ?? "bg-pink-600";
+  const inputColor = parts.filter((p) => !p.startsWith("bg-")).join(" ");
 
   const inputCls = cn(
     "block rounded-xl border-2 bg-white text-center font-extrabold transition",
     "focus:outline-none focus:ring-2",
-    // Hide browser number-input spinner arrows
-    "[appearance:textfield]",
-    "[&::-webkit-inner-spin-button]:appearance-none",
-    "[&::-webkit-outer-spin-button]:appearance-none",
     s.box,
     inputColor,
   );
+
+  function handleNum(raw: string) {
+    const digits = raw.replace(/\D/g, "").slice(0, 2);
+    setNumText(digits);
+    if (digits === "") return;
+    const v = parseInt(digits, 10);
+    if (v >= minNumerator && v <= maxNumerator && v !== numerator) onChange(v, denominator);
+  }
+
+  function handleDen(raw: string) {
+    const digits = raw.replace(/\D/g, "").slice(0, 2);
+    setDenText(digits);
+    if (digits === "") return;
+    const v = parseInt(digits, 10);
+    if (v >= minDenominator && v <= maxDenominator && v !== denominator) onChange(numerator, v);
+  }
 
   return (
     <div className={cn("inline-flex flex-col items-center", className)}>
       {/* ── ตัวเศษ (บน) ── */}
       <input
-        type="number"
-        value={numerator}
-        min={1}
-        max={99}
-        onChange={(e) => {
-          const v = parseInt(e.target.value, 10);
-          if (!isNaN(v) && v >= 1 && v <= 99) onChange(v, denominator);
-        }}
+        type="text"
+        inputMode="numeric"
+        value={numText}
+        onChange={(e) => handleNum(e.target.value)}
+        onBlur={() => setNumText(String(numerator))}
+        aria-label="ตัวเศษ"
         className={inputCls}
       />
       {/* ── เส้นคั่น ── */}
       <div className={cn("rounded-full", s.line, lineBg)} />
       {/* ── ตัวส่วน (ล่าง) ── */}
       <input
-        type="number"
-        value={denominator}
-        min={1}
-        max={20}
-        onChange={(e) => {
-          const v = parseInt(e.target.value, 10);
-          if (!isNaN(v) && v >= 1 && v <= 20) onChange(numerator, v);
-        }}
+        type="text"
+        inputMode="numeric"
+        value={denText}
+        onChange={(e) => handleDen(e.target.value)}
+        onBlur={() => setDenText(String(denominator))}
+        aria-label="ตัวส่วน"
         className={inputCls}
       />
     </div>

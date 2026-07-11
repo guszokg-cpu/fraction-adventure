@@ -1,41 +1,44 @@
-﻿"use client";
+"use client";
 
 import { LessonActionBar } from "@/components/lessons/LessonActionBar";
 import { LessonProgressHeader } from "@/components/lessons/LessonProgressHeader";
 import { LessonStepper } from "@/components/lessons/LessonStepper";
-import { ConnectPairsCard } from "@/components/lessons/simplify-expand/ConnectPairsCard";
-import { EquivalentGeneratorCard } from "@/components/lessons/simplify-expand/EquivalentGeneratorCard";
-import { ExpandFractionCard } from "@/components/lessons/simplify-expand/ExpandFractionCard";
-import { FractionDetectiveCard } from "@/components/lessons/simplify-expand/FractionDetectiveCard";
-import { LowestTermCard } from "@/components/lessons/simplify-expand/LowestTermCard";
-import { SimplifyFractionCard } from "@/components/lessons/simplify-expand/SimplifyFractionCard";
-import { SimplifyPracticeGrid } from "@/components/lessons/simplify-expand/SimplifyPracticeGrid";
-import { SpeedSimplifyCard } from "@/components/lessons/simplify-expand/SpeedSimplifyCard";
-import { ZoomEquivalentCard } from "@/components/lessons/simplify-expand/ZoomEquivalentCard";
+import { LessonVideoCard } from "@/components/lessons/LessonVideoCard";
+import { EquivalentFamilyCard } from "@/components/lessons/simplify-expand/EquivalentFamilyCard";
+import { GcdShortcutCard } from "@/components/lessons/simplify-expand/GcdShortcutCard";
+import { IsLowestGameCard } from "@/components/lessons/simplify-expand/IsLowestGameCard";
+import { MatchFamilyGameCard } from "@/components/lessons/simplify-expand/MatchFamilyGameCard";
+import { SimplifyLabCard } from "@/components/lessons/simplify-expand/SimplifyLabCard";
+import { SimplifySummaryCard } from "@/components/lessons/simplify-expand/SimplifySummaryCard";
+import { SpeedSimplifyGameCard } from "@/components/lessons/simplify-expand/SpeedSimplifyGameCard";
 import { simplifyExpandMeta } from "@/data/lessonSimplifyExpand";
+import { lessonVideos } from "@/data/lessonVideos";
 import { LessonQuiz } from "@/components/lessons/LessonQuiz";
 import { makeSimplifyQuestion } from "@/lib/quizGenerators";
 
+const VIDEO_URL = lessonVideos["/lessons/simplify-expand"] ?? "";
+
 const STEPS = [
-  { id: 1, title: "ขยายเศษส่วน" },
-  { id: 2, title: "ย่อเศษส่วน" },
-  { id: 3, title: "ซูมเศษส่วนเท่ากัน" },
-  { id: 4, title: "สร้างเศษส่วนเท่ากัน" },
-  { id: 5, title: "เศษส่วนอย่างต่ำ" },
-  { id: 6, title: "นักสืบเศษส่วน" },
-  { id: 7, title: "จับคู่" },
-  { id: 8, title: "ย่อเร็ว" },
+  { id: 1, title: "ดูวิดีโอ" },
+  { id: 2, title: "ครอบครัวเศษส่วนเท่ากัน" },
+  { id: 3, title: "ห้องทดลองย่อ" },
+  { id: 4, title: "ทางลัด ห.ร.ม." },
+  { id: 5, title: "อย่างต่ำหรือยัง?" },
+  { id: 6, title: "จับคู่ครอบครัว" },
+  { id: 7, title: "ย่อเร็ว 60 วิ" },
+  { id: 8, title: "สรุปบทเรียน" },
   { id: 9, title: "แบบทดสอบ" },
 ];
 
 const COMPONENTS = [
-  ExpandFractionCard, SimplifyFractionCard, ZoomEquivalentCard,
-  EquivalentGeneratorCard, LowestTermCard, FractionDetectiveCard,
-  ConnectPairsCard, SpeedSimplifyCard,
+  () => <LessonVideoCard lessonPath="/lessons/simplify-expand" videoUrl={VIDEO_URL} title="วิดีโอ: เศษส่วนอย่างต่ำ" />,
+  EquivalentFamilyCard, SimplifyLabCard, GcdShortcutCard,
+  IsLowestGameCard, MatchFamilyGameCard, SpeedSimplifyGameCard,
+  SimplifySummaryCard,
   () => (
     <LessonQuiz
-      title="แบบทดสอบ: ย่อและขยายเศษส่วน"
-      gradient="bg-gradient-to-r from-indigo-600 to-blue-500"
+      title="แบบทดสอบ: เศษส่วนอย่างต่ำ"
+      gradient="bg-gradient-to-r from-orange-500 to-amber-500"
       makeQuestion={makeSimplifyQuestion}
       lessonSlug="simplify-expand"
     />
@@ -55,24 +58,21 @@ export function SimplifyExpandContent() {
         }}
         renderAll={() => (
           <>
+            <LessonVideoCard lessonPath="/lessons/simplify-expand" videoUrl={VIDEO_URL} title="วิดีโอ: เศษส่วนอย่างต่ำ" />
+            <EquivalentFamilyCard />
+            <SimplifyLabCard />
+            <GcdShortcutCard />
             <div className="grid gap-5 xl:grid-cols-2">
-              <ExpandFractionCard />
-              <SimplifyFractionCard />
+              <IsLowestGameCard />
+              <MatchFamilyGameCard />
             </div>
-            <ZoomEquivalentCard />
-            <EquivalentGeneratorCard />
-            <LowestTermCard />
-            <div className="grid gap-5 xl:grid-cols-2">
-              <FractionDetectiveCard />
-              <ConnectPairsCard />
-            </div>
-            <SpeedSimplifyCard />
-            <SimplifyPracticeGrid />
+            <SpeedSimplifyGameCard />
+            <SimplifySummaryCard />
             <LessonQuiz
-              title="แบบทดสอบ: ย่อและขยายเศษส่วน"
-              gradient="bg-gradient-to-r from-indigo-600 to-blue-500"
+              title="แบบทดสอบ: เศษส่วนอย่างต่ำ"
+              gradient="bg-gradient-to-r from-orange-500 to-amber-500"
               makeQuestion={makeSimplifyQuestion}
-      lessonSlug="simplify-expand"
+              lessonSlug="simplify-expand"
             />
           </>
         )}

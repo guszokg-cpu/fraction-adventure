@@ -16,7 +16,7 @@ const LESSON_NAV = [
   { href: "/lessons/number-line",       icon: "📏",  title: "เศษส่วนบนเส้นจำนวน" },
   { href: "/lessons/compare",           icon: "⚖️",  title: "เปรียบเทียบเศษส่วน" },
   { href: "/lessons/equivalent",        icon: "🔁",  title: "เศษส่วนที่เท่ากัน" },
-  { href: "/lessons/simplify-expand",   icon: "🔎",  title: "ย่อและขยายเศษส่วน" },
+  { href: "/lessons/simplify-expand",   icon: "🔎",  title: "เศษส่วนอย่างต่ำ" },
   { href: "/lessons/mixed-improper",    icon: "1¼",  title: "จำนวนคละและเศษเกิน" },
   { href: "/lessons/add",               icon: "➕",  title: "บวกเศษส่วน" },
   { href: "/lessons/subtract",          icon: "➖",  title: "ลบเศษส่วน" },

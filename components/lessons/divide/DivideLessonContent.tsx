@@ -1,20 +1,14 @@
-﻿"use client";
+"use client";
 
 import { LessonActionBar } from "@/components/lessons/LessonActionBar";
 import { LessonProgressHeader } from "@/components/lessons/LessonProgressHeader";
 import { LessonStepper } from "@/components/lessons/LessonStepper";
-import { LessonSummary } from "@/components/lessons/LessonSummary";
+import { DivideLabCard } from "@/components/lessons/divide/DivideLabCard";
 import { DividePracticeCard } from "@/components/lessons/divide/DividePracticeCard";
-import { DividePracticeGrid } from "@/components/lessons/divide/DividePracticeGrid";
 import { DivideStepsCard } from "@/components/lessons/divide/DivideStepsCard";
-import { DivideTimerCard } from "@/components/lessons/divide/DivideTimerCard";
-import { DivideTypeSelector } from "@/components/lessons/divide/DivideTypeSelector";
-import { FractionLabCard } from "@/components/lessons/divide/FractionLabCard";
-import { LiveExperimentCard } from "@/components/lessons/divide/LiveExperimentCard";
-import { MixedDivideCard } from "@/components/lessons/divide/MixedDivideCard";
-import { MultiplyVsDivideCard } from "@/components/lessons/divide/MultiplyVsDivideCard";
-import { WholeNumberDivideCard } from "@/components/lessons/divide/WholeNumberDivideCard";
-import { WhyFlipCard } from "@/components/lessons/divide/WhyFlipCard";
+import { DivideSummaryCard } from "@/components/lessons/divide/DivideSummaryCard";
+import { DivideTimerGameCard } from "@/components/lessons/divide/DivideTimerGameCard";
+import { WholeMixedDivideCard } from "@/components/lessons/divide/WholeMixedDivideCard";
 import { divideLessonMeta } from "@/data/lessonDivide";
 import { LessonVideoCard } from "@/components/lessons/LessonVideoCard";
 import { lessonVideos } from "@/data/lessonVideos";
@@ -25,37 +19,20 @@ const VIDEO_URL = lessonVideos["/lessons/divide"] ?? "";
 
 const STEPS = [
   { id: 1, title: "ดูวิดีโอ" },
-  { id: 2, title: "ประเภทการหาร" },
-  { id: 3, title: "ห้องทดลอง" },
-  { id: 4, title: "ขั้นตอนการหาร" },
-  { id: 5, title: "ทำไมต้องกลับ" },
-  { id: 6, title: "หารด้วยจำนวนเต็ม" },
-  { id: 7, title: "จำนวนคละ" },
-  { id: 8, title: "ทดลองสด" },
-  { id: 9, title: "คูณ vs หาร" },
-  { id: 10, title: "ฝึกทำ" },
-  { id: 11, title: "เกมจับเวลา" },
-  { id: 12, title: "สรุปบทเรียน" },
-  { id: 13, title: "แบบทดสอบ" },
+  { id: 2, title: "ห้องทดลอง: มีกี่ชิ้น" },
+  { id: 3, title: "กลับแล้วคูณ" },
+  { id: 4, title: "จำนวนเต็ม & จำนวนคละ" },
+  { id: 5, title: "เกมจับเวลา" },
+  { id: 6, title: "ฝึกทำ" },
+  { id: 7, title: "สรุปบทเรียน" },
+  { id: 8, title: "แบบทดสอบ" },
 ];
 
 const COMPONENTS = [
   () => <LessonVideoCard lessonPath="/lessons/divide" videoUrl={VIDEO_URL} title="วิดีโอ: หารเศษส่วน" />,
-  DivideTypeSelector, FractionLabCard, DivideStepsCard,
-  WhyFlipCard, WholeNumberDivideCard, MixedDivideCard,
-  LiveExperimentCard, MultiplyVsDivideCard, DividePracticeCard, DivideTimerCard,
-  () => (
-    <LessonSummary
-      gradient="bg-gradient-to-r from-violet-700 to-purple-500"
-      mascot="➗"
-      points={[
-        "การหาร = คงตัวหน้า กลับตัวหลัง แล้วคูณ",
-        "เศษส่วนที่กลับหัว–ท้ายเรียกว่า ส่วนกลับ",
-        "หารด้วยจำนวนเต็ม = คูณด้วย 1 ส่วนจำนวนนั้น",
-        "ทำผลลัพธ์ให้เป็นเศษส่วนอย่างต่ำ",
-      ]}
-    />
-  ),
+  DivideLabCard, DivideStepsCard, WholeMixedDivideCard,
+  DivideTimerGameCard, DividePracticeCard,
+  DivideSummaryCard,
   () => (
     <LessonQuiz
       title="แบบทดสอบ: หารเศษส่วน"
@@ -80,40 +57,19 @@ export function DivideLessonContent() {
         renderAll={() => (
           <>
             <LessonVideoCard lessonPath="/lessons/divide" videoUrl={VIDEO_URL} title="วิดีโอ: หารเศษส่วน" />
-            <DivideTypeSelector />
+            <DivideLabCard />
+            <DivideStepsCard />
+            <WholeMixedDivideCard />
             <div className="grid gap-5 xl:grid-cols-2">
-              <FractionLabCard />
-              <DivideStepsCard />
-            </div>
-            <div className="grid gap-5 xl:grid-cols-2">
-              <WhyFlipCard />
-              <WholeNumberDivideCard />
-            </div>
-            <div className="grid gap-5 xl:grid-cols-2">
-              <MixedDivideCard />
-              <LiveExperimentCard />
-            </div>
-            <div className="grid gap-5 xl:grid-cols-3">
-              <MultiplyVsDivideCard />
+              <DivideTimerGameCard />
               <DividePracticeCard />
-              <DivideTimerCard />
             </div>
-            <DividePracticeGrid />
-            <LessonSummary
-              gradient="bg-gradient-to-r from-violet-700 to-purple-500"
-              mascot="➗"
-              points={[
-                "การหาร = คงตัวหน้า กลับตัวหลัง แล้วคูณ",
-                "เศษส่วนที่กลับหัว–ท้ายเรียกว่า ส่วนกลับ",
-                "หารด้วยจำนวนเต็ม = คูณด้วย 1 ส่วนจำนวนนั้น",
-                "ทำผลลัพธ์ให้เป็นเศษส่วนอย่างต่ำ",
-              ]}
-            />
+            <DivideSummaryCard />
             <LessonQuiz
               title="แบบทดสอบ: หารเศษส่วน"
               gradient="bg-gradient-to-r from-violet-700 to-purple-500"
               makeQuestion={makeDivideQuestion}
-      lessonSlug="divide"
+              lessonSlug="divide"
             />
           </>
         )}

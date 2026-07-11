@@ -18,11 +18,3 @@ export const mixedImproperMissions: LessonMissionItem[] = [
   { id: "m2", icon: "🔃", title: "แปลงจำนวนคละเป็นเศษเกิน 5 ข้อ", current: 2, target: 5 },
   { id: "m3", icon: "📏", title: "ตำแหน่งบนเส้นจำนวน 5 ข้อ", current: 1, target: 5 }
 ];
-
-export const mixedPracticeActivities = [
-  { id: "toMixed", icon: "🔄", title: "แปลงเศษเกินเป็นจำนวนคละ", desc: "หาร ได้จำนวนเต็มและเศษที่เหลือ" },
-  { id: "toImproper", icon: "🔃", title: "แปลงจำนวนคละเป็นเศษเกิน", desc: "คูณจำนวนเต็มกับตัวส่วน แล้วบวกตัวเศษ" },
-  { id: "match", icon: "🧩", title: "ลากจับคู่", desc: "จับคู่เศษเกินกับจำนวนคละที่เท่ากัน" },
-  { id: "visual", icon: "🖼️", title: "ดูภาพตอบคำถาม", desc: "อ่านภาพแล้วบอกว่าเป็นจำนวนใด" },
-  { id: "timer", icon: "⏱️", title: "เกมจับเวลา 60 วินาที", desc: "แปลงให้ไวภายในเวลาที่กำหนด" }
-];

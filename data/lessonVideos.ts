@@ -16,6 +16,7 @@ export const lessonVideos: Record<string, string> = {
   "/lessons/multiply":         "",   // คูณเศษส่วน
   "/lessons/divide":           "",   // หารเศษส่วน
   "/lessons/equivalent":       "",   // เศษส่วนที่เท่ากัน
+  "/lessons/simplify-expand":  "",   // เศษส่วนอย่างต่ำ
 };
 
 /** แปลง YouTube URL ทุกรูปแบบเป็น embed URL */

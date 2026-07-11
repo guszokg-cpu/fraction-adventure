@@ -12,9 +12,9 @@ import { simplifyExpandMeta } from "@/data/lessonSimplifyExpand";
 export default function SimplifyExpandPage() {
   return (
     <AppShell
-      title="ย่อและขยายเศษส่วน"
+      title="เศษส่วนอย่างต่ำ"
       eyebrow="Lesson 7"
-      description="ทำให้เท่ากัน โดยค่าไม่เปลี่ยน"
+      description="ย่อให้สุด หาหัวหน้าครอบครัวเศษส่วนเท่ากัน"
       activePath="/lessons/simplify-expand"
       heroImage={simplifyExpandMeta.heroImage}
       themeColor={simplifyExpandMeta.themeColor}

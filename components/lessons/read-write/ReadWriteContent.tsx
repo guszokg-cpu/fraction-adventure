@@ -8,6 +8,7 @@ import { ProperFractionSection } from "@/components/lessons/fraction-types/Prope
 import { ImproperFractionSection } from "@/components/lessons/fraction-types/ImproperFractionSection";
 import { MixedNumberSection } from "@/components/lessons/fraction-types/MixedNumberSection";
 import { ClassifyActivity } from "@/components/lessons/fraction-types/ClassifyActivity";
+import { TreasureSortGame } from "@/components/lessons/fraction-types/TreasureSortGame";
 import { readWriteMeta } from "@/data/lessonReadWrite";
 import { LessonQuiz } from "@/components/lessons/LessonQuiz";
 import { makeFractionTypesQuestion } from "@/lib/quizGenerators";
@@ -19,6 +20,7 @@ const STEPS = [
   { id: 4, title: "จำนวนคละ", icon: "🟣" },
   { id: 5, title: "แยกประเภท", icon: "🧩" },
   { id: 6, title: "แบบฝึกทักษะ", icon: "✏️" },
+  { id: 7, title: "เกม", icon: "🎮" },
 ];
 
 const COMPONENTS = [
@@ -31,6 +33,7 @@ const COMPONENTS = [
       lessonSlug="read-write"
     />
   ),
+  TreasureSortGame,
 ];
 
 export function ReadWriteContent() {
@@ -57,6 +60,7 @@ export function ReadWriteContent() {
               makeQuestion={makeFractionTypesQuestion}
               lessonSlug="read-write"
             />
+            <TreasureSortGame />
           </>
         )}
         footer={<LessonActionBar meta={readWriteMeta} />}

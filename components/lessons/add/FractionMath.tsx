@@ -44,6 +44,36 @@ export function SectionHeader({ number, title }: SectionHeaderProps) {
   );
 }
 
+type TwoToneBarProps = {
+  a: number;
+  b: number;
+  denominator: number;
+  className?: string;
+};
+
+/** แท่งเดียวแบ่ง denominator ช่อง — a ช่องแรกสีฟ้า, b ช่องถัดมาสีม่วง (แสดงผลการรวมสองเศษส่วน) */
+export function TwoToneBar({ a, b, denominator, className }: TwoToneBarProps) {
+  const width = 100 / denominator;
+  return (
+    <div className={cn("grid place-items-center", className)}>
+      <svg viewBox="0 0 100 26" className="h-full w-full" role="img" aria-label={`${a} บวก ${b} จาก ${denominator} ส่วน`}>
+        {Array.from({ length: denominator }, (_, i) => (
+          <rect
+            key={i}
+            x={i * width}
+            y={0}
+            width={width}
+            height={26}
+            fill={i < a ? "#38bdf8" : i < a + b ? "#a78bfa" : "#ffffff"}
+            stroke="#312e81"
+            strokeWidth={1.2}
+          />
+        ))}
+      </svg>
+    </div>
+  );
+}
+
 type MiniFractionBarProps = {
   numerator: number;
   denominator: number;

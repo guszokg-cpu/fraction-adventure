@@ -76,8 +76,8 @@ export const mockLessons: Lesson[] = [
   {
     id: "simplify-expand",
     order: 7,
-    title: "ย่อและขยายเศษส่วน",
-    subtitle: "หาค่าเท่ากันด้วยการคูณและหาร",
+    title: "เศษส่วนอย่างต่ำ",
+    subtitle: "ย่อให้สุด หาหัวหน้าครอบครัวเศษส่วนเท่ากัน",
     gradeRange: "ป.5-ป.6",
     stars: 3,
     progress: 100,

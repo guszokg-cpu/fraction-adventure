@@ -51,7 +51,7 @@ function makeProblem(): Problem {
 export function EquivalentPracticeCard() {
   return (
     <PracticeShell<Problem>
-      badge={7}
+      badge={5}
       title="แบบฝึกหัด — หาเศษส่วนที่เท่ากัน"
       accent="teal"
       gradient="bg-gradient-to-r from-teal-600 to-violet-500"

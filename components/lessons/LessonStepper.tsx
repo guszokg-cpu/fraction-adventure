@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, type ReactNode } from "react";
-import { ArrowLeft, ArrowRight, Check, Maximize2, Minimize2, List, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Maximize2, Minimize2, List, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { ExtraContentBlocks } from "@/components/lessons/ExtraContentBlocks";
 import { isStepHiddenApi } from "@/lib/extraContentApi";
@@ -29,6 +29,45 @@ export function LessonStepper({ steps, renderStep, renderAll, footer, lessonSlug
   const [isFullView, setIsFullView] = useState(false);
   const [stepHidden, setStepHidden] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
+  const stripRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const [canLeft, setCanLeft] = useState(false);
+  const [canRight, setCanRight] = useState(false);
+
+  function updateArrows() {
+    const el = stripRef.current;
+    if (!el) return;
+    setCanLeft(el.scrollLeft > 4);
+    setCanRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
+  }
+
+  // Track overflow so side arrows show only when there is more to scroll
+  useEffect(() => {
+    if (isFullView || showAll) return;
+    updateArrows();
+    const el = stripRef.current;
+    if (!el) return;
+    el.addEventListener("scroll", updateArrows, { passive: true });
+    window.addEventListener("resize", updateArrows);
+    return () => {
+      el.removeEventListener("scroll", updateArrows);
+      window.removeEventListener("resize", updateArrows);
+    };
+  }, [isFullView, showAll, steps.length]);
+
+  // Keep the active step card centered in the strip (only scrolls the strip, not the page)
+  useEffect(() => {
+    if (isFullView || showAll) return;
+    const el = stripRef.current;
+    const card = cardRefs.current[currentStep - 1];
+    if (!el || !card) return;
+    const delta = card.getBoundingClientRect().left - el.getBoundingClientRect().left - (el.clientWidth - card.clientWidth) / 2;
+    el.scrollBy({ left: delta, behavior: "smooth" });
+  }, [currentStep, isFullView, showAll]);
+
+  function scrollStrip(dir: -1 | 1) {
+    stripRef.current?.scrollBy({ left: dir * 320, behavior: "smooth" });
+  }
 
   useEffect(() => {
     if (!lessonSlug) return;
@@ -157,8 +196,38 @@ export function LessonStepper({ steps, renderStep, renderAll, footer, lessonSlug
             </button>
           </div>
 
-          {/* Step cards — horizontal scroll */}
-          <div className="flex items-center overflow-x-auto pb-1 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-200">
+          {/* Step cards — horizontal scroll with side arrows */}
+          <div className="relative">
+            {/* Left arrow */}
+            {canLeft && (
+              <>
+                <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-white to-transparent" />
+                <button
+                  onClick={() => scrollStrip(-1)}
+                  aria-label="เลื่อนดูขั้นก่อนหน้า"
+                  className="absolute left-0 top-1/2 z-20 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-md transition hover:border-violet-300 hover:text-violet-600 active:scale-95"
+                >
+                  <ChevronLeft size={22} />
+                </button>
+              </>
+            )}
+            {/* Right arrow */}
+            {canRight && (
+              <>
+                <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-white to-transparent" />
+                <button
+                  onClick={() => scrollStrip(1)}
+                  aria-label="เลื่อนดูขั้นถัดไป"
+                  className="absolute right-0 top-1/2 z-20 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-md transition hover:border-violet-300 hover:text-violet-600 active:scale-95"
+                >
+                  <ChevronRight size={22} />
+                </button>
+              </>
+            )}
+            <div
+              ref={stripRef}
+              className="flex items-center overflow-x-auto pb-1 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-200"
+            >
             {steps.map((s, idx) => {
               const isCurrent = s.id === currentStep;
               const isDone = visited.has(s.id) && !isCurrent;
@@ -170,6 +239,7 @@ export function LessonStepper({ steps, renderStep, renderAll, footer, lessonSlug
 
                   {/* Card */}
                   <button
+                    ref={(el) => { cardRefs.current[idx] = el; }}
                     onClick={() => goTo(s.id)}
                     className={cn(
                       "flex w-[148px] flex-col items-center gap-2.5 rounded-xl border-2 px-3 py-4 text-center transition-all duration-200 hover:-translate-y-0.5",
@@ -234,6 +304,7 @@ export function LessonStepper({ steps, renderStep, renderAll, footer, lessonSlug
                 </div>
               );
             })}
+            </div>
           </div>
         </div>
       )}

@@ -67,8 +67,8 @@ export const pageRoutes: PageRoute[] = [
   {
     order: 8,
     href: "/lessons/simplify-expand",
-    title: "ย่อและขยายเศษส่วน",
-    description: "ทำเศษส่วนให้เท่ากันโดยไม่เปลี่ยนค่า",
+    title: "เศษส่วนอย่างต่ำ",
+    description: "ย่อให้สุด หาหัวหน้าครอบครัวเศษส่วนเท่ากัน",
     eyebrow: "Lesson 7",
     icon: "🔎"
   },

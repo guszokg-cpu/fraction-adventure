@@ -19,7 +19,7 @@ const LESSONS = [
   { slug: "number-line",         title: "เศษส่วนบนเส้นจำนวน" },
   { slug: "compare",             title: "เปรียบเทียบเศษส่วน" },
   { slug: "equivalent",          title: "เศษส่วนที่เท่ากัน" },
-  { slug: "simplify-expand",     title: "ย่อและขยายเศษส่วน" },
+  { slug: "simplify-expand",     title: "เศษส่วนอย่างต่ำ" },
   { slug: "mixed-improper",      title: "จำนวนคละและเศษเกิน" },
   { slug: "add",                 title: "บวกเศษส่วน" },
   { slug: "subtract",            title: "ลบเศษส่วน" },

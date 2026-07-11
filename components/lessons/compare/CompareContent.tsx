@@ -9,6 +9,7 @@ import { RaceNumberLine } from "@/components/lessons/compare/RaceNumberLine";
 import { EqualizeMachine } from "@/components/lessons/compare/EqualizeMachine";
 import { CompareSandbox } from "@/components/lessons/compare/CompareSandbox";
 import { CompareGame } from "@/components/lessons/compare/CompareGame";
+import { CompareGameHub } from "@/components/lessons/compare/CompareGameHub";
 import { compareMeta } from "@/data/lessonCompare";
 import { LessonVideoCard } from "@/components/lessons/LessonVideoCard";
 import { lessonVideos } from "@/data/lessonVideos";
@@ -26,6 +27,7 @@ const STEPS = [
   { id: 6, title: "ห้องทดลอง", icon: "🔬" },
   { id: 7, title: "เกมฝึกทักษะ", icon: "🎮" },
   { id: 8, title: "แบบทดสอบ", icon: "🏆" },
+  { id: 9, title: "โซนเกม", icon: "🎮" },
 ];
 
 const COMPONENTS = [
@@ -39,6 +41,7 @@ const COMPONENTS = [
       lessonSlug="compare"
     />
   ),
+  CompareGameHub,
 ];
 
 export function CompareContent() {
@@ -67,6 +70,7 @@ export function CompareContent() {
               makeQuestion={makeCompareQuestion}
               lessonSlug="compare"
             />
+            <CompareGameHub />
           </>
         )}
         footer={<LessonActionBar meta={compareMeta} />}

@@ -96,9 +96,9 @@ export function InteractiveFractionExamples() {
             🧪
           </span>
           <div>
-            <h2 className="text-xl font-extrabold text-brand-900">ตัวอย่างเศษส่วนรอบตัวเรา</h2>
+            <h2 className="text-xl font-extrabold text-brand-900">ห้องทดลองเศษส่วน</h2>
             <p className="mt-0.5 text-sm font-bold text-slate-500">
-              ดูภาพ เปลี่ยนจำนวนส่วน แล้วสังเกตว่าเศษส่วนเปลี่ยนอย่างไร
+              เลือกของ ปรับจำนวนส่วน ฟังคำอ่าน — หรือกดซ่อนคำตอบให้เพื่อนทายหน้าชั้น
             </p>
           </div>
         </div>

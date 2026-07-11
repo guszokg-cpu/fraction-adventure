@@ -1,6 +1,4 @@
-import { FractionShape } from "@/components/fractions/FractionShape";
 import { cn } from "@/lib/cn";
-import type { FractionTone } from "@/types/lessonContent";
 
 type FractionStackProps = {
   top: string | number;
@@ -44,42 +42,3 @@ export function StepBadge({ children }: StepBadgeProps) {
   );
 }
 
-type MiniFractionBarProps = {
-  numerator: number;
-  denominator: number;
-  tone?: FractionTone;
-  label?: React.ReactNode;
-  className?: string;
-};
-
-export function MiniFractionBar({ numerator, denominator, tone = "violet", label, className }: MiniFractionBarProps) {
-  return (
-    <div className={cn("rounded-xl bg-white p-3 text-center shadow-sm ring-1 ring-violet-100", className)}>
-      <FractionShape numerator={numerator} denominator={denominator} shape="bar" tone={tone} className="mx-auto h-10 w-full" />
-      {label ? <div className="mt-2 text-sm font-extrabold text-brand-900">{label}</div> : null}
-    </div>
-  );
-}
-
-type SegmentBarProps = {
-  filled: number;
-  denominator: number;
-  groupSize?: number;
-};
-
-export function SegmentBar({ filled, denominator, groupSize = 1 }: SegmentBarProps) {
-  return (
-    <div className="grid gap-1" style={{ gridTemplateColumns: `repeat(${denominator}, minmax(0, 1fr))` }}>
-      {Array.from({ length: denominator }, (_, index) => (
-        <div
-          key={index}
-          className={cn(
-            "h-11 rounded border border-violet-900/50 bg-white",
-            index < filled && "bg-pink-300",
-            index < filled && index % groupSize === 0 && "ring-2 ring-violet-500"
-          )}
-        />
-      ))}
-    </div>
-  );
-}

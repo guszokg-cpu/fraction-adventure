@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { CheckCircle, XCircle, ArrowRight, RotateCcw, Trophy } from "lucide-react";
+import { CheckCircle, XCircle, ArrowRight, RotateCcw, Trophy, Square } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { FractionShape } from "@/components/fractions/FractionShape";
 import { FractionStack } from "@/components/fractions/FractionStack";
@@ -82,12 +82,20 @@ function ChoiceDisplay({ text }: { text: string }) {
   return <span className="text-base font-extrabold">{text}</span>;
 }
 
-/** Inline-render N/D patterns within a prompt string */
+/** Inline-render N/D patterns within a prompt string; "?/D" renders with an empty box standing in for the unknown numerator */
 function PromptText({ text }: { text: string }) {
-  const parts = text.split(/(\d+\/\d+)/g);
+  const parts = text.split(/(\?\/\d+|\d+\/\d+)/g);
   return (
     <>
       {parts.map((part, i) => {
+        if (/^\?\/\d+$/.test(part)) {
+          const d = Number(part.split("/")[1]);
+          return (
+            <span key={i} className="inline-flex items-end">
+              <FractionStack top={<Square size={20} strokeWidth={3} />} bottom={d} className="text-xl" />
+            </span>
+          );
+        }
         if (/^\d+\/\d+$/.test(part)) {
           const [n, d] = part.split("/").map(Number);
           return (
