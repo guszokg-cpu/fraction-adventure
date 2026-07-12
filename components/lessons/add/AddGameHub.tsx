@@ -5,6 +5,9 @@ import { ArrowLeft, Play, Lock } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { AddJuiceTankGame } from "@/components/lessons/add/AddJuiceTankGame";
 import { AddMixedDrinkGame } from "@/components/lessons/add/AddMixedDrinkGame";
+import { AddBridgeGame } from "@/components/lessons/add/AddBridgeGame";
+import { AddJourneyGame } from "@/components/lessons/add/AddJourneyGame";
+import { AddRaceGame } from "@/components/lessons/add/AddRaceGame";
 import { cn } from "@/lib/cn";
 
 type GameDef = { id: string; emoji: string; title: string; desc: string; accent: string; ready: boolean };
@@ -12,9 +15,9 @@ type GameDef = { id: string; emoji: string; title: string; desc: string; accent:
 const GAMES: GameDef[] = [
   { id: "juice", emoji: "🍊", title: "โหลน้ำส้มรวมพลัง", desc: "เทน้ำส้มจากโหล A ลงโหล B ดูระดับเพิ่มขึ้นจริง — ครูตั้งโจทย์ได้ + โหมดทายก่อนเท", accent: "from-orange-500 to-amber-500", ready: true },
   { id: "drink", emoji: "🥤", title: "บาร์ผสมน้ำ (จำนวนคละ)", desc: "เลือกสี+ตั้งชื่อน้ำ เทรวมสองแก้ว น้ำล้นก็เพิ่มแก้ว = จำนวนคละ 1 แก้วกับอีกเศษ", accent: "from-pink-500 to-rose-500", ready: true },
-  { id: "bridge", emoji: "🌉", title: "สะพานข้ามเหวเศษส่วน", desc: "เลือกแผ่นไม้ 2 แผ่นบวกให้พอดี ตัวละครเดินข้าม (เร็ว ๆ นี้)", accent: "from-emerald-500 to-teal-500", ready: false },
-  { id: "whole", emoji: "🧩", title: "จับคู่ให้ครบ 1", desc: "เปิดการ์ดคู่ที่บวกกันได้ 1 พอดี (เร็ว ๆ นี้)", accent: "from-violet-500 to-purple-500", ready: false },
-  { id: "race", emoji: "🏎️", title: "รถแข่งบวกเร็ว", desc: "ตอบเร็วรถพุ่ง ใครถึงเส้นชัยก่อนชนะ (เร็ว ๆ นี้)", accent: "from-rose-500 to-pink-500", ready: false },
+  { id: "bridge", emoji: "🌉", title: "สะพานข้ามเหวเศษส่วน", desc: "เลือกแผ่นไม้ 2 แผ่นบวกให้พอดีเหว ตัวละครเดินข้าม — โหมดครู + แข่ง 2 ทีม", accent: "from-emerald-500 to-teal-500", ready: true },
+  { id: "whole", emoji: "🚗", title: "ขับรถให้ถึงเส้นชัย (ครบ 1)", desc: "เลือกระยะที่เหลือให้รถถึงเส้นชัยพอดี (รวมกันได้ 1) + โหมดระยะจริง กม./ม.", accent: "from-violet-500 to-purple-500", ready: true },
+  { id: "race", emoji: "🏎️", title: "รถแข่งบวกเร็ว", desc: "เห็นโจทย์ตอบเลย ตอบถูกรถพุ่ง แข่งกับรถ AI ถึงเส้นชัยก่อนชนะ", accent: "from-rose-500 to-pink-500", ready: true },
 ];
 
 export function AddGameHub() {
@@ -82,6 +85,9 @@ export function AddGameHub() {
             </div>
             {activeGame.id === "juice" && <AddJuiceTankGame />}
             {activeGame.id === "drink" && <AddMixedDrinkGame />}
+            {activeGame.id === "bridge" && <AddBridgeGame />}
+            {activeGame.id === "whole" && <AddJourneyGame />}
+            {activeGame.id === "race" && <AddRaceGame />}
           </div>
         )}
       </div>
