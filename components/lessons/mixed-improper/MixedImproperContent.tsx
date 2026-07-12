@@ -10,6 +10,7 @@ import { MixedNumberLineGame } from "@/components/lessons/mixed-improper/MixedNu
 import { MixedSummaryCard } from "@/components/lessons/mixed-improper/MixedSummaryCard";
 import { MixedTimerGameCard } from "@/components/lessons/mixed-improper/MixedTimerGameCard";
 import { TwoWayConverterCard } from "@/components/lessons/mixed-improper/TwoWayConverterCard";
+import { MixedGameHub } from "@/components/lessons/mixed-improper/MixedGameHub";
 import { mixedImproperMeta } from "@/data/lessonMixedImproper";
 import { LessonVideoCard } from "@/components/lessons/LessonVideoCard";
 import { lessonVideos } from "@/data/lessonVideos";
@@ -28,6 +29,7 @@ const STEPS = [
   { id: 7, title: "เกมจับเวลา" },
   { id: 8, title: "สรุปบทเรียน" },
   { id: 9, title: "แบบทดสอบ" },
+  { id: 10, title: "โซนเกม" },
 ];
 
 const COMPONENTS = [
@@ -43,6 +45,7 @@ const COMPONENTS = [
       lessonSlug="mixed-improper"
     />
   ),
+  MixedGameHub,
 ];
 
 export function MixedImproperContent() {
@@ -74,6 +77,7 @@ export function MixedImproperContent() {
               makeQuestion={makeMixedImproperQuestion}
               lessonSlug="mixed-improper"
             />
+            <MixedGameHub />
           </>
         )}
         footer={<LessonActionBar meta={mixedImproperMeta} />}

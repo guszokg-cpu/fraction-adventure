@@ -9,6 +9,7 @@ import { DiffDenAddCard } from "@/components/lessons/add/DiffDenAddCard";
 import { MakeOneGameCard } from "@/components/lessons/add/MakeOneGameCard";
 import { MixedAddCard } from "@/components/lessons/add/MixedAddCard";
 import { SameDenAddCard } from "@/components/lessons/add/SameDenAddCard";
+import { AddGameHub } from "@/components/lessons/add/AddGameHub";
 import { addLessonMeta } from "@/data/lessonAdd";
 import { LessonVideoCard } from "@/components/lessons/LessonVideoCard";
 import { lessonVideos } from "@/data/lessonVideos";
@@ -26,6 +27,7 @@ const STEPS = [
   { id: 6, title: "ฝึกทำ" },
   { id: 7, title: "สรุปบทเรียน" },
   { id: 8, title: "แบบทดสอบ" },
+  { id: 9, title: "โซนเกม" },
 ];
 
 const COMPONENTS = [
@@ -41,6 +43,7 @@ const COMPONENTS = [
       lessonSlug="add"
     />
   ),
+  AddGameHub,
 ];
 
 export function AddLessonContent() {
@@ -71,6 +74,7 @@ export function AddLessonContent() {
               makeQuestion={makeAddQuestion}
               lessonSlug="add"
             />
+            <AddGameHub />
           </>
         )}
         footer={<LessonActionBar meta={addLessonMeta} />}

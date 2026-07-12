@@ -5,6 +5,8 @@ import { ArrowLeft, Play, Lock } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { FishJarGame } from "@/components/lessons/equivalent/FishJarGame";
 import { FractionChocFactory } from "@/components/lessons/equivalent/FractionChocFactory";
+import { FractionTrainGame } from "@/components/lessons/equivalent/FractionTrainGame";
+import { FractionBalloonGame } from "@/components/lessons/equivalent/FractionBalloonGame";
 import { cn } from "@/lib/cn";
 
 type GameDef = {
@@ -19,8 +21,8 @@ type GameDef = {
 const GAMES: GameDef[] = [
   { id: "jar", emoji: "🐟", title: "โหลปลาเศษส่วน", desc: "ติดแถบเศษส่วนที่โหล เทน้ำหาขีดที่ตรงกัน — โหมดครู + ภารกิจ", accent: "from-sky-500 to-cyan-500", ready: true },
   { id: "choc", emoji: "🍫", title: "โรงงานช็อกโกแลตแฝด", desc: "ตัดแท่งขวาให้เท่าแท่งซ้าย พิสูจน์ด้วยการเทียบปริมาณ", accent: "from-amber-600 to-orange-500", ready: true },
-  { id: "train", emoji: "🚂", title: "รถไฟจับคู่เศษส่วน", desc: "เปิดการ์ดจับคู่ที่เท่ากัน มีโหมด 2 ทีมแข่งหน้าห้อง", accent: "from-emerald-500 to-teal-500", ready: false },
-  { id: "balloon", emoji: "🎈", title: "ยิงลูกโป่งเศษส่วน", desc: "แตะเฉพาะลูกโป่งที่เท่ากับโจทย์ ก่อนลอยหลุดไป!", accent: "from-rose-500 to-pink-500", ready: false },
+  { id: "train", emoji: "🚂", title: "รถไฟจับคู่เศษส่วน", desc: "เปิดการ์ดจับคู่ที่เท่ากัน ต่อขบวนรถไฟ 3D + โหมด 2 ทีมแข่งหน้าห้อง", accent: "from-emerald-500 to-teal-500", ready: true },
+  { id: "balloon", emoji: "🎈", title: "ยิงลูกโป่งเศษส่วน", desc: "แตะเฉพาะลูกโป่งที่เท่ากับโจทย์ ก่อนลอยหลุดไป!", accent: "from-rose-500 to-pink-500", ready: true },
 ];
 
 export function EquivalentGameHub() {
@@ -93,6 +95,8 @@ export function EquivalentGameHub() {
             </div>
             {activeGame.id === "jar" && <FishJarGame />}
             {activeGame.id === "choc" && <FractionChocFactory />}
+            {activeGame.id === "train" && <FractionTrainGame />}
+            {activeGame.id === "balloon" && <FractionBalloonGame />}
           </div>
         )}
       </div>

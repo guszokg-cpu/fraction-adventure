@@ -11,6 +11,7 @@ import { MatchFamilyGameCard } from "@/components/lessons/simplify-expand/MatchF
 import { SimplifyLabCard } from "@/components/lessons/simplify-expand/SimplifyLabCard";
 import { SimplifySummaryCard } from "@/components/lessons/simplify-expand/SimplifySummaryCard";
 import { SpeedSimplifyGameCard } from "@/components/lessons/simplify-expand/SpeedSimplifyGameCard";
+import { SimplifyGameHub } from "@/components/lessons/simplify-expand/SimplifyGameHub";
 import { simplifyExpandMeta } from "@/data/lessonSimplifyExpand";
 import { lessonVideos } from "@/data/lessonVideos";
 import { LessonQuiz } from "@/components/lessons/LessonQuiz";
@@ -28,6 +29,7 @@ const STEPS = [
   { id: 7, title: "ย่อเร็ว 60 วิ" },
   { id: 8, title: "สรุปบทเรียน" },
   { id: 9, title: "แบบทดสอบ" },
+  { id: 10, title: "โซนเกม" },
 ];
 
 const COMPONENTS = [
@@ -43,6 +45,7 @@ const COMPONENTS = [
       lessonSlug="simplify-expand"
     />
   ),
+  SimplifyGameHub,
 ];
 
 export function SimplifyExpandContent() {
@@ -74,6 +77,7 @@ export function SimplifyExpandContent() {
               makeQuestion={makeSimplifyQuestion}
               lessonSlug="simplify-expand"
             />
+            <SimplifyGameHub />
           </>
         )}
         footer={<LessonActionBar meta={simplifyExpandMeta} />}
