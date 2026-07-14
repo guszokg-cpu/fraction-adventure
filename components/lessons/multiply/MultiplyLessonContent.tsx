@@ -10,6 +10,7 @@ import { MultiplyStepsCard } from "@/components/lessons/multiply/MultiplyStepsCa
 import { MultiplySummaryCard } from "@/components/lessons/multiply/MultiplySummaryCard";
 import { MultiplyTimerGameCard } from "@/components/lessons/multiply/MultiplyTimerGameCard";
 import { WholeMixedMultiplyCard } from "@/components/lessons/multiply/WholeMixedMultiplyCard";
+import { MultiplyGameHub } from "@/components/lessons/multiply/MultiplyGameHub";
 import { multiplyLessonMeta } from "@/data/lessonMultiply";
 import { LessonVideoCard } from "@/components/lessons/LessonVideoCard";
 import { lessonVideos } from "@/data/lessonVideos";
@@ -28,6 +29,7 @@ const STEPS = [
   { id: 7, title: "ฝึกทำ" },
   { id: 8, title: "สรุปบทเรียน" },
   { id: 9, title: "แบบทดสอบ" },
+  { id: 10, title: "โซนเกม" },
 ];
 
 const COMPONENTS = [
@@ -43,6 +45,7 @@ const COMPONENTS = [
       lessonSlug="multiply"
     />
   ),
+  MultiplyGameHub,
 ];
 
 export function MultiplyLessonContent() {
@@ -74,6 +77,7 @@ export function MultiplyLessonContent() {
               makeQuestion={makeMultiplyQuestion}
               lessonSlug="multiply"
             />
+            <MultiplyGameHub />
           </>
         )}
         footer={<LessonActionBar meta={multiplyLessonMeta} />}

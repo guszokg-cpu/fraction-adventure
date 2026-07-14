@@ -9,6 +9,7 @@ import { SameDenSubtractCard } from "@/components/lessons/subtract/SameDenSubtra
 import { SubtractPracticeCard } from "@/components/lessons/subtract/SubtractPracticeCard";
 import { SubtractSummaryCard } from "@/components/lessons/subtract/SubtractSummaryCard";
 import { SubtractTimerGameCard } from "@/components/lessons/subtract/SubtractTimerGameCard";
+import { SubtractGameHub } from "@/components/lessons/subtract/SubtractGameHub";
 import { subtractLessonMeta } from "@/data/lessonSubtract";
 import { LessonVideoCard } from "@/components/lessons/LessonVideoCard";
 import { lessonVideos } from "@/data/lessonVideos";
@@ -26,6 +27,7 @@ const STEPS = [
   { id: 6, title: "ฝึกทำ" },
   { id: 7, title: "สรุปบทเรียน" },
   { id: 8, title: "แบบทดสอบ" },
+  { id: 9, title: "โซนเกม" },
 ];
 
 const COMPONENTS = [
@@ -41,6 +43,7 @@ const COMPONENTS = [
       lessonSlug="subtract"
     />
   ),
+  SubtractGameHub,
 ];
 
 export function SubtractLessonContent() {
@@ -71,6 +74,7 @@ export function SubtractLessonContent() {
               makeQuestion={makeSubtractQuestion}
               lessonSlug="subtract"
             />
+            <SubtractGameHub />
           </>
         )}
         footer={<LessonActionBar meta={subtractLessonMeta} />}
