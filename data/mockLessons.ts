@@ -107,7 +107,7 @@ export const mockLessons: Lesson[] = [
     progress: 0,
     status: "available",
     icon: "➕",
-    color: "slate"
+    color: "pink"
   },
   {
     id: "subtract-fractions",
@@ -119,7 +119,7 @@ export const mockLessons: Lesson[] = [
     progress: 0,
     status: "available",
     icon: "➖",
-    color: "slate"
+    color: "sky"
   },
   {
     id: "multiply-fractions",
@@ -131,7 +131,7 @@ export const mockLessons: Lesson[] = [
     progress: 0,
     status: "available",
     icon: "✖️",
-    color: "slate"
+    color: "amber"
   },
   {
     id: "divide-fractions",
@@ -143,7 +143,7 @@ export const mockLessons: Lesson[] = [
     progress: 0,
     status: "available",
     icon: "➗",
-    color: "slate"
+    color: "violet"
   },
   {
     id: "word-problems",

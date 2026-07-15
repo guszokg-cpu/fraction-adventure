@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, LayoutGrid, X } from "lucide-react";
+import { Home, LayoutGrid, Gamepad2, X } from "lucide-react";
 import { pageRoutes } from "@/data/pageRoutes";
 
 const LESSON_HREFS = new Set([
@@ -26,7 +26,7 @@ export function MobileNav({ activePath }: { activePath?: string }) {
     <>
       {/* แถบนำทางล่าง (เฉพาะจอเล็ก) */}
       <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur lg:hidden">
-        <div className="mx-auto grid max-w-md grid-cols-3">
+        <div className="mx-auto grid max-w-md grid-cols-4">
           <Link
             href="/"
             className={cn(
@@ -46,8 +46,18 @@ export function MobileNav({ activePath }: { activePath?: string }) {
           </button>
           <div className="flex flex-col items-center justify-center gap-0.5 py-2 text-[11px] font-extrabold text-slate-400">
             <span className="text-base leading-none">{current?.icon ?? "🍕"}</span>
-            <span className="max-w-[6rem] truncate">{current?.title ?? "เศษส่วน"}</span>
+            <span className="max-w-[5rem] truncate">{current?.title ?? "เศษส่วน"}</span>
           </div>
+          <Link
+            href="/games"
+            className={cn(
+              "flex flex-col items-center gap-0.5 py-2 text-[11px] font-extrabold transition",
+              currentPath === "/games" ? "text-violet-600" : "text-slate-500",
+            )}
+          >
+            <Gamepad2 size={20} />
+            เกมเศษส่วน
+          </Link>
         </div>
       </nav>
 

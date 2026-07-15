@@ -9,6 +9,7 @@ import {
   Save, Check, Shield, ImagePlus
 } from "lucide-react";
 import { resizeImageToBase64 } from "@/lib/imageUtils";
+import { AdminGameCovers } from "@/components/admin/AdminGameCovers";
 import { cn } from "@/lib/cn";
 import { getSystemSettings, saveSystemSettings } from "@/lib/systemSettings";
 import { loadClassrooms, saveClassrooms } from "@/lib/classroomStore";
@@ -17,7 +18,7 @@ import { pageRoutes } from "@/data/pageRoutes";
 import type { MockClassroom } from "@/lib/classroomStore";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-type TabId = "website" | "lessons" | "videos" | "worksheets" | "display" | "rewards" | "students" | "backup";
+type TabId = "website" | "lessons" | "videos" | "gamecovers" | "worksheets" | "display" | "rewards" | "students" | "backup";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 function genPin() { return Math.random().toString(36).slice(2, 8).toUpperCase(); }
@@ -38,6 +39,7 @@ const TABS: { id: TabId; emoji: string; label: string; active: string }[] = [
   { id: "website",    emoji: "🌐", label: "ข้อมูลเว็บไซต์",       active: "bg-sky-500 text-white" },
   { id: "lessons",    emoji: "📚", label: "จัดการบทเรียน",        active: "bg-violet-600 text-white" },
   { id: "videos",     emoji: "🎬", label: "วิดีโอบทเรียน",        active: "bg-red-500 text-white" },
+  { id: "gamecovers", emoji: "🎮", label: "หน้าปกเกม",            active: "bg-purple-600 text-white" },
   { id: "worksheets", emoji: "📋", label: "ใบงาน",                active: "bg-amber-500 text-white" },
   { id: "display",    emoji: "🎨", label: "การแสดงผล",            active: "bg-fuchsia-600 text-white" },
   { id: "rewards",    emoji: "🏆", label: "คะแนนและรางวัล",       active: "bg-yellow-500 text-white" },
@@ -603,6 +605,8 @@ export function SettingsContent() {
       )}
 
       {/* ── 4. ใบงาน ─────────────────────────────────────────────────────── */}
+      {tab === "gamecovers" && <AdminGameCovers />}
+
       {tab === "worksheets" && (
         <Card>
           <CardHead emoji="📋" title="จัดการใบงาน" sub="เพิ่ม แก้ไข เผยแพร่ใบงานสำหรับแต่ละบทเรียน" />

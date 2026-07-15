@@ -9,6 +9,7 @@ import { DivideStepsCard } from "@/components/lessons/divide/DivideStepsCard";
 import { DivideSummaryCard } from "@/components/lessons/divide/DivideSummaryCard";
 import { DivideTimerGameCard } from "@/components/lessons/divide/DivideTimerGameCard";
 import { WholeMixedDivideCard } from "@/components/lessons/divide/WholeMixedDivideCard";
+import { DivideGameHub } from "@/components/lessons/divide/DivideGameHub";
 import { divideLessonMeta } from "@/data/lessonDivide";
 import { LessonVideoCard } from "@/components/lessons/LessonVideoCard";
 import { lessonVideos } from "@/data/lessonVideos";
@@ -26,6 +27,7 @@ const STEPS = [
   { id: 6, title: "ฝึกทำ" },
   { id: 7, title: "สรุปบทเรียน" },
   { id: 8, title: "แบบทดสอบ" },
+  { id: 9, title: "โซนเกม" },
 ];
 
 const COMPONENTS = [
@@ -41,6 +43,7 @@ const COMPONENTS = [
       lessonSlug="divide"
     />
   ),
+  DivideGameHub,
 ];
 
 export function DivideLessonContent() {
@@ -71,6 +74,7 @@ export function DivideLessonContent() {
               makeQuestion={makeDivideQuestion}
               lessonSlug="divide"
             />
+            <DivideGameHub />
           </>
         )}
         footer={<LessonActionBar meta={divideLessonMeta} />}

@@ -87,6 +87,29 @@ export function LessonStepper({ steps, renderStep, renderAll, footer, lessonSlug
     return () => { document.body.style.overflow = ""; };
   }, [isFullView]);
 
+  /* เต็มจอจริง: ขอ Fullscreen API ของเบราว์เซอร์ (ซ่อนแถบที่อยู่/แท็บ) ควบคู่กับ overlay
+     บางเบราว์เซอร์/บริบทอาจปฏิเสธ — ถ้าล้มเหลวก็ยังได้ overlay เต็ม viewport เหมือนเดิม */
+  async function enterFullView() {
+    setIsFullView(true);
+    try { if (!document.fullscreenElement) await document.documentElement.requestFullscreen(); } catch { /* ไม่รองรับ — ใช้ overlay อย่างเดียว */ }
+  }
+  async function exitFullView() {
+    setIsFullView(false);
+    try { if (document.fullscreenElement) await document.exitFullscreen(); } catch { /* ignore */ }
+  }
+
+  // ผู้ใช้กด ESC / F11 ออกเอง → sync state กลับ
+  useEffect(() => {
+    function onFsChange() {
+      if (!document.fullscreenElement) setIsFullView(false);
+    }
+    document.addEventListener("fullscreenchange", onFsChange);
+    return () => document.removeEventListener("fullscreenchange", onFsChange);
+  }, []);
+
+  // ออกจาก fullscreen ของเบราว์เซอร์เมื่อคอมโพเนนต์ถูกถอด
+  useEffect(() => () => { if (document.fullscreenElement) void document.exitFullscreen().catch(() => {}); }, []);
+
   function goTo(step: number) {
     setCurrentStep(step);
     setVisited((prev) => new Set(prev).add(step));
@@ -146,7 +169,7 @@ export function LessonStepper({ steps, renderStep, renderAll, footer, lessonSlug
 
             {/* Fullview pill */}
             <button
-              onClick={() => setIsFullView((v) => !v)}
+              onClick={() => (isFullView ? exitFullView() : enterFullView())}
               title={isFullView ? "ออกจากเต็มจอ" : "ดูเต็มจอ"}
               className="flex shrink-0 items-center gap-1.5 rounded-xl border border-pink-200 bg-white px-2.5 py-1.5 text-[11px] font-bold text-pink-500 transition hover:border-pink-300 hover:bg-pink-100 hover:text-pink-600 md:px-3 md:text-xs"
             >
@@ -316,7 +339,7 @@ export function LessonStepper({ steps, renderStep, renderAll, footer, lessonSlug
         <div ref={contentRef} className={cn(
           "flex flex-col bg-white transition-all duration-300",
           isFullView
-            ? "fixed inset-0 z-[9999] h-screen w-screen overflow-hidden rounded-none bg-slate-50 shadow-none"
+            ? "fixed inset-0 z-[9999] overflow-hidden rounded-none bg-slate-50 shadow-none"
             : "overflow-hidden rounded-2xl border border-slate-200 shadow-sm"
         )}>
 
@@ -344,8 +367,9 @@ export function LessonStepper({ steps, renderStep, renderAll, footer, lessonSlug
                 })}
               </div>
               <button
-                onClick={() => setIsFullView(false)}
+                onClick={() => exitFullView()}
                 className="ml-6 flex shrink-0 items-center gap-1.5 rounded-xl bg-slate-100 px-3.5 py-2 text-sm font-bold text-slate-600 transition hover:bg-red-50 hover:text-red-600"
+                title="ออกจากเต็มจอ (หรือกด ESC)"
               >
                 <Minimize2 size={14} />
                 ออกจากเต็มจอ
@@ -353,23 +377,25 @@ export function LessonStepper({ steps, renderStep, renderAll, footer, lessonSlug
             </div>
           )}
 
-          {/* Content area */}
+          {/* Content area — เต็มจอ: จัดกลางและจำกัดความกว้างให้อ่านสบายบนจอ 16:9 */}
           <div className={cn(
             isFullView
-              ? "flex-1 overflow-y-auto p-6 lg:p-10"
+              ? "flex-1 overflow-y-auto px-4 py-5 lg:px-8 lg:py-7"
               : "min-h-[70vh] p-5 md:p-6 lg:p-8"
           )}>
-            {stepHidden ? (
-              <div className="flex flex-col items-center justify-center gap-3 py-16 text-center text-slate-400">
-                <span className="text-5xl">🙈</span>
-                <p className="text-base font-bold">เนื้อหาหลักถูกซ่อนโดยแอดมิน</p>
-              </div>
-            ) : (
-              renderStep(currentStep)
-            )}
-            {lessonSlug && (
-              <ExtraContentBlocks lessonSlug={lessonSlug} stepIndex={currentStep} />
-            )}
+            <div className={cn(isFullView && "mx-auto w-full max-w-[1500px]")}>
+              {stepHidden ? (
+                <div className="flex flex-col items-center justify-center gap-3 py-16 text-center text-slate-400">
+                  <span className="text-5xl">🙈</span>
+                  <p className="text-base font-bold">เนื้อหาหลักถูกซ่อนโดยแอดมิน</p>
+                </div>
+              ) : (
+                renderStep(currentStep)
+              )}
+              {lessonSlug && (
+                <ExtraContentBlocks lessonSlug={lessonSlug} stepIndex={currentStep} />
+              )}
+            </div>
           </div>
 
           {/* Footer nav */}
