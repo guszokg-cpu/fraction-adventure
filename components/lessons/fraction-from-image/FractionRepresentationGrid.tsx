@@ -1,4 +1,5 @@
 "use client";
+import { Frac } from "@/components/lessons/Frac";
 
 import { Volume2 } from "lucide-react";
 import { Card } from "@/components/ui/Card";
@@ -31,7 +32,7 @@ export function FractionRepresentationGrid({ numerator, denominator }: Props) {
   return (
     <div className="space-y-4">
       <h3 className="flex items-center gap-2 text-xl font-extrabold text-brand-900">
-        <span>⭐</span> ดูรูปแบบต่าง ๆ ที่แทน {numerator}/{denominator} เหมือนกัน
+        <span>⭐</span> ดูรูปแบบต่าง ๆ ที่แทน <Frac n={numerator} d={denominator} /> เหมือนกัน
       </h3>
 
       <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">

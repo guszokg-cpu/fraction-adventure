@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Play, RotateCcw, Trophy, Volume2, VolumeX, Eye } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { FractionText } from "@/components/fractions/FractionText";
+import { Frac } from "@/components/lessons/Frac";
 import { cn } from "@/lib/cn";
 import { generateDrawChallenge, toMixedNumber, type FractionKind } from "@/lib/fractionUtils";
 import { randInt, shuffle } from "@/lib/randomFraction";
@@ -718,7 +719,7 @@ export function TreasureSortGame() {
                   {log.map((r, i) => (
                     <div key={i} className="flex items-center gap-3 px-4 py-2 text-sm">
                       <span className="w-6 shrink-0 text-center">{r.correct ? "✅" : "📖"}</span>
-                      <span className="w-16 shrink-0 font-extrabold text-slate-800">{r.card.kind === "mixed" ? `${r.card.whole} ` : ""}{r.card.numerator}/{r.card.denominator}</span>
+                      <span className="inline-flex w-16 shrink-0 items-center gap-1 font-extrabold text-slate-800">{r.card.kind === "mixed" ? `${r.card.whole} ` : ""}<Frac n={r.card.numerator} d={r.card.denominator} /></span>
                       <span className="w-24 shrink-0 font-bold text-slate-600">{KIND_LABEL[r.card.kind]}</span>
                       <span className="flex-1 text-xs font-bold text-slate-500">{reasonFor(r.card)}</span>
                     </div>

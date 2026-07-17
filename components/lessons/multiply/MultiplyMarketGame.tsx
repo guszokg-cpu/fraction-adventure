@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { Play, RotateCcw, Volume2, VolumeX, FlaskConical, Target, ArrowRight, Eye, EyeOff, Pencil } from "lucide-react";
 import { StackedFraction } from "@/components/lessons/compare/StackedFraction";
+import { Frac } from "@/components/lessons/Frac";
 import { cn } from "@/lib/cn";
 import { randInt, shuffle } from "@/lib/randomFraction";
 
@@ -651,9 +652,9 @@ export function MultiplyMarketGame() {
             {/* คำอธิบายผล */}
             {done && (
               <p className="text-center text-sm font-extrabold text-slate-600">
-                วาง {bags} ถุง ถุงละ <b className="text-emerald-600">{per}/{den}</b> กก. →
-                เอาตัวเศษมารวมกัน {bags} ครั้ง = <b className="text-amber-600">{totalNumRaw}/{den}</b>
-                {totalNum === 0 ? <> = <b className="text-amber-600">{totalWhole}</b> กก.</> : totalWhole > 0 ? <> = <b className="text-amber-600">{totalWhole} กับ {totalNum}/{den}</b> กก.</> : <> กก.</>}
+                วาง {bags} ถุง ถุงละ <Frac n={per} d={den} tone="text-emerald-600" /> กก. →
+                เอาตัวเศษมารวมกัน {bags} ครั้ง = <Frac n={totalNumRaw} d={den} tone="text-amber-600" />
+                {totalNum === 0 ? <> = <b className="text-amber-600">{totalWhole}</b> กก.</> : totalWhole > 0 ? <> = <span className="text-amber-600"><b>{totalWhole}</b> กับ <Frac n={totalNum} d={den} tone="text-amber-600" /></span> กก.</> : <> กก.</>}
                 {" "}— <span className="text-rose-500">ตัวส่วนไม่คูณ!</span> ทุกถุงยังแบ่ง {den} เท่าเท่าเดิม
               </p>
             )}
@@ -691,8 +692,8 @@ export function MultiplyMarketGame() {
               <div className={cn("rounded-2xl border-2 p-3 text-center", checked ? "border-emerald-300 bg-emerald-50" : "border-rose-300 bg-rose-50")}>
                 <p className={cn("text-base font-extrabold", checked ? "text-emerald-700" : "text-rose-600")}>
                   {checked
-                    ? `🎉 เก่งมาก! ${bags} × ${per}/${den} = ${totalNumRaw}/${den}${totalNum === 0 ? ` = ${totalWhole} กก.` : totalWhole > 0 ? ` = ${totalWhole} กับ ${totalNum}/${den} กก.` : " กก."}`
-                    : `ทาย ${guessW > 0 ? guessW + " " : ""}${guessN}/${den} — จริง ๆ คือ ${totalWhole > 0 ? totalWhole + " " : ""}${totalNum}/${den} กก. (เอาเศษ ${per} มารวม ${bags} ครั้ง = ${totalNumRaw}/${den})`}
+                    ? <>🎉 เก่งมาก! {bags} × <Frac n={per} d={den} /> = <Frac n={totalNumRaw} d={den} />{totalNum === 0 ? <> = {totalWhole} กก.</> : totalWhole > 0 ? <> = {totalWhole} กับ <Frac n={totalNum} d={den} /> กก.</> : <> กก.</>}</>
+                    : <>ทาย {guessW > 0 ? guessW + " " : ""}<Frac n={guessN} d={den} /> — จริง ๆ คือ {totalWhole > 0 ? totalWhole + " " : ""}<Frac n={totalNum} d={den} /> กก. (เอาเศษ {per} มารวม {bags} ครั้ง = <Frac n={totalNumRaw} d={den} />)</>}
                 </p>
                 <button onClick={nextMission} className="mt-2 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-500 px-6 py-2 text-base font-extrabold text-white shadow transition hover:brightness-105 active:scale-[0.98]">
                   {round >= MISSIONS_TOTAL ? "🏁 ดูสรุปผล" : <>ลูกค้าคนต่อไป <ArrowRight size={16} /></>}

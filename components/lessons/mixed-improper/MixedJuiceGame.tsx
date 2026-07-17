@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Play, RotateCcw, Volume2, VolumeX, FlaskConical, Zap, Eye, EyeOff, Users, CheckCircle2, XCircle, ArrowRight } from "lucide-react";
 import { StackedFraction } from "@/components/lessons/compare/StackedFraction";
+import { Frac } from "@/components/lessons/Frac";
 import { cn } from "@/lib/cn";
 import { randInt } from "@/lib/randomFraction";
 
@@ -638,7 +639,7 @@ export function MixedJuiceGame() {
                 <ImproperInput num={ansNum} den={m.den} onNum={(d) => setAnsNum((n) => Math.max(0, Math.min(m.den * 4, n + d)))} disabled={checked === true} />
 
                 {reveal && mode === "lab" && (
-                  <p className="text-center text-sm font-extrabold text-violet-600">เฉลย: {m.whole}×{m.den}+{m.num} = {total} → {total}/{m.den}</p>
+                  <p className="flex flex-wrap items-center justify-center gap-1 text-center text-sm font-extrabold text-violet-600">เฉลย: {m.whole}×{m.den}+{m.num} = {total} → <Frac n={total} d={m.den} /></p>
                 )}
                 {checked === false && <p className="text-center text-sm font-extrabold text-rose-600">❌ ยังไม่ตรง ลองนับแก้วทั้งหมดอีกที (ขวดละ {m.den} แก้ว)</p>}
 

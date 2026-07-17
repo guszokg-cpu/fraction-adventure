@@ -10,7 +10,7 @@ import { RealWorldChallengeCard } from "@/components/lessons/fraction-intro/Real
 import { EqualPartsCourtCard } from "@/components/lessons/fraction-intro/EqualPartsCourtCard";
 import { IntroTimerGameCard } from "@/components/lessons/fraction-intro/IntroTimerGameCard";
 import { IntroSummaryCard } from "@/components/lessons/fraction-intro/IntroSummaryCard";
-import { FishingPondGame } from "@/components/lessons/fraction-intro/FishingPondGame";
+import { IntroGameHub } from "@/components/lessons/fraction-intro/IntroGameHub";
 import { LessonVideoCard } from "@/components/lessons/LessonVideoCard";
 import { fractionIntroMeta } from "@/data/lessonFractionIntro";
 import { lessonVideos } from "@/data/lessonVideos";
@@ -29,7 +29,7 @@ const STEPS = [
   { id: 7, title: "เกมจับเวลา" },
   { id: 8, title: "สรุปบทเรียน" },
   { id: 9, title: "แบบทดสอบ" },
-  { id: 10, title: "บ่อปลาเศษส่วน" },
+  { id: 10, title: "โซนเกม" },
 ];
 
 const COMPONENTS = [
@@ -45,7 +45,7 @@ const COMPONENTS = [
       lessonSlug="fraction-intro"
     />
   ),
-  FishingPondGame,
+  IntroGameHub,
 ];
 
 export function FractionIntroContent() {
@@ -77,7 +77,7 @@ export function FractionIntroContent() {
               makeQuestion={makeFractionIntroQuestion}
               lessonSlug="fraction-intro"
             />
-            <FishingPondGame />
+            <IntroGameHub />
           </>
         )}
         footer={<LessonActionBar meta={fractionIntroMeta} />}

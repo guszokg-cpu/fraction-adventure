@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Volume2, VolumeX, FlaskConical, Car as CarIcon, Eye, EyeOff, RotateCcw, Dice5, ArrowRight, Play, MapPin } from "lucide-react";
 import { StackedFraction } from "@/components/lessons/compare/StackedFraction";
+import { Frac } from "@/components/lessons/Frac";
 import { cn } from "@/lib/cn";
 import { randInt, shuffle } from "@/lib/randomFraction";
 
@@ -302,7 +303,7 @@ function AddendSlot({ v, den, tone }: { v: number | null; den: number; tone: str
 
 function RoadScene({ den, leg1, carPos, vType, vBody, vDark, phase, driving, kmLabels, signLabel, arriveLabel }: {
   den: number; leg1: number; carPos: number; vType: VType; vBody: string; vDark: string; phase: Phase; driving: boolean;
-  kmLabels?: string[]; signLabel?: string; arriveLabel?: string;
+  kmLabels?: string[]; signLabel?: React.ReactNode; arriveLabel?: string;
 }) {
   const posOf = (d: number) => ROAD_L + (d / den) * (ROAD_R - ROAD_L);
   const legPos = posOf(leg1);
@@ -342,7 +343,7 @@ function RoadScene({ den, leg1, carPos, vType, vBody, vDark, phase, driving, kmL
 
       {/* ป้ายบอกจุดเที่ยวแรก */}
       <div className="absolute z-[3] flex flex-col items-center" style={{ left: `${legPos}%`, bottom: ROAD_Y + 10, transform: "translateX(-50%)" }}>
-        <span className="whitespace-nowrap rounded-md bg-slate-800 px-1.5 py-0.5 text-[10px] font-extrabold text-white shadow">{signLabel ?? `ไปแล้ว ${leg1}/${den}`}</span>
+        <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-md bg-slate-800 px-1.5 py-0.5 text-[10px] font-extrabold text-white shadow">{signLabel ?? <>ไปแล้ว <Frac n={leg1} d={den} /></>}</span>
         <span className="h-3 w-[2px] bg-slate-700" />
       </div>
 
@@ -706,7 +707,7 @@ export function AddJourneyGame() {
                 🚗 ขับรถจาก 🏠 {place.from} ไป {place.emoji} {place.to} ระยะทาง <b className="text-teal-700">{total} {unit}</b>
               </p>
               <p className="mt-1 text-sm font-extrabold text-slate-700 sm:text-base">
-                {driver} ขับไปแล้ว <b className="text-indigo-600">{leg1}/{den}</b> ของระยะทางทั้งหมด —{" "}
+                {driver} ขับไปแล้ว <Frac n={leg1} d={den} tone="text-indigo-600" /> ของระยะทางทั้งหมด —{" "}
                 <span className="text-rose-600">{ask === "remaining" ? `ต้องขับต่ออีกกี่ ${unit}?` : `ขับไปแล้วกี่ ${unit}?`}</span>
               </p>
               <p className="mt-1 text-xs font-bold text-slate-400">💡 1 ส่วน = {total} ÷ {den} = {showKm ? `${kmStep} ${unit}` : "?"} ต่อช่อง</p>
@@ -730,7 +731,7 @@ export function AddJourneyGame() {
               phase={phase}
               driving={driving}
               kmLabels={showKm ? kmLabels : undefined}
-              signLabel={ask === "remaining" ? `ขับแล้ว ${leg1}/${den}` : `📍 ${leg1}/${den} ของทาง`}
+              signLabel={ask === "remaining" ? <>ขับแล้ว <Frac n={leg1} d={den} /></> : <>📍 <Frac n={leg1} d={den} /> ของทาง</>}
               arriveLabel={ask === "remaining" ? `ถึง ${place.to}! 🏁` : "ถึงจุดหมาย! 📍"}
             />
 
@@ -766,7 +767,7 @@ export function AddJourneyGame() {
               ) : (
                 <>
                   {phase === "arrive"
-                    ? <p className="w-full text-center text-sm font-extrabold text-emerald-600">✅ {ask === "remaining" ? `เหลือ ${den - leg1}/${den} ของ ${total} = ${den - leg1} × ${kmStep} = ${correctKm} ${unit}` : `ไปแล้ว ${leg1}/${den} ของ ${total} = ${leg1} × ${kmStep} = ${correctKm} ${unit}`}</p>
+                    ? <p className="flex w-full flex-wrap items-center justify-center gap-1 text-center text-sm font-extrabold text-emerald-600">✅ {ask === "remaining" ? <>เหลือ <Frac n={den - leg1} d={den} /> ของ {total} = {den - leg1} × {kmStep} = {correctKm} {unit}</> : <>ไปแล้ว <Frac n={leg1} d={den} /> ของ {total} = {leg1} × {kmStep} = {correctKm} {unit}</>}</p>
                     : <p className="w-full text-center text-sm font-extrabold text-rose-600">ยังไม่ใช่ — คำตอบที่ถูกคือ {correctKm} {unit} (กด “ลองใหม่” หรือดู “เฉลย”)</p>}
                   <button onClick={resetDistanceTry} className="inline-flex items-center gap-1.5 rounded-xl border-2 border-slate-200 bg-white px-4 py-2 text-sm font-extrabold text-slate-500 transition hover:bg-slate-50">
                     <RotateCcw size={15} /> ลองใหม่
@@ -823,8 +824,8 @@ export function AddJourneyGame() {
                 <span className="text-[10px] font-extrabold text-slate-400">เต็มทาง</span>
               </span>
               {(phase === "arrive" || phase === "short" || phase === "over") && pickedNum !== null && (
-                <span className={cn("rounded-full px-3 py-1 text-sm font-extrabold text-white shadow", leg1 + pickedNum === den ? "bg-emerald-500" : leg1 + pickedNum < den ? "bg-rose-500" : "bg-orange-500")}>
-                  {leg1 + pickedNum === den ? "ครบ 1 ✓" : `รวม ${leg1 + pickedNum}/${den}`}
+                <span className={cn("inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm font-extrabold text-white shadow", leg1 + pickedNum === den ? "bg-emerald-500" : leg1 + pickedNum < den ? "bg-rose-500" : "bg-orange-500")}>
+                  {leg1 + pickedNum === den ? "ครบ 1 ✓" : <>รวม <Frac n={leg1 + pickedNum} d={den} /></>}
                 </span>
               )}
             </div>
@@ -864,8 +865,8 @@ export function AddJourneyGame() {
               ) : mode === "teacher" ? (
                 <>
                   {phase === "arrive"
-                    ? <p className="w-full text-center text-sm font-extrabold text-emerald-600">✅ {leg1}/{den} + {needed}/{den} = {den}/{den} = 1 เต็มทาง! (ตัวส่วนเท่าเดิม บวกแค่ตัวเศษ)</p>
-                    : <p className="w-full text-center text-sm font-extrabold text-rose-600">{leg1 + (pickedNum ?? 0) < den ? `ยังขาดอีก ${den - leg1 - (pickedNum ?? 0)}/${den} ถึงจะครบ 1` : `เลยไป ${leg1 + (pickedNum ?? 0) - den}/${den} — เกิน 1 เต็มทาง`}</p>}
+                    ? <p className="flex w-full flex-wrap items-center justify-center gap-1 text-center text-sm font-extrabold text-emerald-600">✅ <Frac n={leg1} d={den} /> + <Frac n={needed} d={den} /> = <Frac n={den} d={den} /> = 1 เต็มทาง! (ตัวส่วนเท่าเดิม บวกแค่ตัวเศษ)</p>
+                    : <p className="flex w-full flex-wrap items-center justify-center gap-1 text-center text-sm font-extrabold text-rose-600">{leg1 + (pickedNum ?? 0) < den ? <>ยังขาดอีก <Frac n={den - leg1 - (pickedNum ?? 0)} d={den} /> ถึงจะครบ 1</> : <>เลยไป <Frac n={leg1 + (pickedNum ?? 0) - den} d={den} /> — เกิน 1 เต็มทาง</>}</p>}
                   <button onClick={resetTry} className="inline-flex items-center gap-1.5 rounded-xl border-2 border-slate-200 bg-white px-4 py-2 text-sm font-extrabold text-slate-500 transition hover:bg-slate-50">
                     <RotateCcw size={15} /> ลองใหม่
                   </button>

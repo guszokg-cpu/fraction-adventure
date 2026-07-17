@@ -7,6 +7,7 @@ import { FractionStack } from "@/components/fractions/FractionStack";
 import { DraggableNumberLine } from "@/components/lessons/number-line/DraggableNumberLine";
 import { NumberLineStrip } from "@/components/lessons/number-line/NumberLineStrip";
 import { DrawChallengeResult } from "@/components/lessons/fraction-from-image/DrawChallengeResult";
+import { Frac } from "@/components/lessons/Frac";
 import { cn } from "@/lib/cn";
 import { randInt, shuffle } from "@/lib/randomFraction";
 
@@ -294,7 +295,7 @@ export function NumberLineGame() {
         {checked && (
           <div
             className={cn(
-              "rounded-xl px-4 py-3 text-sm font-bold",
+              "flex flex-wrap items-center gap-1 rounded-xl px-4 py-3 text-sm font-bold",
               (isPlace ? placed === question.numerator : selected === `${question.numerator}/${question.denominator}`)
                 ? "bg-emerald-50 text-emerald-700"
                 : "bg-rose-50 text-rose-600"
@@ -302,11 +303,11 @@ export function NumberLineGame() {
           >
             {isPlace
               ? placed === question.numerator
-                ? `ถูกต้อง! กบถึง ${question.numerator}/${question.denominator} พอดีเป๊ะ 🐸🎉`
-                : `ยังไม่ตรง — ตอนนี้กบอยู่ที่ ${placed}/${question.denominator} แต่โจทย์ต้องการ ${question.numerator}/${question.denominator} ลองเลื่อนอีกนิดนะ`
+                ? <>ถูกต้อง! กบถึง <Frac n={question.numerator} d={question.denominator} /> พอดีเป๊ะ 🐸🎉</>
+                : <>ยังไม่ตรง — ตอนนี้กบอยู่ที่ <Frac n={placed} d={question.denominator} /> แต่โจทย์ต้องการ <Frac n={question.numerator} d={question.denominator} /> ลองเลื่อนอีกนิดนะ</>
               : selected === `${question.numerator}/${question.denominator}`
-                ? `ถูกต้อง! กบอยู่ที่ ${question.numerator}/${question.denominator} เก่งมาก 🎉`
-                : `ยังไม่ถูก — เส้นแบ่งเป็น ${question.denominator} ช่อง กบอยู่ห่างจาก 0 ไป ${question.numerator} ช่อง จึงเป็น ${question.numerator}/${question.denominator}`}
+                ? <>ถูกต้อง! กบอยู่ที่ <Frac n={question.numerator} d={question.denominator} /> เก่งมาก 🎉</>
+                : <>ยังไม่ถูก — เส้นแบ่งเป็น {question.denominator} ช่อง กบอยู่ห่างจาก 0 ไป {question.numerator} ช่อง จึงเป็น <Frac n={question.numerator} d={question.denominator} /></>}
           </div>
         )}
 

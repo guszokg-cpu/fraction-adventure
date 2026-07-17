@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Play, RotateCcw, Volume2, VolumeX, FlaskConical, Target, Eye, EyeOff, ArrowRight, Plus } from "lucide-react";
 import { StackedFraction } from "@/components/lessons/compare/StackedFraction";
+import { Frac, SvgFrac } from "@/components/lessons/Frac";
 import { cn } from "@/lib/cn";
 import { randInt } from "@/lib/randomFraction";
 
@@ -180,9 +181,9 @@ function Glass({ x, y, level, den, drink, gid, dur, name, showLabels, dim }: {
           <g key={k}>
             <line x1={L + 4} y1={ty} x2={R - 4} y2={ty} stroke={drink.dark} strokeWidth={bold && level > 0 ? 2.6 : 1.2} strokeDasharray="5 4" opacity={bold && level > 0 ? 0.9 : 0.4} />
             {showLabels && (
-              <text x={R + G_DX + 3} y={ty + 3.5} fontSize={den > 6 ? 8 : 9.5} fontWeight={800} fill={drink.dark} opacity={0.6}>
-                {k === 0 ? "0" : k === den ? "เต็ม" : `${k}/${den}`}
-              </text>
+              k === 0 || k === den
+                ? <text x={R + G_DX + 3} y={ty + 3.5} fontSize={den > 6 ? 8 : 9.5} fontWeight={800} fill={drink.dark} opacity={0.6}>{k === 0 ? "0" : "เต็ม"}</text>
+                : <g opacity={0.6}><SvgFrac x={R + G_DX + 11} y={ty + 1} n={k} d={den} size={den > 6 ? 7 : 8} fill={drink.dark} /></g>
             )}
           </g>
         );
@@ -537,8 +538,8 @@ export function AddMixedDrinkGame() {
             {stage === "done" && (
               <p className="text-center text-sm font-extrabold text-slate-600">
                 {overflow
-                  ? <>รวมได้ <b className="text-slate-500">{sum}/{den}</b> = <b className="text-pink-600">{whole} แก้วเต็ม{rem > 0 ? ` กับอีก ${rem}/${den} แก้ว` : ""}</b> — น้ำเกิน 1 แก้ว ต้องใช้แก้วที่ 2!</>
-                  : <>รวมได้ <b className="text-pink-600">{sum}/{den} แก้ว</b> (ยังไม่เต็มแก้ว)</>}
+                  ? <span className="inline-flex flex-wrap items-center justify-center gap-1">รวมได้ <Frac n={sum} d={den} tone="text-slate-500" /> = <span className="inline-flex items-center gap-1 text-pink-600"><b>{whole} แก้วเต็ม</b>{rem > 0 && <>กับอีก <Frac n={rem} d={den} tone="text-pink-600" /> แก้ว</>}</span> — น้ำเกิน 1 แก้ว ต้องใช้แก้วที่ 2!</span>
+                  : <span className="inline-flex flex-wrap items-center justify-center gap-1">รวมได้ <Frac n={sum} d={den} tone="text-pink-600" /> แก้ว (ยังไม่เต็มแก้ว)</span>}
               </p>
             )}
 
@@ -603,8 +604,8 @@ export function AddMixedDrinkGame() {
             )}
             {mode === "mission" && checked !== null && (
               <div className={cn("rounded-2xl border-2 p-3 text-center", checked ? "border-emerald-300 bg-emerald-50" : "border-rose-300 bg-rose-50")}>
-                <p className={cn("text-base font-extrabold", checked ? "text-emerald-700" : "text-rose-600")}>
-                  {checked ? `🎉 ทายถูก! ${sum}/${den} = ${whole} กับ ${rem}/${den} แก้ว` : `ยังไม่ตรง — รวมจริงได้ ${whole} แก้วกับ ${rem}/${den}`}
+                <p className={cn("flex flex-wrap items-center justify-center gap-1 text-base font-extrabold", checked ? "text-emerald-700" : "text-rose-600")}>
+                  {checked ? <>🎉 ทายถูก! <Frac n={sum} d={den} /> = {whole} กับ <Frac n={rem} d={den} /> แก้ว</> : <>ยังไม่ตรง — รวมจริงได้ {whole} แก้วกับ <Frac n={rem} d={den} /></>}
                 </p>
                 <button onClick={nextMission} className="mt-2 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-pink-600 to-rose-500 px-6 py-2 text-base font-extrabold text-white shadow transition hover:brightness-105 active:scale-[0.98]">
                   {round >= MISSIONS_TOTAL ? "🏁 ดูสรุปผล" : <>ข้อต่อไป <ArrowRight size={16} /></>}

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Play, Volume2, VolumeX, FlaskConical, Target, ArrowRight, Pencil, Sprout } from "lucide-react";
 import { StackedFraction } from "@/components/lessons/compare/StackedFraction";
+import { Frac, SvgFrac } from "@/components/lessons/Frac";
 import { gcd } from "@/lib/fractionUtils";
 import { cn } from "@/lib/cn";
 import { randInt, shuffle } from "@/lib/randomFraction";
@@ -234,12 +235,16 @@ function GardenPlot({ plantNum, plantDen, weedNum, weedDen, display }: {
       {/* ป้ายคอลัมน์ (ตัวตั้ง 🌱) */}
       {showPlant && <>
         <line x1={X} y1={44} x2={X + (display === "a" ? plantNum * cw : plantNum * (W / plantDen))} y2={44} stroke="#16a34a" strokeWidth={4} strokeLinecap="round" />
-        <text x={X + (display === "a" ? plantNum * cw : plantNum * (W / plantDen)) / 2} y={38} fontSize={13} fontWeight={900} fill="#15803d" textAnchor="middle">🌱 ปลูก {plantNum}/{plantDen}</text>
+        <text x={X + (display === "a" ? plantNum * cw : plantNum * (W / plantDen)) / 2 - 14} y={38} fontSize={13} fontWeight={900} fill="#15803d" textAnchor="middle">🌱 ปลูก</text>
+        <SvgFrac x={X + (display === "a" ? plantNum * cw : plantNum * (W / plantDen)) / 2 + 22} y={34} n={plantNum} d={plantDen} size={11} fill="#15803d" />
       </>}
       {/* ป้ายแถว (ตัวคูณ 🍃) */}
       {showWeed && <>
         <line x1={X + W + 8} y1={Y} x2={X + W + 8} y2={Y + weedNum * (H / weedDen)} stroke="#7c3aed" strokeWidth={4} strokeLinecap="round" />
-        <text x={X + W + 14} y={Y + (weedNum * (H / weedDen)) / 2 - 4} fontSize={12} fontWeight={900} fill="#6d28d9" transform={`rotate(90 ${X + W + 14} ${Y + (weedNum * (H / weedDen)) / 2})`} textAnchor="middle">🍃 ผักบุ้ง {weedNum}/{weedDen}</text>
+        <g transform={`rotate(90 ${X + W + 14} ${Y + (weedNum * (H / weedDen)) / 2})`}>
+          <text x={X + W + 14 - 20} y={Y + (weedNum * (H / weedDen)) / 2 - 4} fontSize={12} fontWeight={900} fill="#6d28d9" textAnchor="middle">🍃 ผักบุ้ง</text>
+          <SvgFrac x={X + W + 14 + 26} y={Y + (weedNum * (H / weedDen)) / 2 - 8} n={weedNum} d={weedDen} size={10} fill="#6d28d9" />
+        </g>
       </>}
 
       {/* ดินฐาน */}
@@ -525,7 +530,7 @@ export function MultiplyGardenGame() {
               <p className="text-center text-sm font-extrabold text-slate-600">
                 แปลงถูกแบ่งเป็น <b className="text-green-700">{plantDen}</b> คอลัมน์ × <b className="text-violet-700">{weedDen}</b> แถว = <b>{resDen} ช่อง</b> ·
                 ผักบุ้งอยู่ <b className="text-emerald-600">{plantNum}×{weedNum} = {resNum} ช่อง</b> →
-                เป็น <b className="text-emerald-600">{resNum}/{resDen}</b>{g > 1 && <> = <b className="text-emerald-700">{rNum}/{rDen}</b></>} ของแปลง
+                เป็น <Frac n={resNum} d={resDen} tone="text-emerald-600" />{g > 1 && <> = <Frac n={rNum} d={rDen} tone="text-emerald-700" /></>} ของแปลง
                 {" "}<span className="text-rose-500">— เศษ×เศษ, ส่วน×ส่วน (ยิ่งแบ่งซ้อน ช่องยิ่งเล็กลง ส่วนจึงคูณกัน)</span>
               </p>
             )}
@@ -554,8 +559,8 @@ export function MultiplyGardenGame() {
               <div className={cn("rounded-2xl border-2 p-3 text-center", checked ? "border-emerald-300 bg-emerald-50" : "border-rose-300 bg-rose-50")}>
                 <p className={cn("text-base font-extrabold", checked ? "text-emerald-700" : "text-rose-600")}>
                   {checked
-                    ? `🎉 ถูกต้อง! ${weedNum}/${weedDen} × ${plantNum}/${plantDen} = ${resNum}/${resDen}${g > 1 ? ` = ${rNum}/${rDen}` : ""}`
-                    : `ทาย ${gNum}/${gDen || "?"} — จริง ๆ คือ ${resNum}/${resDen}${g > 1 ? ` (= ${rNum}/${rDen})` : ""} · เศษ ${weedNum}×${plantNum}=${resNum}, ส่วน ${weedDen}×${plantDen}=${resDen}`}
+                    ? <>🎉 ถูกต้อง! <Frac n={weedNum} d={weedDen} /> × <Frac n={plantNum} d={plantDen} /> = <Frac n={resNum} d={resDen} />{g > 1 && <> = <Frac n={rNum} d={rDen} /></>}</>
+                    : <>ทาย <Frac n={gNum} d={gDen || "?"} /> — จริง ๆ คือ <Frac n={resNum} d={resDen} />{g > 1 && <> (= <Frac n={rNum} d={rDen} />)</>} · เศษ {weedNum}×{plantNum}={resNum}, ส่วน {weedDen}×{plantDen}={resDen}</>}
                 </p>
                 <button onClick={nextMission} className="mt-2 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 to-green-500 px-6 py-2 text-base font-extrabold text-white shadow transition hover:brightness-105 active:scale-[0.98]">
                   {round >= MISSIONS_TOTAL ? "🏁 ดูสรุปผล" : <>แปลงต่อไป <ArrowRight size={16} /></>}
@@ -569,10 +574,10 @@ export function MultiplyGardenGame() {
                 <p className="text-center text-xs font-extrabold text-slate-500">เลือกแสดงแปลงผัก:</p>
                 <div className="flex flex-wrap items-center justify-center gap-2">
                   <button onClick={() => pickView("weed")} className={cn("inline-flex items-center gap-1.5 rounded-xl border-2 px-4 py-2 text-sm font-extrabold transition active:scale-95", view === "weed" ? "border-violet-500 bg-violet-100 text-violet-700 shadow" : "border-slate-200 bg-white text-slate-500 hover:bg-slate-50")}>
-                    🍃 เฉพาะ {weedNum}/{weedDen}
+                    🍃 เฉพาะ <Frac n={weedNum} d={weedDen} />
                   </button>
                   <button onClick={() => pickView("plant")} className={cn("inline-flex items-center gap-1.5 rounded-xl border-2 px-4 py-2 text-sm font-extrabold transition active:scale-95", view === "plant" ? "border-green-500 bg-green-100 text-green-700 shadow" : "border-slate-200 bg-white text-slate-500 hover:bg-slate-50")}>
-                    🌱 เฉพาะ {plantNum}/{plantDen}
+                    🌱 เฉพาะ <Frac n={plantNum} d={plantDen} />
                   </button>
                   <button onClick={() => pickView("both")} className={cn("inline-flex items-center gap-1.5 rounded-xl border-2 px-4 py-2 text-sm font-extrabold transition active:scale-95", view === "both" ? "border-emerald-600 bg-emerald-600 text-white shadow" : "border-emerald-300 bg-white text-emerald-600 hover:bg-emerald-50")}>
                     🥬 ซ้อนกัน = คำตอบ
@@ -581,8 +586,8 @@ export function MultiplyGardenGame() {
                 {view !== "both" && (
                   <p className="text-center text-xs font-bold text-slate-500">
                     {view === "weed"
-                      ? <>นี่คือ <b className="text-violet-600">{weedNum}/{weedDen}</b> — แบ่งแปลงเป็น {weedDen} แถวแนวนอน แล้วแรเงา {weedNum} แถว</>
-                      : <>นี่คือ <b className="text-green-600">{plantNum}/{plantDen}</b> — แบ่งแปลงเป็น {plantDen} คอลัมน์แนวตั้ง แล้วแรเงา {plantNum} คอลัมน์</>}
+                      ? <>นี่คือ <Frac n={weedNum} d={weedDen} tone="text-violet-600" /> — แบ่งแปลงเป็น {weedDen} แถวแนวนอน แล้วแรเงา {weedNum} แถว</>
+                      : <>นี่คือ <Frac n={plantNum} d={plantDen} tone="text-green-600" /> — แบ่งแปลงเป็น {plantDen} คอลัมน์แนวตั้ง แล้วแรเงา {plantNum} คอลัมน์</>}
                   </p>
                 )}
               </div>

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Volume2, VolumeX, FlaskConical, Swords, Eye, RotateCcw, Dice5, ArrowRight } from "lucide-react";
 import { StackedFraction } from "@/components/lessons/compare/StackedFraction";
+import { Frac } from "@/components/lessons/Frac";
 import { cn } from "@/lib/cn";
 import { randInt, shuffle } from "@/lib/randomFraction";
 
@@ -297,7 +298,7 @@ function BridgeScene({ den, T, selNums, char, charLeft, crossing, phase }: {
           className="absolute z-[4] flex items-center justify-center rounded-sm border-b-4 transition-all duration-300"
           style={{ left: `${pl.left}%`, width: `${pl.width}%`, bottom: DECK - 7, height: 15, background: `repeating-linear-gradient(90deg,${pl.tone} 0 7px,${pl.dark} 7px 14px)`, borderColor: pl.dark }}
         >
-          <span className="text-[11px] font-black text-white/95 drop-shadow">{pl.n}/{den}</span>
+          <Frac n={pl.n} d={den} className="text-white/95 drop-shadow" />
         </div>
       ))}
 
@@ -582,8 +583,8 @@ export function AddBridgeGame() {
                 <StackedFraction numerator={target} denominator={den} className="text-3xl sm:text-4xl" toneClassName="text-emerald-600" />
               </span>
               {(phase === "ok" || phase === "short" || phase === "long") && selected.length === 2 && (
-                <span className={cn("rounded-full px-3 py-1 text-sm font-extrabold text-white shadow", sum === target ? "bg-emerald-500" : sum < target ? "bg-rose-500" : "bg-orange-500")}>
-                  {sum === target ? "พอดี ✓" : `รวม ${sum}/${den}`}
+                <span className={cn("inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm font-extrabold text-white shadow", sum === target ? "bg-emerald-500" : sum < target ? "bg-rose-500" : "bg-orange-500")}>
+                  {sum === target ? "พอดี ✓" : <>รวม <Frac n={sum} d={den} /></>}
                 </span>
               )}
             </div>
@@ -613,8 +614,8 @@ export function AddBridgeGame() {
               ) : mode === "teacher" ? (
                 <>
                   {phase === "ok"
-                    ? <p className="w-full text-center text-sm font-extrabold text-emerald-600">✅ {selNums[0]}/{den} + {selNums[1]}/{den} = {target}/{den} — ตัวส่วนเท่าเดิม บวกแค่ตัวเศษ!</p>
-                    : <p className="w-full text-center text-sm font-extrabold text-rose-600">{sum < target ? `ยังขาดอีก ${target - sum}/${den} — ลองแผ่นที่ยาวกว่านี้` : `เกินมา ${sum - target}/${den} — ลองแผ่นที่สั้นลง`}</p>}
+                    ? <p className="flex w-full flex-wrap items-center justify-center gap-1 text-center text-sm font-extrabold text-emerald-600">✅ <Frac n={selNums[0]} d={den} /> + <Frac n={selNums[1]} d={den} /> = <Frac n={target} d={den} /> — ตัวส่วนเท่าเดิม บวกแค่ตัวเศษ!</p>
+                    : <p className="flex w-full flex-wrap items-center justify-center gap-1 text-center text-sm font-extrabold text-rose-600">{sum < target ? <>ยังขาดอีก <Frac n={target - sum} d={den} /> — ลองแผ่นที่ยาวกว่านี้</> : <>เกินมา <Frac n={sum - target} d={den} /> — ลองแผ่นที่สั้นลง</>}</p>}
                   <button onClick={resetTry} className="inline-flex items-center gap-1.5 rounded-xl border-2 border-slate-200 bg-white px-4 py-2 text-sm font-extrabold text-slate-500 transition hover:bg-slate-50">
                     <RotateCcw size={15} /> ลองใหม่
                   </button>

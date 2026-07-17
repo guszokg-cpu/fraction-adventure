@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Check, Shuffle, X } from "lucide-react";
 import { FractionText } from "@/components/fractions/FractionText";
 import { Card } from "@/components/ui/Card";
+import { SvgFrac } from "@/components/lessons/Frac";
 import { cn } from "@/lib/cn";
 import { randInt, shuffle } from "@/lib/randomFraction";
 
@@ -81,14 +82,15 @@ function LineDiagram({ round, revealed }: { round: Round; revealed: boolean }) {
         <g>
           {/* ป้ายจำนวนคละ (บน) */}
           <rect x={x - 42} y={Y - 58} width={84} height={30} rx={15} fill="#c026d3" />
-          <text x={x} y={Y - 37} textAnchor="middle" fontSize={19} fontWeight={800} fill="#ffffff">
-            {round.whole > 0 ? `${round.whole} เศษ ${round.num}/${round.den}` : `${round.num}/${round.den}`}
-          </text>
+          {round.whole > 0
+            ? <>
+                <text x={x - 20} y={Y - 36} textAnchor="middle" fontSize={18} fontWeight={800} fill="#ffffff">{round.whole}</text>
+                <SvgFrac x={x + 16} y={Y - 43} n={round.num} d={round.den} size={15} fill="#ffffff" />
+              </>
+            : <SvgFrac x={x} y={Y - 43} n={round.num} d={round.den} size={17} fill="#ffffff" />}
           {/* ป้ายเศษเกิน (ล่าง) */}
           <rect x={x - 32} y={Y + 54} width={64} height={30} rx={15} fill="#ec4899" />
-          <text x={x} y={Y + 75} textAnchor="middle" fontSize={19} fontWeight={800} fill="#ffffff">
-            {improperNum}/{round.den}
-          </text>
+          <SvgFrac x={x} y={Y + 69} n={improperNum} d={round.den} size={17} fill="#ffffff" />
         </g>
       )}
     </svg>

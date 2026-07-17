@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { Play, RotateCcw, Volume2, VolumeX, FlaskConical, Target, ArrowRight, Eye, EyeOff, Pencil } from "lucide-react";
 import { StackedFraction } from "@/components/lessons/compare/StackedFraction";
+import { Frac } from "@/components/lessons/Frac";
 import { cn } from "@/lib/cn";
 import { randInt, shuffle } from "@/lib/randomFraction";
 
@@ -566,10 +567,10 @@ export function MultiplyTowerGame() {
             {/* คำอธิบายผล */}
             {done && (
               <p className="text-center text-sm font-extrabold text-slate-600">
-                {count} {cfg.item} ใบละ <b className="text-orange-600">{whole} {fnum}/{fden}</b> {cfg.unit} →
-                ส่วนเต็ม <b>{whole}×{count} = {wholeProduct}</b>, ส่วนเศษ <b className="text-emerald-600">{fnum}×{count} = {fracImp}/{fden}</b>
-                {fracImp >= fden && <> = <b>{Math.floor(fracImp / fden)} {fracImp % fden > 0 ? `${fracImp % fden}/${fden}` : ""}</b></>} →
-                รวม <b className="text-orange-600">{totalWhole}{totalNum > 0 ? ` ${totalNum}/${fden}` : ""}</b> {cfg.unit}
+                {count} {cfg.item} ใบละ <span className="text-orange-600"><b>{whole}</b> <Frac n={fnum} d={fden} tone="text-orange-600" /></span> {cfg.unit} →
+                ส่วนเต็ม <b>{whole}×{count} = {wholeProduct}</b>, ส่วนเศษ <span className="text-emerald-600"><b>{fnum}×{count}</b> = <Frac n={fracImp} d={fden} tone="text-emerald-600" /></span>
+                {fracImp >= fden && <> = <span><b>{Math.floor(fracImp / fden)}</b>{fracImp % fden > 0 && <Frac n={fracImp % fden} d={fden} />}</span></>} →
+                รวม <span className="text-orange-600"><b>{totalWhole}</b>{totalNum > 0 && <Frac n={totalNum} d={fden} tone="text-orange-600" />}</span> {cfg.unit}
                 {" "}<span className="text-rose-500">— อย่าลืมคูณเศษของทุก{cfg.item}!</span>
               </p>
             )}
@@ -603,8 +604,8 @@ export function MultiplyTowerGame() {
               <div className={cn("rounded-2xl border-2 p-3 text-center", checked ? "border-emerald-300 bg-emerald-50" : "border-rose-300 bg-rose-50")}>
                 <p className={cn("text-base font-extrabold", checked ? "text-emerald-700" : "text-rose-600")}>
                   {checked
-                    ? `🎉 เก่งมาก! ${whole} ${fnum}/${fden} × ${count} = ${totalWhole}${totalNum > 0 ? ` ${totalNum}/${fden}` : ""} ${cfg.unit}`
-                    : `ทาย ${gWhole}${gNum > 0 ? ` ${gNum}/${fden}` : ""} — จริง ๆ คือ ${totalWhole}${totalNum > 0 ? ` ${totalNum}/${fden}` : ""} ${cfg.unit} · ${gWhole === wholeProduct && gNum === 0 ? "ลืมคูณเศษของทุกใบ!" : `ส่วนเต็ม ${whole}×${count}, เศษ ${fnum}×${count}=${fracImp}/${fden}`}`}
+                    ? <>🎉 เก่งมาก! {whole} <Frac n={fnum} d={fden} /> × {count} = {totalWhole}{totalNum > 0 && <Frac n={totalNum} d={fden} />} {cfg.unit}</>
+                    : <>ทาย {gWhole}{gNum > 0 && <Frac n={gNum} d={fden} />} — จริง ๆ คือ {totalWhole}{totalNum > 0 && <Frac n={totalNum} d={fden} />} {cfg.unit} · {gWhole === wholeProduct && gNum === 0 ? "ลืมคูณเศษของทุกใบ!" : <>ส่วนเต็ม {whole}×{count}, เศษ {fnum}×{count}=<Frac n={fracImp} d={fden} /></>}</>}
                 </p>
                 <button onClick={nextMission} className="mt-2 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-600 to-orange-500 px-6 py-2 text-base font-extrabold text-white shadow transition hover:brightness-105 active:scale-[0.98]">
                   {round >= MISSIONS_TOTAL ? "🏁 ดูสรุปผล" : <>ข้อต่อไป <ArrowRight size={16} /></>}

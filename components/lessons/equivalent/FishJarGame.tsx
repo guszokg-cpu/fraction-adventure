@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Play, RotateCcw, Volume2, VolumeX, FlaskConical, Target, Eye, Droplets } from "lucide-react";
 import { StackedFraction } from "@/components/lessons/compare/StackedFraction";
+import { Frac, SvgFrac } from "@/components/lessons/Frac";
 import { cn } from "@/lib/cn";
 import { randInt } from "@/lib/randomFraction";
 
@@ -335,9 +336,9 @@ function FractionTank3D({ numerator, denominator, toneIdx, watered, released, po
         return (
           <g key={k}>
             <line x1={L + 3} y1={y} x2={R - 3} y2={y} stroke={tone.badge} strokeWidth={target ? 3 : 1.5} strokeDasharray="6 4" opacity={target ? 0.95 : 0.45} />
-            <text x={R + DX + 5} y={y + 3.5} fontSize={target ? labelSize + 1 : labelSize} fontWeight={800} fill={tone.badge} opacity={target ? 1 : 0.6}>
-              {k === 0 ? "0" : k === denominator ? "เต็ม" : `${k}/${denominator}`}
-            </text>
+            {k === 0 || k === denominator
+              ? <text x={R + DX + 5} y={y + 3.5} fontSize={target ? labelSize + 1 : labelSize} fontWeight={800} fill={tone.badge} opacity={target ? 1 : 0.6}>{k === 0 ? "0" : "เต็ม"}</text>
+              : <g opacity={target ? 1 : 0.6}><SvgFrac x={R + DX + 12} y={y + 1} n={k} d={denominator} size={target ? labelSize + 1 : labelSize} fill={tone.badge} /></g>}
           </g>
         );
       })}

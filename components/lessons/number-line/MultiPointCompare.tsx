@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Check, RefreshCw, X } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { FractionStack } from "@/components/fractions/FractionStack";
+import { Frac } from "@/components/lessons/Frac";
 import { cn } from "@/lib/cn";
 import { randInt } from "@/lib/randomFraction";
 
@@ -262,7 +263,7 @@ export function MultiPointCompare() {
             {picked === duelMax ? <Check size={17} className="mt-0.5 shrink-0" /> : <X size={17} className="mt-0.5 shrink-0" />}
             <span>
               {picked === duelMax ? "ถูกต้อง! " : "ยังไม่ใช่ — "}
-              {duelMax}/{duel.denominator} อยู่ขวากว่า {duelMin}/{duel.denominator} บนเส้นจำนวน จึงมีค่ามากกว่า
+              <Frac n={duelMax} d={duel.denominator} /> อยู่ขวากว่า <Frac n={duelMin} d={duel.denominator} /> บนเส้นจำนวน จึงมีค่ามากกว่า
             </span>
           </div>
         )}

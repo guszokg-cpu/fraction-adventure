@@ -36,6 +36,32 @@ export type LessonGames = {
 
 export const GAME_REGISTRY: LessonGames[] = [
   {
+    slug: "fraction-intro",
+    lessonTitle: "รู้จักเศษส่วน",
+    href: "/lessons/fraction-intro",
+    icon: "🍕",
+    accent: "from-brand-600 to-indigo-500",
+    games: [
+      { id: "witchcake", emoji: "🧁", title: "ครัวเค้กแม่มดน้อย", desc: "แม่มดเสกเค้กมา 3 ถาด เลือกถาดที่แบ่งเท่ากันจริง คาถาถึงสำเร็จ — สอนว่าเศษส่วนต้องแบ่งเท่ากันก่อนเสมอ", concept: "ส่วนแบ่งต้องเท่ากัน", accent: "from-violet-500 to-fuchsia-500", ready: true },
+      { id: "bee", emoji: "🐝", title: "สวนผึ้งเก็บน้ำหวาน", desc: "คลิกกลีบดอกส่งผึ้งไปเกาะให้ได้ตามเศษส่วนที่กำหนด — ตัวเศษคือกลีบที่ผึ้งเกาะ ตัวส่วนคือกลีบทั้งหมด", concept: "ตัวเศษ / ตัวส่วน", accent: "from-lime-500 to-amber-400", ready: true },
+      { id: "robot", emoji: "🤖", title: "โรงชาร์จหุ่นยนต์", desc: "เติมพลังงานแบตทีละช่องให้ได้เศษส่วนพอดี ถูกแล้วหุ่นเต้น เกินแล้วช็อต! — สร้างเศษส่วนด้วยแถบส่วนเท่ากัน", concept: "สร้างเศษส่วนจากแถบ", accent: "from-sky-500 to-cyan-500", ready: true },
+      { id: "pond", emoji: "🎣", title: "บ่อปลาเศษส่วน", desc: "ดูภาพโจทย์แล้วจับปลาที่คาบเศษส่วนตรงกันภายในเวลา — ฝึกอ่านภาพเป็นเศษส่วนแบบเร้าใจ", concept: "จับคู่ภาพกับเศษส่วน", accent: "from-sky-500 to-blue-500", ready: true },
+    ],
+  },
+  {
+    slug: "read-write",
+    lessonTitle: "ประเภทของเศษส่วน",
+    href: "/lessons/read-write",
+    icon: "📖",
+    accent: "from-amber-500 to-orange-500",
+    games: [
+      { id: "bus", emoji: "🛺", title: "รถสองแถวสายเศษส่วน", desc: "ผู้โดยสารถือป้ายเศษส่วน ส่งขึ้นรถให้ถูกสาย แท้/เกิน/คละ — ตัวละครไทยจิบิ แต่งตัวกระเป๋ารถได้", concept: "จำแนก 3 ประเภท", accent: "from-amber-500 to-orange-500", ready: true },
+      { id: "kitchen", emoji: "🍜", title: "ครัวคุณป้าเศษส่วน", desc: "ลูกค้าสั่ง “ขอเศษส่วนแท้ 1 ชาม!” เลือกชามก๋วยเตี๋ยวที่ตรงออเดอร์เสิร์ฟ — แต่งตัวผู้ช่วยเชฟได้", concept: "หาตัวอย่างตามประเภท", accent: "from-rose-500 to-amber-500", ready: true },
+      { id: "gate", emoji: "🚧", title: "ด่านตรวจเศษส่วน", desc: "กติกาสุ่ม “ให้ผ่านเฉพาะเศษเกิน” กด ✅/❌ ตัดสินเร็ว ๆ สะสมสตรีคไฟลุก — แต่งตัวยามด่านได้", concept: "ตัดสินใช่/ไม่ใช่ (สตรีค)", accent: "from-lime-500 to-emerald-500", ready: true },
+      { id: "treasure", emoji: "💎", title: "ล่าสมบัติเศษส่วน", desc: "คัดแยกการ์ดเศษส่วนลงหีบให้ถูกประเภท ขุดลึกเก็บเหรียญทำสถิติ", concept: "คัดแยกต่อเนื่อง", accent: "from-violet-500 to-fuchsia-500", ready: true },
+    ],
+  },
+  {
     slug: "compare",
     lessonTitle: "เปรียบเทียบเศษส่วน",
     href: "/lessons/compare",

@@ -1,4 +1,5 @@
 "use client";
+import { Frac } from "@/components/lessons/Frac";
 
 import { useState } from "react";
 import { Check, Shuffle } from "lucide-react";
@@ -86,8 +87,8 @@ export function CrossCancelCard() {
                 <FractionStack top={rawNum / g} bottom={rawDen / g} className="text-emerald-700" />
               </div>
             </div>
-            <p className="mt-2 text-center text-xs font-bold text-slate-400">
-              ต้องคูณเลขใหญ่ {rawNum}/{rawDen} แล้วค่อยหาตัวย่อ
+            <p className="mt-2 flex flex-wrap items-center justify-center gap-1 text-center text-xs font-bold text-slate-400">
+              ต้องคูณเลขใหญ่ <Frac n={rawNum} d={rawDen} /> แล้วค่อยหาตัวย่อ
             </p>
           </div>
 

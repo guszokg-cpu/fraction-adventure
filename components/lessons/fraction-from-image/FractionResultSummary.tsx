@@ -1,4 +1,5 @@
 "use client";
+import { Frac } from "@/components/lessons/Frac";
 
 import { Volume2 } from "lucide-react";
 import { Card } from "@/components/ui/Card";
@@ -36,7 +37,7 @@ export function FractionResultSummary({ coloredTotal, denominator }: Props) {
     ? getThaiMixedNumberReading(mixed!.whole, mixed!.numerator, mixed!.denominator)
     : getThaiFractionReading(coloredTotal, denominator);
 
-  let explanation: string;
+  let explanation: React.ReactNode;
   if (isEmpty) {
     explanation = "ยังไม่ได้ระบายส่วนใด";
   } else if (isWholeUnit) {
@@ -44,7 +45,7 @@ export function FractionResultSummary({ coloredTotal, denominator }: Props) {
   } else if (isImproper) {
     explanation = `มี ${mixed!.whole} หน่วยเต็ม และอีก ${mixed!.numerator} ส่วน จาก ${denominator} ส่วน`;
   } else {
-    explanation = `ระบาย ${coloredTotal} ส่วน จากรูปที่แบ่งเป็น ${denominator} ส่วนเท่า ๆ กัน จึงเขียนได้เป็น ${coloredTotal}/${denominator}`;
+    explanation = <>ระบาย {coloredTotal} ส่วน จากรูปที่แบ่งเป็น {denominator} ส่วนเท่า ๆ กัน จึงเขียนได้เป็น <Frac n={coloredTotal} d={denominator} /></>;
   }
 
   return (
@@ -91,7 +92,7 @@ export function FractionResultSummary({ coloredTotal, denominator }: Props) {
         )}
       </div>
 
-      <div className="mt-4 rounded-xl bg-sky-50 px-4 py-3 text-sm font-bold text-sky-700">{explanation}</div>
+      <div className="mt-4 flex flex-wrap items-center gap-1 rounded-xl bg-sky-50 px-4 py-3 text-sm font-bold text-sky-700">{explanation}</div>
 
       {!isEmpty && (
         <button

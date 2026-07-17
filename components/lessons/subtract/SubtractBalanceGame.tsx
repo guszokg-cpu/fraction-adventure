@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Play, RotateCcw, Volume2, VolumeX, FlaskConical, Target, ArrowRight, Plus, Minus } from "lucide-react";
 import { StackedFraction } from "@/components/lessons/compare/StackedFraction";
+import { Frac, SvgFrac } from "@/components/lessons/Frac";
 import { cn } from "@/lib/cn";
 import { randInt, shuffle } from "@/lib/randomFraction";
 
@@ -217,7 +218,7 @@ function FractionBar({ num, den, color, label }: { num: number; den: number; col
 
 const PX = 180, PY = 60, HALF = 120, STR = 30;
 
-function Balance({ tilt, leftLabel, rightLabel, coins, n }: { tilt: number; leftLabel: string; rightLabel: string; coins: number; n: number }) {
+function Balance({ tilt, leftNum, rightNum, coins, n }: { tilt: number; leftNum: number; rightNum: number; coins: number; n: number }) {
   const rad = (tilt * Math.PI) / 180;
   const lx = PX - HALF * Math.cos(rad), ly = PY - HALF * Math.sin(rad);
   const rx = PX + HALF * Math.cos(rad), ry = PY + HALF * Math.sin(rad);
@@ -244,7 +245,7 @@ function Balance({ tilt, leftLabel, rightLabel, coins, n }: { tilt: number; left
         <line x1={lx} y1={ly} x2={lx} y2={lpy} stroke="#94a3b8" strokeWidth={1.5} />
         <ellipse cx={lx} cy={lpy} rx={34} ry={7} fill="#bfdbfe" stroke="#3b82f6" strokeWidth={2} />
         <rect x={lx - 18} y={lpy - 26} width={36} height={22} rx={4} fill="#3b82f6" />
-        <text x={lx} y={lpy - 10} fontSize={12} fontWeight={900} fill="#fff" textAnchor="middle">{leftLabel}</text>
+        <SvgFrac x={lx} y={lpy - 15} n={leftNum} d={n} size={11} fill="#fff" />
       </g>
 
       {/* เชือก + จานขวา (มีลูกตุ้ม) */}
@@ -252,7 +253,7 @@ function Balance({ tilt, leftLabel, rightLabel, coins, n }: { tilt: number; left
         <line x1={rx} y1={ry} x2={rx} y2={rpy} stroke="#94a3b8" strokeWidth={1.5} />
         <ellipse cx={rx} cy={rpy} rx={34} ry={7} fill="#fbcfe8" stroke="#ec4899" strokeWidth={2} />
         <rect x={rx - 18} y={rpy - 26} width={36} height={22} rx={4} fill="#ec4899" />
-        <text x={rx} y={rpy - 10} fontSize={12} fontWeight={900} fill="#fff" textAnchor="middle">{rightLabel}</text>
+        <SvgFrac x={rx} y={rpy - 15} n={rightNum} d={n} size={11} fill="#fff" />
         {/* ลูกตุ้มทอง 1/n */}
         {Array.from({ length: coins }, (_, i) => {
           const col = i % coinCols;
@@ -260,7 +261,7 @@ function Balance({ tilt, leftLabel, rightLabel, coins, n }: { tilt: number; left
           return (
             <g key={i}>
               <circle cx={rx - (coinCols - 1) * 6 + col * 12} cy={rpy - 34 - row * 11} r={5} fill="#facc15" stroke="#a16207" strokeWidth={1.2} />
-              <text x={rx - (coinCols - 1) * 6 + col * 12} y={rpy - 31 - row * 11} fontSize={5} fontWeight={900} fill="#a16207" textAnchor="middle">1/{n}</text>
+              <SvgFrac x={rx - (coinCols - 1) * 6 + col * 12} y={rpy - 34 - row * 11} n={1} d={n} size={4.5} fill="#a16207" />
             </g>
           );
         })}
@@ -522,8 +523,8 @@ export function SubtractBalanceGame() {
                 </>
               ) : (
                 <>
-                  <FractionBar num={A} den={n} color="#3b82f6" label={<span className="text-blue-600">= {A}/{n} <span className="text-[10px] text-slate-400">(×{n / b})</span></span>} />
-                  <FractionBar num={C} den={n} color="#ec4899" label={<span className="text-pink-600">= {C}/{n} <span className="text-[10px] text-slate-400">(×{n / d})</span></span>} />
+                  <FractionBar num={A} den={n} color="#3b82f6" label={<span className="inline-flex items-center gap-1 text-blue-600">= <Frac n={A} d={n} tone="text-blue-600" /> <span className="text-[10px] text-slate-400">(×{n / b})</span></span>} />
+                  <FractionBar num={C} den={n} color="#ec4899" label={<span className="inline-flex items-center gap-1 text-pink-600">= <Frac n={C} d={n} tone="text-pink-600" /> <span className="text-[10px] text-slate-400">(×{n / d})</span></span>} />
                   <p className="text-xs font-extrabold text-emerald-600">✅ ขีดตรงกันแล้ว ({n} ช่องเท่ากัน) — พร้อมชั่งหาความต่าง!</p>
                 </>
               )}
@@ -549,7 +550,7 @@ export function SubtractBalanceGame() {
               <div className="rounded-2xl border-2 border-indigo-200 bg-gradient-to-b from-indigo-50 to-white p-2">
                 {denMsg && step === "weigh" && <p className="text-center text-xs font-extrabold text-emerald-600">{denMsg}</p>}
                 <div className="relative">
-                  <Balance tilt={tilt} leftLabel={`${A}/${n}`} rightLabel={`${C}/${n}`} coins={placed} n={n} />
+                  <Balance tilt={tilt} leftNum={A} rightNum={C} coins={placed} n={n} />
                   <div className="absolute bottom-0 left-1">
                     <SciKid kid={char} mood={mood} size={58} />
                   </div>
@@ -563,7 +564,7 @@ export function SubtractBalanceGame() {
                     <div className="flex items-center justify-center gap-2">
                       <button onClick={removeWeight} disabled={placed <= 0} className="grid h-10 w-10 place-items-center rounded-xl border-2 border-slate-200 bg-white text-slate-600 transition hover:bg-slate-50 disabled:opacity-40"><Minus size={18} /></button>
                       <button onClick={placeWeight} className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 px-6 py-2.5 text-base font-extrabold text-white shadow-lg transition hover:brightness-105 active:scale-[0.98]">
-                        🪙 วางลูกตุ้ม 1/{n}
+                        🪙 วางลูกตุ้ม <Frac n={1} d={n} />
                       </button>
                     </div>
                   </div>
@@ -574,8 +575,8 @@ export function SubtractBalanceGame() {
             {/* สรุปผล */}
             {step === "done" && n !== null && (
               <>
-                <p className="text-center text-sm font-extrabold text-slate-600">
-                  ⚖️ สมดุลแล้ว! เติม <b className="text-amber-600">{needed}</b> ก้อน = <b className="text-emerald-600">{needed}/{n}</b> · {a}/{b} − {c}/{d} = {A}/{n} − {C}/{n} = <b className="text-emerald-600">{needed}/{n}</b>
+                <p className="flex flex-wrap items-center justify-center gap-1 text-center text-sm font-extrabold text-slate-600">
+                  ⚖️ สมดุลแล้ว! เติม <b className="text-amber-600">{needed}</b> ก้อน = <Frac n={needed} d={n} tone="text-emerald-600" /> · <Frac n={a} d={b} /> − <Frac n={c} d={d} /> = <Frac n={A} d={n} /> − <Frac n={C} d={n} /> = <Frac n={needed} d={n} tone="text-emerald-600" />
                 </p>
                 <div className="flex flex-wrap items-center justify-center gap-2">
                   {mode === "mission" ? (

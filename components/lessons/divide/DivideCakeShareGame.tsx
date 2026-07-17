@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Play, RotateCcw, Volume2, VolumeX, FlaskConical, Target, ArrowRight, Eye, EyeOff, Pencil, Scissors } from "lucide-react";
 import { StackedFraction } from "@/components/lessons/compare/StackedFraction";
+import { Frac, SvgFrac } from "@/components/lessons/Frac";
 import { gcd } from "@/lib/fractionUtils";
 import { cn } from "@/lib/cn";
 import { randInt, shuffle } from "@/lib/randomFraction";
@@ -218,7 +219,9 @@ function CakePan({ a, b, n, phase }: { a: number; b: number; n: number; phase: "
       ))}
 
       {/* ป้ายบอก a/b */}
-      <text x={X + (a * cellW) / 2} y={Y - 12} fontSize={12} fontWeight={900} fill="#b45309" textAnchor="middle">🍰 เค้ก {a}/{b} ก้อน</text>
+      <text x={X + (a * cellW) / 2 - 26} y={Y - 8} fontSize={12} fontWeight={900} fill="#b45309" textAnchor="middle">🍰 เค้ก</text>
+      <SvgFrac x={X + (a * cellW) / 2 + 6} y={Y - 12} n={a} d={b} size={10} fill="#b45309" />
+      <text x={X + (a * cellW) / 2 + 30} y={Y - 8} fontSize={12} fontWeight={900} fill="#b45309" textAnchor="middle">ก้อน</text>
       {a < b && <text x={X + a * cellW + ((b - a) * cellW) / 2} y={Y - 12} fontSize={11} fontWeight={800} fill="#94a3b8" textAnchor="middle">(ว่าง)</text>}
     </svg>
   );
@@ -480,9 +483,9 @@ export function DivideCakeShareGame() {
             {/* คำอธิบายผล */}
             {done && (
               <p className="text-center text-sm font-extrabold text-slate-600">
-                ซอยเค้กแต่ละส่วนออกเป็น <b className="text-orange-600">{kids}</b> แถว → ได้ชิ้นเล็กชิ้นละ <b>1/{resDen}</b> ก้อน ·
-                แต่ละคนได้ <b className="text-amber-600">{num} ชิ้น = {resNum}/{resDen}</b>{g > 1 && <> = <b className="text-orange-700">{rNum}/{rDen}</b></>} ก้อน
-                {" "}<span className="text-rose-500">— หารด้วยจำนวนคน = ตัวส่วนคูณ {kids} ({num}/{den} × 1/{kids})</span>
+                ซอยเค้กแต่ละส่วนออกเป็น <b className="text-orange-600">{kids}</b> แถว → ได้ชิ้นเล็กชิ้นละ <Frac n={1} d={resDen} /> ก้อน ·
+                แต่ละคนได้ <b className="text-amber-600">{num} ชิ้น</b> = <Frac n={resNum} d={resDen} tone="text-amber-600" />{g > 1 && <> = <Frac n={rNum} d={rDen} tone="text-orange-700" /></>} ก้อน
+                {" "}<span className="text-rose-500">— หารด้วยจำนวนคน = ตัวส่วนคูณ {kids} (<Frac n={num} d={den} /> × <Frac n={1} d={kids} />)</span>
               </p>
             )}
 
@@ -501,7 +504,7 @@ export function DivideCakeShareGame() {
                     <Scissors size={17} /> แบ่งพิสูจน์!
                   </button>
                 </div>
-                <p className="text-center text-xs font-bold text-slate-400">💡 ซอยแต่ละส่วน (1/{den}) ออกเป็น {kids} คน → ชิ้นเล็ก 1/{resDen}</p>
+                <p className="text-center text-xs font-bold text-slate-400">💡 ซอยแต่ละส่วน (<Frac n={1} d={den} />) ออกเป็น {kids} คน → ชิ้นเล็ก <Frac n={1} d={resDen} /></p>
               </div>
             )}
 
@@ -510,8 +513,8 @@ export function DivideCakeShareGame() {
               <div className={cn("rounded-2xl border-2 p-3 text-center", checked ? "border-emerald-300 bg-emerald-50" : "border-rose-300 bg-rose-50")}>
                 <p className={cn("text-base font-extrabold", checked ? "text-emerald-700" : "text-rose-600")}>
                   {checked
-                    ? `🎉 ถูกต้อง! ${num}/${den} ÷ ${kids} = ${resNum}/${resDen}${g > 1 ? ` = ${rNum}/${rDen}` : ""} ก้อน`
-                    : `ทาย ${gNum}/${gDen || "?"} — จริง ๆ คือ ${resNum}/${resDen}${g > 1 ? ` (= ${rNum}/${rDen})` : ""} · แบ่ง ${kids} คน → ตัวส่วนคูณ ${kids}`}
+                    ? <>🎉 ถูกต้อง! <Frac n={num} d={den} /> ÷ {kids} = <Frac n={resNum} d={resDen} />{g > 1 && <> = <Frac n={rNum} d={rDen} /></>} ก้อน</>
+                    : <>ทาย <Frac n={gNum} d={gDen || "?"} /> — จริง ๆ คือ <Frac n={resNum} d={resDen} />{g > 1 && <> (= <Frac n={rNum} d={rDen} />)</>} · แบ่ง {kids} คน → ตัวส่วนคูณ {kids}</>}
                 </p>
                 <button onClick={nextMission} className="mt-2 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-500 px-6 py-2 text-base font-extrabold text-white shadow transition hover:brightness-105 active:scale-[0.98]">
                   {round >= MISSIONS_TOTAL ? "🏁 ดูสรุปผล" : <>งานต่อไป <ArrowRight size={16} /></>}

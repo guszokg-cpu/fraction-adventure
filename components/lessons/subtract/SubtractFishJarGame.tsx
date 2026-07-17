@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Play, RotateCcw, Volume2, VolumeX, FlaskConical, Target, Eye, EyeOff, ArrowRight } from "lucide-react";
 import { StackedFraction } from "@/components/lessons/compare/StackedFraction";
+import { Frac, SvgFrac } from "@/components/lessons/Frac";
 import { cn } from "@/lib/cn";
 import { randInt } from "@/lib/randomFraction";
 
@@ -189,9 +190,9 @@ function FishJar({ x, y, level, den, boldTick, dur, showLabels }: {
           <g key={k}>
             <line x1={L + 3} y1={ty} x2={R - 3} y2={ty} stroke="#0369a1" strokeWidth={bold ? 3 : 1.4} strokeDasharray="6 4" opacity={bold ? 0.95 : 0.4} />
             {showLabels && (
-              <text x={R + JAR_DX + 4} y={ty + 3.5} fontSize={den > 8 ? 8 : 10} fontWeight={800} fill="#0369a1" opacity={bold ? 1 : 0.55}>
-                {k === 0 ? "0" : k === den ? "เต็ม" : `${k}/${den}`}
-              </text>
+              k === 0 || k === den
+                ? <text x={R + JAR_DX + 4} y={ty + 3.5} fontSize={den > 8 ? 8 : 10} fontWeight={800} fill="#0369a1" opacity={bold ? 1 : 0.55}>{k === 0 ? "0" : "เต็ม"}</text>
+                : <g opacity={bold ? 1 : 0.55}><SvgFrac x={R + JAR_DX + 12} y={ty + 1} n={k} d={den} size={den > 8 ? 7 : 8.5} fill="#0369a1" /></g>
             )}
           </g>
         );
@@ -511,10 +512,10 @@ export function SubtractFishJarGame() {
 
             {/* คำอธิบายผล */}
             {done && (
-              <p className="text-center text-sm font-extrabold text-slate-600">
+              <p className="flex flex-wrap items-center justify-center gap-1 text-center text-sm font-extrabold text-slate-600">
                 {result === 0
-                  ? <>น้ำหมดโหล! <b className="text-rose-600">0/{den}</b> — เติมน้ำให้ปลาด่วน 🐠</>
-                  : <>เทออกไป <b className="text-rose-500">{b}/{den}</b> เหลือน้ำที่ขีด <b className="text-cyan-600">{result}/{den}</b> — ตัวส่วนไม่เปลี่ยน (ขีดโหลเท่าเดิม) เอาแค่ตัวเศษมาลบกัน!</>}
+                  ? <>น้ำหมดโหล! <Frac n={0} d={den} tone="text-rose-600" /> — เติมน้ำให้ปลาด่วน 🐠</>
+                  : <>เทออกไป <Frac n={b} d={den} tone="text-rose-500" /> เหลือน้ำที่ขีด <Frac n={result} d={den} tone="text-cyan-600" /> — ตัวส่วนไม่เปลี่ยน (ขีดโหลเท่าเดิม) เอาแค่ตัวเศษมาลบกัน!</>}
               </p>
             )}
 
@@ -540,8 +541,8 @@ export function SubtractFishJarGame() {
             {/* ผลทาย */}
             {mode === "mission" && checked !== null && (
               <div className={cn("rounded-2xl border-2 p-3 text-center", checked ? "border-emerald-300 bg-emerald-50" : "border-rose-300 bg-rose-50")}>
-                <p className={cn("text-base font-extrabold", checked ? "text-emerald-700" : "text-rose-600")}>
-                  {checked ? `🎉 ทายถูก! ${a}/${den} − ${b}/${den} = ${result}/${den}` : `ทาย ${guess}/${den} แต่เหลือจริง ${result}/${den} — ${guess === a + b ? "นี่คือการบวก! เราเทออกนะ" : guess === b ? "นั่นคือน้ำที่เทออก ไม่ใช่ที่เหลือ" : "ลองข้อต่อไป!"}`}
+                <p className={cn("flex flex-wrap items-center justify-center gap-1 text-base font-extrabold", checked ? "text-emerald-700" : "text-rose-600")}>
+                  {checked ? <>🎉 ทายถูก! <Frac n={a} d={den} /> − <Frac n={b} d={den} /> = <Frac n={result} d={den} /></> : <>ทาย <Frac n={guess} d={den} /> แต่เหลือจริง <Frac n={result} d={den} /> — {guess === a + b ? "นี่คือการบวก! เราเทออกนะ" : guess === b ? "นั่นคือน้ำที่เทออก ไม่ใช่ที่เหลือ" : "ลองข้อต่อไป!"}</>}
                 </p>
                 <button onClick={nextMission} className="mt-2 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-600 to-sky-500 px-6 py-2 text-base font-extrabold text-white shadow transition hover:brightness-105 active:scale-[0.98]">
                   {round >= MISSIONS_TOTAL ? "🏁 ดูสรุปผล" : <>ข้อต่อไป <ArrowRight size={16} /></>}

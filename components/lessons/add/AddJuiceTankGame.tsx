@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Play, RotateCcw, Volume2, VolumeX, FlaskConical, Target, Eye, EyeOff, ArrowRight, ArrowLeftRight } from "lucide-react";
 import { StackedFraction } from "@/components/lessons/compare/StackedFraction";
+import { Frac, SvgFrac } from "@/components/lessons/Frac";
 import { cn } from "@/lib/cn";
 import { randInt } from "@/lib/randomFraction";
 
@@ -167,9 +168,9 @@ function Jar({ x, y, level, den, boldTick, gid, dur, showLabels, badge }: {
           <g key={k}>
             <line x1={L + 3} y1={ty} x2={R - 3} y2={ty} stroke="#b45309" strokeWidth={bold ? 3 : 1.4} strokeDasharray="6 4" opacity={bold ? 0.95 : 0.42} />
             {showLabels && (
-              <text x={R + JAR_DX + 4} y={ty + 3.5} fontSize={den > 8 ? 8 : 10} fontWeight={800} fill="#b45309" opacity={bold ? 1 : 0.55}>
-                {k === 0 ? "0" : k === den ? "เต็ม" : `${k}/${den}`}
-              </text>
+              k === 0 || k === den
+                ? <text x={R + JAR_DX + 4} y={ty + 3.5} fontSize={den > 8 ? 8 : 10} fontWeight={800} fill="#b45309" opacity={bold ? 1 : 0.55}>{k === 0 ? "0" : "เต็ม"}</text>
+                : <g opacity={bold ? 1 : 0.55}><SvgFrac x={R + JAR_DX + 12} y={ty + 1} n={k} d={den} size={den > 8 ? 7 : 8.5} fill="#b45309" /></g>
             )}
           </g>
         );
@@ -502,8 +503,8 @@ export function AddJuiceTankGame() {
             {combined && (
               <p className="text-center text-sm font-extrabold text-slate-600">
                 {overflow
-                  ? <>โหล {tgtName} เต็ม 🈵 แล้วยังเหลืออีก <b className="text-rose-600">{sum - den}/{den}</b> → รวม = <b className="text-rose-600">1 กับ {sum - den}/{den}</b> (เกิน 1 โหล!)</>
-                  : <>น้ำส้มรวมกันที่ขีด <b className="text-orange-600">{sum}/{den}</b> พอดี — ตัวส่วนไม่เปลี่ยน (ขีดโหลเท่าเดิม) เอาแค่ตัวเศษมาบวกกัน!</>}
+                  ? <span className="inline-flex flex-wrap items-center justify-center gap-1">โหล {tgtName} เต็ม 🈵 แล้วยังเหลืออีก <Frac n={sum - den} d={den} tone="text-rose-600" /> → รวม = <span className="inline-flex items-center gap-1 text-rose-600"><b>1</b> กับ <Frac n={sum - den} d={den} tone="text-rose-600" /></span> (เกิน 1 โหล!)</span>
+                  : <span className="inline-flex flex-wrap items-center justify-center gap-1">น้ำส้มรวมกันที่ขีด <Frac n={sum} d={den} tone="text-orange-600" /> พอดี — ตัวส่วนไม่เปลี่ยน (ขีดโหลเท่าเดิม) เอาแค่ตัวเศษมาบวกกัน!</span>}
               </p>
             )}
 
@@ -529,8 +530,8 @@ export function AddJuiceTankGame() {
             {/* ผลทาย */}
             {mode === "mission" && checked !== null && (
               <div className={cn("rounded-2xl border-2 p-3 text-center", checked ? "border-emerald-300 bg-emerald-50" : "border-rose-300 bg-rose-50")}>
-                <p className={cn("text-base font-extrabold", checked ? "text-emerald-700" : "text-rose-600")}>
-                  {checked ? `🎉 ทายถูก! ${a}/${den} + ${b}/${den} = ${sum}/${den}` : `ทาย ${guess}/${den} แต่รวมจริงได้ ${sum}/${den} — ลองข้อต่อไป!`}
+                <p className={cn("flex flex-wrap items-center justify-center gap-1 text-base font-extrabold", checked ? "text-emerald-700" : "text-rose-600")}>
+                  {checked ? <>🎉 ทายถูก! <Frac n={a} d={den} /> + <Frac n={b} d={den} /> = <Frac n={sum} d={den} /></> : <>ทาย <Frac n={guess} d={den} /> แต่รวมจริงได้ <Frac n={sum} d={den} /> — ลองข้อต่อไป!</>}
                 </p>
                 <button onClick={nextMission} className="mt-2 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-600 to-orange-500 px-6 py-2 text-base font-extrabold text-white shadow transition hover:brightness-105 active:scale-[0.98]">
                   {round >= MISSIONS_TOTAL ? "🏁 ดูสรุปผล" : <>ข้อต่อไป <ArrowRight size={16} /></>}

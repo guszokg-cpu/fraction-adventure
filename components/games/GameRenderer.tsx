@@ -24,6 +24,18 @@ const Loading = () => (
 
 
 export const GAME_COMPONENTS: Record<string, ComponentType> = {
+  /* รู้จักเศษส่วน */
+  "fraction-intro:witchcake": dynamic(() => import("@/components/lessons/fraction-intro/IntroWitchCakeGame").then((m) => m.IntroWitchCakeGame), { ssr: false, loading: Loading }),
+  "fraction-intro:bee":       dynamic(() => import("@/components/lessons/fraction-intro/IntroBeeGardenGame").then((m) => m.IntroBeeGardenGame), { ssr: false, loading: Loading }),
+  "fraction-intro:robot":     dynamic(() => import("@/components/lessons/fraction-intro/IntroRobotChargeGame").then((m) => m.IntroRobotChargeGame), { ssr: false, loading: Loading }),
+  "fraction-intro:pond":      dynamic(() => import("@/components/lessons/fraction-intro/FishingPondGame").then((m) => m.FishingPondGame), { ssr: false, loading: Loading }),
+
+  /* ประเภทของเศษส่วน */
+  "read-write:bus":      dynamic(() => import("@/components/lessons/fraction-types/TypesBusGame").then((m) => m.TypesBusGame), { ssr: false, loading: Loading }),
+  "read-write:kitchen":  dynamic(() => import("@/components/lessons/fraction-types/TypesKitchenGame").then((m) => m.TypesKitchenGame), { ssr: false, loading: Loading }),
+  "read-write:gate":     dynamic(() => import("@/components/lessons/fraction-types/TypesGateGame").then((m) => m.TypesGateGame), { ssr: false, loading: Loading }),
+  "read-write:treasure": dynamic(() => import("@/components/lessons/fraction-types/TreasureSortGame").then((m) => m.TreasureSortGame), { ssr: false, loading: Loading }),
+
   /* เปรียบเทียบเศษส่วน */
   "compare:race":    dynamic(() => import("@/components/lessons/compare/RaceTrackGame").then((m) => m.RaceTrackGame), { ssr: false, loading: Loading }),
   "compare:balance": dynamic(() => import("@/components/lessons/compare/FractionScaleGame").then((m) => m.FractionScaleGame), { ssr: false, loading: Loading }),

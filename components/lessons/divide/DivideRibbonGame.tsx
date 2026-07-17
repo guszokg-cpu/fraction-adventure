@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Play, RotateCcw, Volume2, VolumeX, FlaskConical, Target, ArrowRight, Eye, EyeOff, Pencil, Scissors } from "lucide-react";
 import { StackedFraction } from "@/components/lessons/compare/StackedFraction";
+import { Frac, SvgFrac } from "@/components/lessons/Frac";
 import { cn } from "@/lib/cn";
 import { randInt, shuffle } from "@/lib/randomFraction";
 
@@ -191,7 +192,9 @@ function RibbonScene({ num, den, e, pieces, sep, color, animating }: {
         return (
           <g key={`mj${k}`}>
             <line x1={x} y1={rY - 30} x2={x} y2={rY - 14} stroke="#a16207" strokeWidth={2} />
-            <text x={x} y={rY - 33} fontSize={10} fontWeight={900} fill="#a16207" textAnchor="middle">{k === 0 ? "0" : k === den ? "1 ม." : `${k}/${den}`}</text>
+            {k === 0 || k === den
+              ? <text x={x} y={rY - 33} fontSize={10} fontWeight={900} fill="#a16207" textAnchor="middle">{k === 0 ? "0" : "1 ม."}</text>
+              : <SvgFrac x={x} y={rY - 38} n={k} d={den} size={9} fill="#a16207" />}
           </g>
         );
       })}
@@ -222,9 +225,11 @@ function RibbonScene({ num, den, e, pieces, sep, color, animating }: {
 
       {/* ป้ายบอกขนาดริบบิ้นที่เหลือ */}
       {remaining > 0 && (
-        <text x={X0 + remLen / 2} y={rY + rH + 30} fontSize={11} fontWeight={800} fill={color.dark} textAnchor="middle">
-          ริบบิ้น {remaining}/{e} ม. (เหลือ)
-        </text>
+        <g>
+          <text x={X0 + remLen / 2 - 26} y={rY + rH + 34} fontSize={11} fontWeight={800} fill={color.dark} textAnchor="middle">ริบบิ้น</text>
+          <SvgFrac x={X0 + remLen / 2 + 2} y={rY + rH + 30} n={remaining} d={e} size={10} fill={color.dark} />
+          <text x={X0 + remLen / 2 + 36} y={rY + rH + 34} fontSize={11} fontWeight={800} fill={color.dark} textAnchor="middle">ม. (เหลือ)</text>
+        </g>
       )}
 
       {/* ถาดชิ้นที่ตัดแล้ว */}
@@ -504,8 +509,8 @@ export function DivideRibbonGame() {
             {/* คำอธิบายผล */}
             {done && (
               <p className="text-center text-sm font-extrabold text-slate-600">
-                ริบบิ้น <b className="text-pink-600">{num}/{den} ม.</b> มีชิ้นละ <b className="text-violet-600">1/{e} ม.</b> อยู่ <b className="text-pink-600">{pieces} ชิ้น</b> →
-                หารคือ &ldquo;มีกี่ชิ้น&rdquo; = <span className="text-emerald-600">กลับตัวหลังแล้วคูณ</span>: {num}/{den} × {e}/1 = {num * e}/{den} = <b className="text-pink-600">{pieces}</b>
+                ริบบิ้น <Frac n={num} d={den} tone="text-pink-600" /> ม. มีชิ้นละ <Frac n={1} d={e} tone="text-violet-600" /> ม. อยู่ <b className="text-pink-600">{pieces} ชิ้น</b> →
+                หารคือ &ldquo;มีกี่ชิ้น&rdquo; = <span className="text-emerald-600">กลับตัวหลังแล้วคูณ</span>: <Frac n={num} d={den} /> × <Frac n={e} d={1} /> = <Frac n={num * e} d={den} /> = <b className="text-pink-600">{pieces}</b>
               </p>
             )}
 
@@ -524,7 +529,7 @@ export function DivideRibbonGame() {
                     <Scissors size={17} /> ตัดพิสูจน์!
                   </button>
                 </div>
-                <p className="text-center text-xs font-bold text-slate-400">💡 นับว่ามีชิ้นละ 1/{e} ม. อยู่กี่ชิ้นใน {num}/{den} ม.</p>
+                <p className="text-center text-xs font-bold text-slate-400">💡 นับว่ามีชิ้นละ <Frac n={1} d={e} /> ม. อยู่กี่ชิ้นใน <Frac n={num} d={den} /> ม.</p>
               </div>
             )}
 
@@ -533,8 +538,8 @@ export function DivideRibbonGame() {
               <div className={cn("rounded-2xl border-2 p-3 text-center", checked ? "border-emerald-300 bg-emerald-50" : "border-rose-300 bg-rose-50")}>
                 <p className={cn("text-base font-extrabold", checked ? "text-emerald-700" : "text-rose-600")}>
                   {checked
-                    ? `🎉 เก่งมาก! ${num}/${den} ÷ 1/${e} = ${num}/${den} × ${e} = ${pieces} ชิ้น`
-                    : `ทาย ${guess} — จริง ๆ ได้ ${pieces} ชิ้น · กลับตัวหลังแล้วคูณ: ${num}/${den} × ${e} = ${pieces}`}
+                    ? <>🎉 เก่งมาก! <Frac n={num} d={den} /> ÷ <Frac n={1} d={e} /> = <Frac n={num} d={den} /> × {e} = <b>{pieces}</b> ชิ้น</>
+                    : <>ทาย {guess} — จริง ๆ ได้ <b>{pieces}</b> ชิ้น · กลับตัวหลังแล้วคูณ: <Frac n={num} d={den} /> × {e} = {pieces}</>}
                 </p>
                 <button onClick={nextMission} className="mt-2 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-fuchsia-600 to-pink-500 px-6 py-2 text-base font-extrabold text-white shadow transition hover:brightness-105 active:scale-[0.98]">
                   {round >= MISSIONS_TOTAL ? "🏁 ดูสรุปผล" : <>ข้อต่อไป <ArrowRight size={16} /></>}

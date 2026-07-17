@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { Play, RotateCcw, Volume2, VolumeX, FlaskConical, Target, ArrowRight, Eye, EyeOff, Pencil } from "lucide-react";
 import { StackedFraction } from "@/components/lessons/compare/StackedFraction";
+import { Frac } from "@/components/lessons/Frac";
 import { cn } from "@/lib/cn";
 import { randInt, shuffle } from "@/lib/randomFraction";
 
@@ -656,7 +657,7 @@ export function SubtractBottleGame() {
             {/* คำอธิบายผล */}
             {done && (
               <p className="flex flex-wrap items-center justify-center gap-1.5 text-center text-base font-extrabold text-slate-600">
-                ให้น้ำ {custName} ไป <MixedNum w={w2} n={n2} den={den} size="sm" tone="text-rose-500" /> — เศษไม่พอ ต้องยืม 1 เต็มมาแตกเป็น {den}/{den} เหลือ <MixedNum w={resW} n={resN} den={den} size="sm" tone="text-emerald-600" /> ขวด
+                ให้น้ำ {custName} ไป <MixedNum w={w2} n={n2} den={den} size="sm" tone="text-rose-500" /> — เศษไม่พอ ต้องยืม 1 เต็มมาแตกเป็น <Frac n={den} d={den} /> เหลือ <MixedNum w={resW} n={resN} den={den} size="sm" tone="text-emerald-600" /> ขวด
               </p>
             )}
 
@@ -686,7 +687,7 @@ export function SubtractBottleGame() {
               <div className="space-y-1.5 rounded-2xl border-2 border-sky-200 bg-white/90 p-3">
                 {phase === "dry" ? (
                   <>
-                    <p className="text-center text-base font-extrabold text-rose-500">💧 น้ำในขวดเปิดไม่พอ! ({n1}/{den} {"<"} {n2}/{den}) ทำไงดี?</p>
+                    <p className="flex flex-wrap items-center justify-center gap-1 text-center text-base font-extrabold text-rose-500">💧 น้ำในขวดเปิดไม่พอ! (<Frac n={n1} d={den} /> {"<"} <Frac n={n2} d={den} />) ทำไงดี?</p>
                     <div className="flex justify-center">
                       <button onClick={openBottle} disabled={sealed <= 0} className="inline-flex animate-pulse items-center gap-2 rounded-xl border-b-4 border-amber-800 bg-gradient-to-b from-amber-400 to-amber-500 px-7 py-3 text-lg font-extrabold text-white shadow-lg transition hover:brightness-105 active:scale-[0.97] active:border-b-2 disabled:animate-none disabled:opacity-40">
                         🔓 เปิดขวดใหม่!

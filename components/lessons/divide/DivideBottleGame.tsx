@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { Play, RotateCcw, Volume2, VolumeX, FlaskConical, Target, ArrowRight, Eye, EyeOff, Pencil } from "lucide-react";
 import { StackedFraction } from "@/components/lessons/compare/StackedFraction";
+import { Frac, SvgFrac } from "@/components/lessons/Frac";
 import { cn } from "@/lib/cn";
 import { randInt, shuffle } from "@/lib/randomFraction";
 
@@ -219,7 +220,9 @@ function TankScene({ N, c, d, bottles, filled, animating }: {
       )}
 
       {/* ป้ายขนาดขวด */}
-      <text x={210} y={26} fontSize={12} fontWeight={900} fill="#0369a1">ขวดละ {c}/{d} ลิตร →</text>
+      <text x={210} y={30} fontSize={12} fontWeight={900} fill="#0369a1">ขวดละ</text>
+      <SvgFrac x={258} y={26} n={c} d={d} size={10} fill="#0369a1" />
+      <text x={278} y={30} fontSize={12} fontWeight={900} fill="#0369a1">ลิตร →</text>
 
       {/* ขวดที่กรอกแล้ว */}
       <text x={366} y={26} fontSize={12} fontWeight={900} fill="#0f766e">🧴 ได้:</text>
@@ -499,8 +502,8 @@ export function DivideBottleGame() {
             {/* คำอธิบายผล */}
             {done && (
               <p className="text-center text-sm font-extrabold text-slate-600">
-                น้ำ <b className="text-sky-600">{liters} ล.</b> แบ่งใส่ขวดละ <b className="text-violet-600">{cnum}/{den} ล.</b> ได้ <b className="text-cyan-600">{bottles} ขวด</b> →
-                หารคือ &ldquo;ได้กี่ขวด&rdquo; = <span className="text-emerald-600">กลับตัวหลังแล้วคูณ</span>: {liters} × {den}/{cnum} = {liters * den}/{cnum} = <b className="text-cyan-600">{bottles}</b>
+                น้ำ <b className="text-sky-600">{liters} ล.</b> แบ่งใส่ขวดละ <Frac n={cnum} d={den} tone="text-violet-600" /> ล. ได้ <b className="text-cyan-600">{bottles} ขวด</b> →
+                หารคือ &ldquo;ได้กี่ขวด&rdquo; = <span className="text-emerald-600">กลับตัวหลังแล้วคูณ</span>: {liters} × <Frac n={den} d={cnum} /> = <Frac n={liters * den} d={cnum} /> = <b className="text-cyan-600">{bottles}</b>
               </p>
             )}
 
@@ -519,7 +522,7 @@ export function DivideBottleGame() {
                     💧 กรอกพิสูจน์!
                   </button>
                 </div>
-                <p className="text-center text-xs font-bold text-slate-400">💡 นับว่ามีขวดละ {cnum}/{den} ล. อยู่กี่ขวดใน {liters} ล.</p>
+                <p className="text-center text-xs font-bold text-slate-400">💡 นับว่ามีขวดละ <Frac n={cnum} d={den} /> ล. อยู่กี่ขวดใน {liters} ล.</p>
               </div>
             )}
 
@@ -528,8 +531,8 @@ export function DivideBottleGame() {
               <div className={cn("rounded-2xl border-2 p-3 text-center", checked ? "border-emerald-300 bg-emerald-50" : "border-rose-300 bg-rose-50")}>
                 <p className={cn("text-base font-extrabold", checked ? "text-emerald-700" : "text-rose-600")}>
                   {checked
-                    ? `🎉 เก่งมาก! ${liters} ÷ ${cnum}/${den} = ${liters} × ${den}/${cnum} = ${bottles} ขวด`
-                    : `ทาย ${guess} — จริง ๆ ได้ ${bottles} ขวด · กลับตัวหลังแล้วคูณ: ${liters} × ${den}/${cnum} = ${bottles}`}
+                    ? <>🎉 เก่งมาก! {liters} ÷ <Frac n={cnum} d={den} /> = {liters} × <Frac n={den} d={cnum} /> = <b>{bottles}</b> ขวด</>
+                    : <>ทาย {guess} — จริง ๆ ได้ <b>{bottles}</b> ขวด · กลับตัวหลังแล้วคูณ: {liters} × <Frac n={den} d={cnum} /> = {bottles}</>}
                 </p>
                 <button onClick={nextMission} className="mt-2 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-sky-600 to-cyan-500 px-6 py-2 text-base font-extrabold text-white shadow transition hover:brightness-105 active:scale-[0.98]">
                   {round >= MISSIONS_TOTAL ? "🏁 ดูสรุปผล" : <>ข้อต่อไป <ArrowRight size={16} /></>}

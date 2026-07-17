@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Play, RotateCcw, Volume2, VolumeX, FlaskConical, Target, Eye, EyeOff, ArrowRight, Pencil } from "lucide-react";
 import { StackedFraction } from "@/components/lessons/compare/StackedFraction";
+import { Frac } from "@/components/lessons/Frac";
 import { cn } from "@/lib/cn";
 import { randInt, shuffle } from "@/lib/randomFraction";
 
@@ -198,9 +199,9 @@ function KidChar({ kid, mood, size = 66, facing = 1, walking = false }: { kid: K
 
 /* ── บอลลูนคำพูด ── */
 
-function SpeechBubble({ text, tone }: { text: string; tone: string }) {
+function SpeechBubble({ text, tone }: { text: React.ReactNode; tone: string }) {
   return (
-    <div className={cn("relative whitespace-nowrap rounded-xl border-2 bg-white px-2.5 py-1 text-[11px] font-extrabold shadow-sm", tone)}>
+    <div className={cn("relative inline-flex items-center gap-1 whitespace-nowrap rounded-xl border-2 bg-white px-2.5 py-1 text-[11px] font-extrabold shadow-sm", tone)}>
       {text}
       <span className="absolute -bottom-1.5 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 border-b-2 border-r-2 bg-white" style={{ borderColor: "inherit" }} />
     </div>
@@ -247,7 +248,7 @@ function FriendPlate({ plate, den }: { plate: number; den: number }) {
         {Array.from({ length: plate }, (_, i) => <ChocoPiece key={i} w={13} h={17} />)}
       </div>
       <div className="mt-0.5 h-2 w-[76px] rounded-[50%] bg-gradient-to-b from-slate-200 to-slate-300 shadow-inner" />
-      <span className="mt-0.5 text-[10px] font-extrabold text-orange-700">ได้รับ {plate}/{den}</span>
+      <span className="mt-0.5 inline-flex items-center gap-1 text-[10px] font-extrabold text-orange-700">ได้รับ <Frac n={plate} d={den} /></span>
     </div>
   );
 }
@@ -285,9 +286,9 @@ function ShareScene({ den, have, plate, ask, phase, me, friend, meX, meFacing, w
 
       {/* แท่งช็อกโกแลต + บอลลูน */}
       <div className="absolute z-[2] flex flex-col items-center gap-1" style={{ left: "41%", bottom: 44, transform: "translateX(-50%)" }}>
-        {phase === "idle" && <SpeechBubble text={`ขอ ${ask}/${den} ได้ไหม? 🥺`} tone="border-sky-300 text-sky-700" />}
+        {phase === "idle" && <SpeechBubble text={<>ขอ <Frac n={ask} d={den} /> ได้ไหม? 🥺</>} tone="border-sky-300 text-sky-700" />}
         <ChocoBar den={den} have={have} />
-        <span className="text-[11px] font-extrabold text-amber-800">มีอยู่ {have}/{den}</span>
+        <span className="inline-flex items-center gap-1 text-[11px] font-extrabold text-amber-800">มีอยู่ <Frac n={have} d={den} /></span>
       </div>
 
       {/* เพื่อน (ขวา) + จาน */}
@@ -574,10 +575,10 @@ export function SubtractChocoGame() {
 
             {/* คำอธิบายผล */}
             {done && (
-              <p className="text-center text-sm font-extrabold text-slate-600">
+              <p className="flex flex-wrap items-center justify-center gap-1 text-center text-sm font-extrabold text-slate-600">
                 {result === 0
-                  ? <>แบ่งหมดแท่งให้ {friend.name}! เหลือ <b className="text-rose-600">0/{den}</b> — ใจดีที่สุด! 💝</>
-                  : <>แบ่งให้ {friend.name} ไป <b className="text-rose-500">{b}/{den}</b> เหลือ <b className="text-orange-600">{result}/{den}</b> — ช่องแท่งไม่เปลี่ยน (ตัวส่วนเท่าเดิม) เอาแค่ตัวเศษมาลบกัน!</>}
+                  ? <>แบ่งหมดแท่งให้ {friend.name}! เหลือ <Frac n={0} d={den} tone="text-rose-600" /> — ใจดีที่สุด! 💝</>
+                  : <>แบ่งให้ {friend.name} ไป <Frac n={b} d={den} tone="text-rose-500" /> เหลือ <Frac n={result} d={den} tone="text-orange-600" /> — ช่องแท่งไม่เปลี่ยน (ตัวส่วนเท่าเดิม) เอาแค่ตัวเศษมาลบกัน!</>}
               </p>
             )}
 
@@ -603,8 +604,8 @@ export function SubtractChocoGame() {
             {/* ผลทาย */}
             {mode === "mission" && checked !== null && (
               <div className={cn("rounded-2xl border-2 p-3 text-center", checked ? "border-emerald-300 bg-emerald-50" : "border-rose-300 bg-rose-50")}>
-                <p className={cn("text-base font-extrabold", checked ? "text-emerald-700" : "text-rose-600")}>
-                  {checked ? `🎉 ทายถูก! ${a}/${den} − ${b}/${den} = ${result}/${den}` : `ทาย ${guess}/${den} แต่เหลือจริง ${result}/${den} — ${guess === a + b ? "นี่คือการบวก! เราแบ่งให้เพื่อนนะ" : guess === b ? "นั่นคือชิ้นที่ให้เพื่อนไป ไม่ใช่ที่เหลือ" : "ลองข้อต่อไป!"}`}
+                <p className={cn("flex flex-wrap items-center justify-center gap-1 text-base font-extrabold", checked ? "text-emerald-700" : "text-rose-600")}>
+                  {checked ? <>🎉 ทายถูก! <Frac n={a} d={den} /> − <Frac n={b} d={den} /> = <Frac n={result} d={den} /></> : <>ทาย <Frac n={guess} d={den} /> แต่เหลือจริง <Frac n={result} d={den} /> — {guess === a + b ? "นี่คือการบวก! เราแบ่งให้เพื่อนนะ" : guess === b ? "นั่นคือชิ้นที่ให้เพื่อนไป ไม่ใช่ที่เหลือ" : "ลองข้อต่อไป!"}</>}
                 </p>
                 <button onClick={nextMission} className="mt-2 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-orange-600 to-amber-500 px-6 py-2 text-base font-extrabold text-white shadow transition hover:brightness-105 active:scale-[0.98]">
                   {round >= MISSIONS_TOTAL ? "🏁 ดูสรุปผล" : <>ข้อต่อไป <ArrowRight size={16} /></>}

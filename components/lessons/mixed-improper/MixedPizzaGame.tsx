@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Play, RotateCcw, Volume2, VolumeX, FlaskConical, Target, Eye, EyeOff, ChefHat, ArrowRight } from "lucide-react";
 import { StackedFraction } from "@/components/lessons/compare/StackedFraction";
+import { Frac } from "@/components/lessons/Frac";
 import { cn } from "@/lib/cn";
 import { randInt } from "@/lib/randomFraction";
 
@@ -668,7 +669,7 @@ export function MixedPizzaGame() {
                     <div className={cn(curBox > 0 && "wiggle")}>
                       <Pizza den={order.den} filled={curBox} r={56} topping={custIdx % TOPPINGS.length} />
                     </div>
-                    <span className="text-[11px] font-extrabold text-orange-600">กำลังแพ็ก {curBox}/{order.den}</span>
+                    <span className="inline-flex items-center gap-1 text-[11px] font-extrabold text-orange-600">กำลังแพ็ก <Frac n={curBox} d={order.den} /></span>
                   </div>
                 </div>
 
@@ -715,8 +716,8 @@ export function MixedPizzaGame() {
                 />
 
                 {reveal && mode === "lab" && (
-                  <p className="text-center text-sm font-extrabold text-violet-600">
-                    เฉลย: {order.num} ÷ {order.den} = {correctWhole} เศษ {correctNum} → {correctWhole}{correctNum > 0 ? ` ${correctNum}/${order.den}` : ""}
+                  <p className="flex flex-wrap items-center justify-center gap-1 text-center text-sm font-extrabold text-violet-600">
+                    เฉลย: {order.num} ÷ {order.den} = {correctWhole} เศษ {correctNum} → {correctWhole}{correctNum > 0 && <Frac n={correctNum} d={order.den} />}
                   </p>
                 )}
 

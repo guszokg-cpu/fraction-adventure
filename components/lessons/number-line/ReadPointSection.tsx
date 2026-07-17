@@ -5,6 +5,7 @@ import { ArrowRight, Check, RefreshCw, X } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { FractionStack } from "@/components/fractions/FractionStack";
 import { NumberLineStrip } from "@/components/lessons/number-line/NumberLineStrip";
+import { Frac } from "@/components/lessons/Frac";
 import { cn } from "@/lib/cn";
 import { randInt, shuffle } from "@/lib/randomFraction";
 
@@ -272,7 +273,7 @@ export function ReadPointSection() {
             <span>
               {isRight ? "ถูกต้อง! เก่งมาก 🎉 " : "ยังไม่ถูก — "}
               เส้นแบ่งเป็น {practice.denominator} ช่องเท่ากัน จุดอยู่ห่างจาก 0 ไป {practice.numerator} ช่อง จึงเป็น{" "}
-              {practice.numerator}/{practice.denominator}
+              <Frac n={practice.numerator} d={practice.denominator} />
             </span>
           </div>
         )}

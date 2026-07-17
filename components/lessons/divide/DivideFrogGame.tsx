@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Play, RotateCcw, Volume2, VolumeX, FlaskConical, Target, ArrowRight, Eye, EyeOff, Pencil } from "lucide-react";
 import { StackedFraction } from "@/components/lessons/compare/StackedFraction";
+import { Frac, SvgFrac } from "@/components/lessons/Frac";
 import { gcd } from "@/lib/fractionUtils";
 import { cn } from "@/lib/cn";
 import { randInt, shuffle } from "@/lib/randomFraction";
@@ -198,12 +199,14 @@ function PondScene({ a, b, c, d, L, hops, whole, rem, animating, frog }: {
           </g>
         );
       })}
-      <text x={X1 - 4} y={lineY + 44} fontSize={10} fontWeight={800} fill="#64748b" textAnchor="end">ขีดละ 1/{L} (ตัวส่วนร่วม)</text>
+      <text x={X1 - 62} y={lineY + 44} fontSize={10} fontWeight={800} fill="#64748b" textAnchor="end">ขีดละ</text>
+      <SvgFrac x={X1 - 48} y={lineY + 40} n={1} d={L} size={9} fill="#64748b" />
+      <text x={X1 - 4} y={lineY + 44} fontSize={10} fontWeight={800} fill="#64748b" textAnchor="end">(ตัวส่วนร่วม)</text>
 
       {/* ธงเป้าหมาย a/b */}
       <line x1={toX(targetVal)} y1={lineY - 12} x2={toX(targetVal)} y2={lineY - 54} stroke="#dc2626" strokeWidth={2.5} />
       <polygon points={`${toX(targetVal)},${lineY - 54} ${toX(targetVal) + 26},${lineY - 47} ${toX(targetVal)},${lineY - 40}`} fill="#dc2626" />
-      <text x={toX(targetVal) + 2} y={lineY - 58} fontSize={12} fontWeight={900} fill="#dc2626" textAnchor="middle">{a}/{b}</text>
+      <SvgFrac x={toX(targetVal) + 14} y={lineY - 47} n={a} d={b} size={9} fill="#fff" />
 
       {/* ใบบัวจุดลง */}
       {Array.from({ length: Math.min(hops, totalHops) + 1 }, (_, i) => {
@@ -218,7 +221,7 @@ function PondScene({ a, b, c, d, L, hops, whole, rem, animating, frog }: {
         return (
           <g key={`arc${i}`}>
             <path d={`M ${x1} ${lineY - 4} Q ${(x1 + x2) / 2} ${lineY - 46} ${x2} ${lineY - 4}`} fill="none" stroke={partial ? "#f59e0b" : frog.dark} strokeWidth={2} strokeDasharray={partial ? "4 3" : "5 4"} opacity={0.75} />
-            <text x={(x1 + x2) / 2} y={lineY - 30} fontSize={10} fontWeight={900} fill={partial ? "#b45309" : frog.dark} textAnchor="middle">{partial ? `${rem}/${c * (L / d)}` : `${c}/${d}`}</text>
+            <SvgFrac x={(x1 + x2) / 2} y={lineY - 34} n={partial ? rem : c} d={partial ? c * (L / d) : d} size={9} fill={partial ? "#b45309" : frog.dark} />
           </g>
         );
       })}
@@ -232,8 +235,11 @@ function PondScene({ a, b, c, d, L, hops, whole, rem, animating, frog }: {
 
       {/* ป้ายขนาดก้าว */}
       <g transform={`translate(${X0}, 22)`}>
-        <rect x={0} y={0} width={132} height={22} rx={7} fill="#fff" stroke={frog.dark} strokeWidth={1.6} />
-        <text x={66} y={15} fontSize={11} fontWeight={900} fill={frog.dark} textAnchor="middle">🐸 ก้าวละ {c}/{d} = {c * (L / d)}/{L}</text>
+        <rect x={0} y={0} width={122} height={22} rx={7} fill="#fff" stroke={frog.dark} strokeWidth={1.6} />
+        <text x={40} y={15} fontSize={11} fontWeight={900} fill={frog.dark} textAnchor="middle">🐸 ก้าวละ</text>
+        <SvgFrac x={72} y={11} n={c} d={d} size={9} fill={frog.dark} />
+        <text x={86} y={15} fontSize={11} fontWeight={900} fill={frog.dark} textAnchor="middle">=</text>
+        <SvgFrac x={102} y={11} n={c * (L / d)} d={L} size={9} fill={frog.dark} />
       </g>
     </svg>
   );
@@ -497,7 +503,7 @@ export function DivideFrogGame() {
               <PondScene a={a} b={b} c={c} d={d} L={L} hops={hops} whole={whole} rem={rem} animating={animating} frog={frog} />
               <div className="-mt-1 text-center">
                 <span className="rounded-full bg-white px-3 py-0.5 text-sm font-extrabold text-slate-600 shadow-sm ring-1 ring-green-200">
-                  กระโดดแล้ว {Math.min(hops, whole)} ก้าวเต็ม{hops > whole && rem > 0 ? ` + อีก ${rem / rg}/${C / rg} ก้าว` : ""} · เป้า {a}/{b} = {A}/{L}
+                  กระโดดแล้ว {Math.min(hops, whole)} ก้าวเต็ม{hops > whole && rem > 0 && <> + อีก <Frac n={rem / rg} d={C / rg} /> ก้าว</>} · เป้า <Frac n={a} d={b} /> = <Frac n={A} d={L} />
                 </span>
               </div>
             </div>
@@ -505,10 +511,10 @@ export function DivideFrogGame() {
             {/* คำอธิบายผล */}
             {done && (
               <p className="text-center text-sm font-extrabold text-slate-600">
-                ทำส่วนให้เท่ากัน: <b className="text-rose-600">{a}/{b} = {A}/{L}</b> · ก้าวละ <b className="text-green-600">{c}/{d} = {C}/{L}</b> →
-                เอาตัวเศษหารกัน <b>{A} ÷ {C} = {rqNum}/{rqDen}</b>
-                {rqNum > rqDen && <> = <b className="text-green-700">{mixedWhole}{mixedNum > 0 ? ` ${mixedNum}/${rqDen}` : ""}</b></>} ก้าว
-                {" "}<span className="text-emerald-600">— หรือกลับตัวหลังแล้วคูณ: {a}/{b} × {d}/{c} = {qNum}/{qDen}</span>
+                ทำส่วนให้เท่ากัน: <span className="text-rose-600"><Frac n={a} d={b} tone="text-rose-600" /> = <Frac n={A} d={L} tone="text-rose-600" /></span> · ก้าวละ <span className="text-green-600"><Frac n={c} d={d} tone="text-green-600" /> = <Frac n={C} d={L} tone="text-green-600" /></span> →
+                เอาตัวเศษหารกัน <b>{A} ÷ {C}</b> = <Frac n={rqNum} d={rqDen} />
+                {rqNum > rqDen && <> = <span className="text-green-700"><b>{mixedWhole}</b>{mixedNum > 0 && <Frac n={mixedNum} d={rqDen} tone="text-green-700" />}</span></>} ก้าว
+                {" "}<span className="text-emerald-600">— หรือกลับตัวหลังแล้วคูณ: <Frac n={a} d={b} /> × <Frac n={d} d={c} /> = <Frac n={qNum} d={qDen} /></span>
               </p>
             )}
 
@@ -536,8 +542,8 @@ export function DivideFrogGame() {
               <div className={cn("rounded-2xl border-2 p-3 text-center", checked ? "border-emerald-300 bg-emerald-50" : "border-rose-300 bg-rose-50")}>
                 <p className={cn("text-base font-extrabold", checked ? "text-emerald-700" : "text-rose-600")}>
                   {checked
-                    ? `🎉 ถูกต้อง! ${a}/${b} ÷ ${c}/${d} = ${a}/${b} × ${d}/${c} = ${rqNum}/${rqDen}${rqNum > rqDen ? ` = ${mixedWhole}${mixedNum > 0 ? ` ${mixedNum}/${rqDen}` : ""}` : ""} ก้าว`
-                    : `ทาย ${gNum}/${gDen || "?"} — จริง ๆ คือ ${rqNum}/${rqDen}${rqNum > rqDen ? ` (= ${mixedWhole}${mixedNum > 0 ? ` ${mixedNum}/${rqDen}` : ""})` : ""} ก้าว · กลับตัวหลังแล้วคูณ ${a}/${b} × ${d}/${c}`}
+                    ? <>🎉 ถูกต้อง! <Frac n={a} d={b} /> ÷ <Frac n={c} d={d} /> = <Frac n={a} d={b} /> × <Frac n={d} d={c} /> = <Frac n={rqNum} d={rqDen} />{rqNum > rqDen && <> = <b>{mixedWhole}</b>{mixedNum > 0 && <Frac n={mixedNum} d={rqDen} />}</>} ก้าว</>
+                    : <>ทาย <Frac n={gNum} d={gDen || "?"} /> — จริง ๆ คือ <Frac n={rqNum} d={rqDen} />{rqNum > rqDen && <> (= <b>{mixedWhole}</b>{mixedNum > 0 && <Frac n={mixedNum} d={rqDen} />})</>} ก้าว · กลับตัวหลังแล้วคูณ <Frac n={a} d={b} /> × <Frac n={d} d={c} /></>}
                 </p>
                 <button onClick={nextMission} className="mt-2 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-lime-600 to-green-500 px-6 py-2 text-base font-extrabold text-white shadow transition hover:brightness-105 active:scale-[0.98]">
                   {round >= MISSIONS_TOTAL ? "🏁 ดูสรุปผล" : <>ด่านต่อไป <ArrowRight size={16} /></>}

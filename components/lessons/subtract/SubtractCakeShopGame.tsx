@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Play, RotateCcw, Volume2, VolumeX, FlaskConical, Target, ArrowRight, Eye, EyeOff, Pencil } from "lucide-react";
 import { StackedFraction } from "@/components/lessons/compare/StackedFraction";
+import { Frac, SvgFrac } from "@/components/lessons/Frac";
 import { cn } from "@/lib/cn";
 import { randInt, shuffle } from "@/lib/randomFraction";
 
@@ -183,7 +184,7 @@ function Cake3D({ den, have, size = 100, whole = false, showLabel = true }: { de
       })}
       {/* ป้ายเศษ */}
       {showLabel && !whole && (
-        <g><rect x={cx - 15} y={cy + h - 3} width={30} height={15} rx={4} fill="#fff" stroke="#b45309" strokeWidth={1.2} /><text x={cx} y={cy + h + 8} fontSize={11} fontWeight={900} fill="#b45309" textAnchor="middle">{have}/{den}</text></g>
+        <g><rect x={cx - 15} y={cy + h - 3} width={30} height={15} rx={4} fill="#fff" stroke="#b45309" strokeWidth={1.2} /><SvgFrac x={cx} y={cy + h + 4.5} n={have} d={den} size={8.5} fill="#b45309" /></g>
       )}
     </svg>
   );
@@ -280,7 +281,7 @@ function ShopScene({ seller, sellerName, den, haveW, haveN, custX, custFacing, c
       {/* ลูกศร ขาย → */}
       {showArrow && (
         <div className="absolute z-[4] flex flex-col items-center" style={{ left: "55%", bottom: 160, transform: "translateX(-50%)" }}>
-          <span className="rounded-full bg-rose-500 px-2 py-0.5 text-[11px] font-extrabold text-white shadow">ขาย {askW}{askN > 0 ? ` ${askN}/${den}` : ""}</span>
+          <span className="inline-flex items-center gap-1 rounded-full bg-rose-500 px-2 py-0.5 text-[11px] font-extrabold text-white shadow">ขาย {askW}{askN > 0 && <Frac n={askN} d={den} />}</span>
           <span className="arrow-pulse text-3xl text-rose-500">➜</span>
         </div>
       )}
@@ -694,7 +695,7 @@ export function SubtractCakeShopGame() {
                     🎂 ให้เค้กทั้งก้อน <span className="rounded-full bg-white/25 px-2 text-sm">{gotW}/{w2}</span>
                   </button>
                   <button onClick={giveSlice} disabled={flying || (haveN <= 0 && gotN < n2)} className="inline-flex items-center gap-2 rounded-xl border-b-4 border-orange-800 bg-gradient-to-b from-orange-500 to-orange-600 px-6 py-2.5 text-base font-extrabold text-white shadow-lg transition hover:brightness-105 active:scale-[0.97] active:border-b-2 disabled:opacity-40">
-                    🍰 ให้ทีละชิ้น (1/{den}) <span className="rounded-full bg-white/25 px-2 text-sm">{gotN}/{n2}</span>
+                    🍰 ให้ทีละชิ้น (<Frac n={1} d={den} />) <span className="rounded-full bg-white/25 px-2 text-sm">{gotN}/{n2}</span>
                   </button>
                 </div>
               </div>
