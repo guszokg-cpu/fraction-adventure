@@ -6,6 +6,7 @@ import { LessonStepper } from "@/components/lessons/LessonStepper";
 import { PizzaCutStory } from "@/components/lessons/fraction-intro/PizzaCutStory";
 import { ThreeImportantSteps } from "@/components/lessons/fraction-intro/ThreeImportantSteps";
 import { InteractiveFractionExamples } from "@/components/lessons/fraction-intro/InteractiveFractionExamples";
+import { GroupObjectsFractionCard } from "@/components/lessons/fraction-intro/GroupObjectsFractionCard";
 import { RealWorldChallengeCard } from "@/components/lessons/fraction-intro/RealWorldChallengeCard";
 import { EqualPartsCourtCard } from "@/components/lessons/fraction-intro/EqualPartsCourtCard";
 import { IntroTimerGameCard } from "@/components/lessons/fraction-intro/IntroTimerGameCard";
@@ -24,17 +25,19 @@ const STEPS = [
   { id: 2, title: "แบ่งพิซซ่ากันเถอะ" },
   { id: 3, title: "3 ขั้นตอนสำคัญ" },
   { id: 4, title: "ห้องทดลองเศษส่วน" },
-  { id: 5, title: "เศษส่วนรอบตัวเรา" },
-  { id: 6, title: "ศาลเศษส่วน" },
-  { id: 7, title: "เกมจับเวลา" },
-  { id: 8, title: "สรุปบทเรียน" },
-  { id: 9, title: "แบบทดสอบ" },
-  { id: 10, title: "โซนเกม" },
+  { id: 5, title: "เศษส่วนของกลุ่มสิ่งของ" },
+  { id: 6, title: "เศษส่วนรอบตัวเรา" },
+  { id: 7, title: "ศาลเศษส่วน" },
+  { id: 8, title: "เกมจับเวลา" },
+  { id: 9, title: "สรุปบทเรียน" },
+  { id: 10, title: "แบบทดสอบ" },
+  { id: 11, title: "โซนเกม" },
 ];
 
 const COMPONENTS = [
   () => <LessonVideoCard lessonPath="/lessons/fraction-intro" videoUrl={VIDEO_URL} title="วิดีโอ: รู้จักเศษส่วน" />,
   PizzaCutStory, ThreeImportantSteps, InteractiveFractionExamples,
+  GroupObjectsFractionCard,
   RealWorldChallengeCard, EqualPartsCourtCard, IntroTimerGameCard,
   IntroSummaryCard,
   () => (
@@ -65,6 +68,7 @@ export function FractionIntroContent() {
             <PizzaCutStory />
             <ThreeImportantSteps />
             <InteractiveFractionExamples />
+            <GroupObjectsFractionCard />
             <div className="grid gap-5 xl:grid-cols-2">
               <RealWorldChallengeCard />
               <EqualPartsCourtCard />

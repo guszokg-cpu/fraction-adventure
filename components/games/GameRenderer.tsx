@@ -29,6 +29,7 @@ export const GAME_COMPONENTS: Record<string, ComponentType> = {
   "fraction-intro:bee":       dynamic(() => import("@/components/lessons/fraction-intro/IntroBeeGardenGame").then((m) => m.IntroBeeGardenGame), { ssr: false, loading: Loading }),
   "fraction-intro:robot":     dynamic(() => import("@/components/lessons/fraction-intro/IntroRobotChargeGame").then((m) => m.IntroRobotChargeGame), { ssr: false, loading: Loading }),
   "fraction-intro:pond":      dynamic(() => import("@/components/lessons/fraction-intro/FishingPondGame").then((m) => m.FishingPondGame), { ssr: false, loading: Loading }),
+  "fraction-intro:paperfold": dynamic(() => import("@/components/lessons/fraction-intro/IntroPaperFoldGame").then((m) => m.IntroPaperFoldGame), { ssr: false, loading: Loading }),
 
   /* ประเภทของเศษส่วน */
   "read-write:bus":      dynamic(() => import("@/components/lessons/fraction-types/TypesBusGame").then((m) => m.TypesBusGame), { ssr: false, loading: Loading }),

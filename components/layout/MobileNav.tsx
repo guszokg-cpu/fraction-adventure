@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, LayoutGrid, Gamepad2, X } from "lucide-react";
+import { Home, LayoutGrid, Gamepad2, ClipboardList, X } from "lucide-react";
 import { pageRoutes } from "@/data/pageRoutes";
 
 const LESSON_HREFS = new Set([
@@ -19,8 +19,6 @@ export function MobileNav({ activePath }: { activePath?: string }) {
   const pathname = usePathname();
   const currentPath = activePath ?? pathname;
   const [open, setOpen] = useState(false);
-
-  const current = pageRoutes.find((r) => r.href === currentPath);
 
   return (
     <>
@@ -44,10 +42,6 @@ export function MobileNav({ activePath }: { activePath?: string }) {
             <LayoutGrid size={20} />
             บทเรียน
           </button>
-          <div className="flex flex-col items-center justify-center gap-0.5 py-2 text-[11px] font-extrabold text-slate-400">
-            <span className="text-base leading-none">{current?.icon ?? "🍕"}</span>
-            <span className="max-w-[5rem] truncate">{current?.title ?? "เศษส่วน"}</span>
-          </div>
           <Link
             href="/games"
             className={cn(
@@ -57,6 +51,16 @@ export function MobileNav({ activePath }: { activePath?: string }) {
           >
             <Gamepad2 size={20} />
             เกมเศษส่วน
+          </Link>
+          <Link
+            href="/word-problems"
+            className={cn(
+              "flex flex-col items-center gap-0.5 py-2 text-[11px] font-extrabold transition",
+              currentPath === "/word-problems" ? "text-fuchsia-600" : "text-slate-500",
+            )}
+          >
+            <ClipboardList size={20} />
+            โจทย์ปัญหา
           </Link>
         </div>
       </nav>

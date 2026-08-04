@@ -7,13 +7,23 @@ import { cn } from "@/lib/cn";
 import { randInt } from "@/lib/randomFraction";
 
 /* ─────────────────────────────────────────────
-   ครัวเค้กแม่มดน้อย 🧁 — "ส่วนแบ่งต้องเท่ากัน"
-   แม่มดเสกเค้กมา 3 ถาด (ตัดคนละแบบ) เด็กเลือกถาดที่แบ่ง "เท่ากันจริง"
-   ตอบถูก → คาถาสำเร็จ เค้กเรืองแสง / ตอบผิด → ควันปุ๋ย เค้กเบี้ยวโชว์เหตุผล
+   แม่มดน้อยแบ่งเท่า ๆ กัน 📐 — "ส่วนแบ่งต้องเท่ากัน"
+   แม่มดเสกของมา 3 แบบ (เค้กกลม / กระดาษจัตุรัส / กระดาษผืนผ้า)
+   แต่ละอันแบ่งคนละแบบ เด็กเลือกอันที่แบ่ง "เท่ากันจริง"
+   ตอบถูก → คาถาสำเร็จ เรืองแสง / ตอบผิด → ควันปุ๋ย โชว์เหตุผล
+   ใช้สอนแผน "แบ่งกระดาษให้เท่า ๆ กัน" (พับกระดาษเป็นส่วนเท่ากัน)
    ───────────────────────────────────────────── */
 
 const MISSIONS_TOTAL = 8;
 const DENS = [2, 3, 4, 5, 6, 8];
+
+type Shape = "cake" | "square" | "rect";
+const SHAPE_LIST: Shape[] = ["cake", "square", "rect"];
+const SHAPES: Record<Shape, { emoji: string; obj: string; counter: string; piece: string; verb: string; label: string }> = {
+  cake:   { emoji: "🎂", obj: "เค้กกลม",           counter: "ถาด", piece: "ชิ้น", verb: "ตัด",     label: "เค้กกลม" },
+  square: { emoji: "🟧", obj: "กระดาษจัตุรัส",      counter: "แผ่น", piece: "ส่วน", verb: "พับแบ่ง", label: "กระดาษจัตุรัส" },
+  rect:   { emoji: "🟦", obj: "กระดาษผืนผ้า",       counter: "แผ่น", piece: "ส่วน", verb: "พับแบ่ง", label: "กระดาษผืนผ้า" },
+};
 
 type SoundKind = "magic" | "poof" | "correct" | "wrong" | "start" | "star";
 
@@ -197,6 +207,49 @@ function CakeCircle({ den, equal, seed, size = 128, glow, chosenWrong }: {
   );
 }
 
+const FILLS_PAPER = ["#fbcfe8", "#fde68a", "#bfdbfe", "#bbf7d0", "#ddd6fe", "#fed7aa", "#fecaca", "#a7f3d0"];
+
+/* ── กระดาษสี่เหลี่ยม (จัตุรัส/ผืนผ้า) แบ่งเป็นแถบเท่า/ไม่เท่า ── */
+function PaperRect({ den, equal, seed, square, size = 118, glow, chosenWrong }: {
+  den: number; equal: boolean; seed: number; square: boolean; size?: number; glow?: boolean; chosenWrong?: boolean;
+}) {
+  const PAD = 6;
+  const W = square ? 106 : 150;
+  const H = square ? 106 : 92;
+  const vbW = W + PAD * 2, vbH = H + PAD * 2;
+  /* ความกว้างแต่ละแถบ: เท่ากัน = W/den · ไม่เท่ากัน = สุ่มเพี้ยนแบบ deterministic จาก seed */
+  const weights: number[] = [];
+  for (let i = 0; i < den; i++) {
+    weights.push(equal ? 1 : Math.max(0.4, 1 + (((seed * 37 + i * 61) % 90) / 100) * (i % 2 === 0 ? 1.15 : -0.62)));
+  }
+  const total = weights.reduce((a, b) => a + b, 0);
+  let x = PAD;
+  const strips = weights.map((w, i) => { const wpx = (w / total) * W; const r = { x, w: wpx, fill: FILLS_PAPER[i % FILLS_PAPER.length] }; x += wpx; return r; });
+  const w = size, h = size * (vbH / vbW);
+  return (
+    <svg viewBox={`0 0 ${vbW} ${vbH}`} width={w} height={h} role="img" aria-label={equal ? "กระดาษแบ่งเท่ากัน" : "กระดาษแบ่งไม่เท่ากัน"}>
+      {glow && <rect x={PAD - 4} y={PAD - 4} width={W + 8} height={H + 8} rx={5} fill="none" stroke="#facc15" strokeWidth={4} opacity={0.85} />}
+      {chosenWrong && <rect x={PAD - 4} y={PAD - 4} width={W + 8} height={H + 8} rx={5} fill="none" stroke="#f43f5e" strokeWidth={4} strokeDasharray="6 5" opacity={0.9} />}
+      {/* เงากระดาษ */}
+      <rect x={PAD} y={PAD + 3} width={W} height={H} rx={3} fill="#00000018" />
+      {/* แถบที่พับ/แบ่ง */}
+      {strips.map((s, i) => (
+        <rect key={i} x={s.x} y={PAD} width={s.w} height={H} fill={s.fill} stroke="#94a3b8" strokeWidth={1.4} strokeDasharray="4 3" />
+      ))}
+      {/* ขอบกระดาษ */}
+      <rect x={PAD} y={PAD} width={W} height={H} rx={3} fill="none" stroke="#475569" strokeWidth={3} />
+    </svg>
+  );
+}
+
+/* ── รูปที่ถูกแบ่ง (เลือกตามชนิด) ── */
+function DividedShape({ shape, den, equal, seed, glow, chosenWrong }: {
+  shape: Shape; den: number; equal: boolean; seed: number; glow?: boolean; chosenWrong?: boolean;
+}) {
+  if (shape === "cake") return <CakeCircle den={den} equal={equal} seed={seed} size={116} glow={glow} chosenWrong={chosenWrong} />;
+  return <PaperRect den={den} equal={equal} seed={seed} square={shape === "square"} size={shape === "square" ? 116 : 150} glow={glow} chosenWrong={chosenWrong} />;
+}
+
 type Tray = { equal: boolean; seed: number };
 
 function makeTrays(): { trays: Tray[]; correct: number } {
@@ -220,9 +273,11 @@ export function IntroWitchCakeGame() {
   }, []);
 
   const [den, setDen] = useState(4);
+  const [shape, setShape] = useState<Shape>("cake");
   const [{ trays, correct }, setBoard] = useState(() => makeTrays());
   const [picked, setPicked] = useState<number | null>(null);
-  const [boardId, setBoardId] = useState(0);   // เพิ่มทุกครั้งที่เสกถาดใหม่ → รีเพลย์อนิเมชันโผล่
+  const [boardId, setBoardId] = useState(0);   // เพิ่มทุกครั้งที่เสกใหม่ → รีเพลย์อนิเมชันโผล่
+  const sh = SHAPES[shape];
 
   /* ภารกิจ */
   const [round, setRound] = useState(1);
@@ -232,9 +287,10 @@ export function IntroWitchCakeGame() {
 
   const solved = picked === correct;
 
-  function newBoard(nd = den) {
+  function newBoard(nd = den, ns: Shape = shape) {
     ensure(); play("magic");
     setDen(nd);
+    setShape(ns);
     setBoard(makeTrays());
     setPicked(null);
     setFirstTry(true);
@@ -257,17 +313,18 @@ export function IntroWitchCakeGame() {
   function startMissions() {
     ensure(); play("start");
     setScore(0); setRound(1); setGameOver(false);
-    newBoard(DENS[randInt(0, DENS.length - 1)]);
+    newBoard(DENS[randInt(0, DENS.length - 1)], SHAPE_LIST[randInt(0, SHAPE_LIST.length - 1)]);
     setMode("mission");
   }
   function nextMission() {
     if (round >= MISSIONS_TOTAL) { setGameOver(true); play("star"); return; }
     setRound((r) => r + 1);
-    newBoard(DENS[randInt(0, DENS.length - 1)]);
+    newBoard(DENS[randInt(0, DENS.length - 1)], SHAPE_LIST[randInt(0, SHAPE_LIST.length - 1)]);
   }
 
   const stars = score >= 170 ? 3 : score >= 100 ? 2 : 1;
-  const order = ["ถาดซ้าย", "ถาดกลาง", "ถาดขวา"];
+  const pos = ["ซ้าย", "กลาง", "ขวา"];
+  const order = pos.map((p) => `${sh.counter}${p}`);
 
   return (
     <div className="relative overflow-hidden rounded-2xl p-3 sm:p-4">
@@ -295,8 +352,8 @@ export function IntroWitchCakeGame() {
 
         {mode === "mission" && gameOver ? (
           <div className="space-y-4 rounded-2xl border-2 border-fuchsia-300 bg-white/90 p-6 text-center">
-            <div className="text-5xl">🧁🏆</div>
-            <h3 className="text-xl font-extrabold text-slate-800 sm:text-2xl">จบคอร์สคาถาแบ่งเค้ก!</h3>
+            <div className="text-5xl">📐🏆</div>
+            <h3 className="text-xl font-extrabold text-slate-800 sm:text-2xl">จบคอร์สคาถาแบ่งเท่า ๆ กัน!</h3>
             <p className="text-2xl">{"⭐".repeat(stars)}{"☆".repeat(3 - stars)}</p>
             <p className="text-base font-extrabold text-fuchsia-700">🏅 คะแนนรวม {score}</p>
             <button onClick={startMissions} className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-fuchsia-600 to-violet-500 px-8 py-3 text-lg font-extrabold text-white shadow-lg transition hover:brightness-105 active:scale-[0.98]">
@@ -307,14 +364,24 @@ export function IntroWitchCakeGame() {
           <div className="space-y-3">
             {/* แถบตั้งค่า / สถานะ */}
             {mode === "lab" ? (
-              <div className="flex flex-wrap items-center justify-center gap-2 rounded-2xl border-2 border-violet-200 bg-white/90 px-3 py-2">
-                <span className="text-sm font-extrabold text-violet-700">🧑‍🏫 แบ่งเค้กเป็นกี่ชิ้น:</span>
-                {DENS.map((d) => (
-                  <button key={d} onClick={() => newBoard(d)} className={cn("h-8 w-8 rounded-lg border-2 text-base font-extrabold transition", den === d ? "border-violet-500 bg-violet-100 text-violet-700" : "border-slate-200 bg-white text-slate-500 hover:bg-slate-50")}>{d}</button>
-                ))}
-                <button onClick={() => newBoard()} className="ml-2 inline-flex items-center gap-1.5 rounded-xl border-2 border-slate-200 bg-white px-3 py-1.5 text-sm font-extrabold text-slate-500 transition hover:bg-slate-50">
-                  <RotateCcw size={14} /> เสกถาดใหม่
-                </button>
+              <div className="space-y-2 rounded-2xl border-2 border-violet-200 bg-white/90 px-3 py-2">
+                <div className="flex flex-wrap items-center justify-center gap-2">
+                  <span className="text-sm font-extrabold text-violet-700">🧑‍🏫 เลือกของที่จะแบ่ง:</span>
+                  {SHAPE_LIST.map((s) => (
+                    <button key={s} onClick={() => newBoard(den, s)} className={cn("inline-flex items-center gap-1 rounded-lg border-2 px-2.5 py-1 text-sm font-extrabold transition", shape === s ? "border-violet-500 bg-violet-100 text-violet-700" : "border-slate-200 bg-white text-slate-500 hover:bg-slate-50")}>
+                      <span>{SHAPES[s].emoji}</span> {SHAPES[s].label}
+                    </button>
+                  ))}
+                </div>
+                <div className="flex flex-wrap items-center justify-center gap-2">
+                  <span className="text-sm font-extrabold text-violet-700">แบ่งเป็นกี่{sh.piece}:</span>
+                  {DENS.map((d) => (
+                    <button key={d} onClick={() => newBoard(d)} className={cn("h-8 w-8 rounded-lg border-2 text-base font-extrabold transition", den === d ? "border-violet-500 bg-violet-100 text-violet-700" : "border-slate-200 bg-white text-slate-500 hover:bg-slate-50")}>{d}</button>
+                  ))}
+                  <button onClick={() => newBoard()} className="ml-2 inline-flex items-center gap-1.5 rounded-xl border-2 border-slate-200 bg-white px-3 py-1.5 text-sm font-extrabold text-slate-500 transition hover:bg-slate-50">
+                    <RotateCcw size={14} /> เสกใหม่
+                  </button>
+                </div>
               </div>
             ) : (
               <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1 rounded-2xl bg-white/90 px-4 py-2 ring-1 ring-fuchsia-200">
@@ -326,10 +393,10 @@ export function IntroWitchCakeGame() {
             {/* โจทย์ */}
             <div className="rounded-2xl border-2 border-violet-200 bg-white/95 px-4 py-3 text-center shadow-sm">
               <p className="text-base font-extrabold leading-relaxed text-slate-700 sm:text-lg">
-                แม่มดน้อยเสกเค้กมา 3 ถาด ตัดเป็น <span className="text-violet-700">{den} ชิ้น</span> เหมือนกัน —
-                แต่มีถาดเดียวที่แบ่ง<span className="text-fuchsia-600">เท่ากันจริง ๆ</span> ช่วยชี้ให้หน่อย!
+                แม่มดน้อยเสก{sh.obj}มา 3 {sh.counter} {sh.verb}เป็น <span className="text-violet-700">{den} {sh.piece}</span> เหมือนกัน —
+                แต่มี{sh.counter}เดียวที่แบ่ง<span className="text-fuchsia-600">เท่ากันจริง ๆ</span> ช่วยชี้ให้หน่อย!
               </p>
-              <p className="mt-1 text-xs font-bold text-slate-400">💡 เศษส่วนจะเกิดได้ ต้องแบ่งทุกชิ้นให้ &ldquo;เท่ากัน&rdquo; ก่อนเสมอ</p>
+              <p className="mt-1 text-xs font-bold text-slate-400">💡 เศษส่วนจะเกิดได้ ต้องแบ่งทุก{sh.piece}ให้ &ldquo;เท่ากัน&rdquo; ก่อนเสมอ</p>
             </div>
 
             {/* ฉาก: แม่มด + 3 ถาด */}
@@ -361,8 +428,10 @@ export function IntroWitchCakeGame() {
                           ))}
                         </span>
                       )}
-                      <CakeCircle den={den} equal={t.equal} seed={t.seed} size={116}
-                        glow={solved && i === correct} chosenWrong={picked === i && i !== correct} />
+                      <div className="grid h-[120px] place-items-center">
+                        <DividedShape shape={shape} den={den} equal={t.equal} seed={t.seed}
+                          glow={solved && i === correct} chosenWrong={picked === i && i !== correct} />
+                      </div>
                       <span className="text-xs font-extrabold text-slate-500">{order[i]}</span>
                     </button>
                   ))}
@@ -375,8 +444,8 @@ export function IntroWitchCakeGame() {
               <div className={cn("rounded-2xl border-2 p-3 text-center", solved ? "border-emerald-300 bg-emerald-50" : "border-rose-300 bg-rose-50")}>
                 <p className={cn("text-base font-extrabold", solved ? "text-emerald-700" : "text-rose-600")}>
                   {solved
-                    ? <>✨ คาถาสำเร็จ! ถาดนี้ทุกชิ้น<b>เท่ากัน</b> — 1 ชิ้น = <Frac n={1} d={den} /> ของเค้กพอดี</>
-                    : <>💨 ปุ๋ง! ถาดนั้นชิ้น<b>ไม่เท่ากัน</b> — บางชิ้นใหญ่ บางชิ้นเล็ก จึงเรียก <Frac n={1} d={den} /> ไม่ได้ ลองใหม่!</>}
+                    ? <>✨ คาถาสำเร็จ! {sh.counter}นี้ทุก{sh.piece}<b>เท่ากัน</b> — 1 {sh.piece} = <Frac n={1} d={den} /> ของ{sh.obj}พอดี</>
+                    : <>💨 ปุ๋ง! {sh.counter}นั้น{sh.piece}<b>ไม่เท่ากัน</b> — บาง{sh.piece}ใหญ่ บาง{sh.piece}เล็ก จึงเรียก <Frac n={1} d={den} /> ไม่ได้ ลองใหม่!</>}
                 </p>
                 {solved && (
                   mode === "mission" ? (
@@ -385,7 +454,7 @@ export function IntroWitchCakeGame() {
                     </button>
                   ) : (
                     <button onClick={() => newBoard()} className="mt-2 inline-flex items-center gap-1.5 rounded-xl border-2 border-slate-200 bg-white px-5 py-2 text-sm font-extrabold text-slate-500 transition hover:bg-slate-50">
-                      <RotateCcw size={15} /> เสกถาดใหม่
+                      <RotateCcw size={15} /> เสกใหม่
                     </button>
                   )
                 )}

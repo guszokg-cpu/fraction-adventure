@@ -26,6 +26,7 @@ const LESSON_NAV = [
 
 const RESOURCE_NAV = [
   { href: "/games",         icon: "🎮", title: "เกมเศษส่วน" },
+  { href: "/word-problems", icon: "📋", title: "โจทย์ปัญหา" },
   { href: "/media-library", icon: "🗂️", title: "คลังสื่อการสอน" },
 ];
 
