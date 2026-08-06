@@ -21,7 +21,7 @@ const VIDEO_URL = lessonVideos["/lessons/compare"] ?? "";
 const STEPS = [
   { id: 1, title: "ดูวิดีโอ", icon: "📹" },
   { id: 2, title: "ใครกินเยอะกว่า", icon: "🍕" },
-  { id: 3, title: "3 เคล็ดลับ", icon: "💡" },
+  { id: 3, title: "4 เคล็ดลับ", icon: "💡" },
   { id: 4, title: "แข่งวิ่ง", icon: "🏁" },
   { id: 5, title: "ทำส่วนเท่ากัน", icon: "⚙️" },
   { id: 6, title: "ห้องทดลอง", icon: "🔬" },

@@ -1,4 +1,7 @@
-import type { ReactNode } from "react";
+"use client";
+
+import { useState, type ReactNode } from "react";
+import { GraduationCap, Layers } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { FractionShape } from "@/components/fractions/FractionShape";
 import { FractionStack, NumberLineEquivalent } from "@/components/lessons/equivalent/EquivalentMath";
@@ -42,16 +45,52 @@ function SummaryBox({
 }
 
 export function EquivalentSummaryCard() {
+  /* โหมด ป.4 = แสดงเฉพาะเนื้อหาในขอบเขตชั้น ป.4 (ซ่อนคูณไขว้ + เศษส่วนอย่างต่ำ ซึ่งเป็น ป.5–6)
+     ค่าเริ่มต้นเปิดไว้ เพราะเว็บนี้ใช้สอน ป.4 เป็นหลัก — ครูกดสลับเป็น "ทั้งหมด" ได้ */
+  const [p4Only, setP4Only] = useState(true);
+
   return (
     <Card className="overflow-hidden p-0">
-      <div className="flex items-center gap-2 bg-gradient-to-r from-teal-600 to-violet-500 px-4 py-2.5 text-white">
-        <span className="text-xl">🔁</span>
-        <h2 className="text-lg font-extrabold">สรุปบทเรียน: เศษส่วนที่เท่ากัน</h2>
+      <div className="flex flex-wrap items-center justify-between gap-2 bg-gradient-to-r from-teal-600 to-violet-500 px-4 py-2.5 text-white">
+        <div className="flex items-center gap-2">
+          <span className="text-xl">🔁</span>
+          <h2 className="text-lg font-extrabold">สรุปบทเรียน: เศษส่วนที่เท่ากัน</h2>
+        </div>
+        <div className="flex rounded-xl bg-white/20 p-0.5">
+          <button
+            onClick={() => setP4Only(true)}
+            className={cn(
+              "flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-extrabold transition",
+              p4Only ? "bg-white text-teal-700 shadow" : "text-white/80 hover:bg-white/10"
+            )}
+          >
+            <GraduationCap size={13} /> โหมด ป.4
+          </button>
+          <button
+            onClick={() => setP4Only(false)}
+            className={cn(
+              "flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-extrabold transition",
+              !p4Only ? "bg-white text-violet-700 shadow" : "text-white/80 hover:bg-white/10"
+            )}
+          >
+            <Layers size={13} /> ทั้งหมด
+          </button>
+        </div>
       </div>
 
+      {p4Only && (
+        <p className="border-b border-teal-100 bg-teal-50/70 px-4 py-2 text-center text-xs font-bold text-teal-700">
+          📘 กำลังแสดงเฉพาะเนื้อหาในขอบเขต ป.4 — ซ่อนการ์ด &ldquo;คูณไขว้&rdquo; และ &ldquo;เศษส่วนอย่างต่ำ&rdquo; (เป็นเนื้อหา ป.5–6) กด &ldquo;ทั้งหมด&rdquo; เพื่อดูครบ
+        </p>
+      )}
+
       <div className="grid gap-4 p-4 sm:p-5 xl:grid-cols-2">
-        {/* 1. กฎทองสองข้อ */}
-        <SummaryBox icon="⭐" title="กฎทอง: คูณหรือหาร ทั้งเศษและส่วน" className="border-emerald-100 xl:col-span-2">
+        {/* 1. กฎทอง */}
+        <SummaryBox
+          icon="⭐"
+          title={p4Only ? "กฎทอง: คูณทั้งเศษและส่วน" : "กฎทอง: คูณหรือหาร ทั้งเศษและส่วน"}
+          className="border-emerald-100 xl:col-span-2"
+        >
           <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4">
             <div className="flex flex-col items-center gap-2">
               <div className="flex items-center gap-3">
@@ -64,20 +103,26 @@ export function EquivalentSummaryCard() {
                 ขยาย: คูณบนล่างด้วยจำนวนเดียวกัน
               </span>
             </div>
-            <div className="flex flex-col items-center gap-2">
-              <div className="flex items-center gap-3">
-                <FractionStack top={6} bottom={8} className="text-2xl text-amber-600 sm:text-3xl" />
-                <MiniFactor symbol="÷" value={2} className="text-amber-500" />
-                <span className="text-2xl font-extrabold text-slate-400">=</span>
-                <FractionStack top={3} bottom={4} className="text-2xl text-amber-600 sm:text-3xl" />
+            {!p4Only && (
+              <div className="flex flex-col items-center gap-2">
+                <div className="flex items-center gap-3">
+                  <FractionStack top={6} bottom={8} className="text-2xl text-amber-600 sm:text-3xl" />
+                  <MiniFactor symbol="÷" value={2} className="text-amber-500" />
+                  <span className="text-2xl font-extrabold text-slate-400">=</span>
+                  <FractionStack top={3} bottom={4} className="text-2xl text-amber-600 sm:text-3xl" />
+                </div>
+                <span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-extrabold text-amber-600 sm:text-sm">
+                  ย่อ: หารบนล่างด้วยจำนวนเดียวกัน
+                </span>
               </div>
-              <span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-extrabold text-amber-600 sm:text-sm">
-                ย่อ: หารบนล่างด้วยจำนวนเดียวกัน
-              </span>
-            </div>
+            )}
           </div>
           <p className="mt-3 text-center text-sm font-bold text-slate-600 sm:text-base">
-            ทำแบบนี้แล้ว <span className="text-emerald-700">ค่าของเศษส่วนไม่เปลี่ยนเลย</span>
+            {p4Only ? (
+              <>แบ่งช่องถี่ขึ้นกี่เท่า ช่องที่ระบายก็เพิ่มเท่านั้น — <span className="text-emerald-700">ปริมาณไม่เปลี่ยนเลย</span></>
+            ) : (
+              <>ทำแบบนี้แล้ว <span className="text-emerald-700">ค่าของเศษส่วนไม่เปลี่ยนเลย</span></>
+            )}
           </p>
         </SummaryBox>
 
@@ -100,7 +145,8 @@ export function EquivalentSummaryCard() {
           </p>
         </SummaryBox>
 
-        {/* 3. เช็คเร็วด้วยคูณไขว้ */}
+        {/* 3. เช็คเร็วด้วยคูณไขว้ — เกินขอบเขต ป.4 (ป.5–6) */}
+        {!p4Only && (
         <SummaryBox icon="✖️" title="เช็คเร็วด้วยการคูณไขว้" className="border-sky-100">
           <div className="flex items-center justify-center gap-4">
             <FractionStack top={2} bottom={3} className="text-2xl text-sky-700 sm:text-3xl" />
@@ -116,8 +162,10 @@ export function EquivalentSummaryCard() {
             ผลคูณไขว้เท่ากัน → <span className="text-emerald-700">เท่ากันแน่นอน</span> ไม่ต้องวาดรูป
           </p>
         </SummaryBox>
+        )}
 
-        {/* 4. เศษส่วนอย่างต่ำ */}
+        {/* 4. เศษส่วนอย่างต่ำ — เกินขอบเขต ป.4 (ป.5–6) */}
+        {!p4Only && (
         <SummaryBox icon="🏆" title="เศษส่วนอย่างต่ำ" className="border-amber-100">
           <div className="flex items-center justify-center gap-3">
             <FractionStack top={8} bottom={12} className="text-2xl text-amber-600 sm:text-3xl" />
@@ -130,9 +178,10 @@ export function EquivalentSummaryCard() {
             ย่อจนหารบนล่างพร้อมกันไม่ได้อีก เรียกว่า <span className="text-amber-600">เศษส่วนอย่างต่ำ</span>
           </p>
         </SummaryBox>
+        )}
 
         {/* 5. บนเส้นจำนวน */}
-        <SummaryBox icon="📏" title="บนเส้นจำนวนก็เห็นได้" className="border-teal-100">
+        <SummaryBox icon="📏" title="บนเส้นจำนวนก็เห็นได้" className={cn("border-teal-100", p4Only && "xl:col-span-2")}>
           <NumberLineEquivalent />
           <p className="mt-2 text-center text-sm font-bold text-slate-600">
             เศษส่วนที่เท่ากันอยู่<span className="text-teal-700">ตำแหน่งเดียวกัน</span>บนเส้นจำนวนเสมอ

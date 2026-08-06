@@ -58,10 +58,7 @@ export function MatchMixedGameCard() {
   return (
     <Card className="overflow-hidden p-0">
       <div className="bg-gradient-to-r from-pink-600 to-fuchsia-600 px-5 py-3 text-white">
-        <div className="flex items-center gap-2">
-          <span className="grid h-8 w-8 place-items-center rounded-full bg-white/20 text-sm font-extrabold">5</span>
-          <h2 className="text-xl font-extrabold">จับคู่เศษเกิน–จำนวนคละ</h2>
-        </div>
+        <h2 className="text-xl font-extrabold">🔗 จับคู่เศษเกิน–จำนวนคละ</h2>
       </div>
 
       <div className="space-y-5 p-5 sm:p-6">

@@ -32,7 +32,7 @@ function colorOf(id: string): BarColor {
   return BAR_COLORS.find((c) => c.id === id) ?? BAR_COLORS[0];
 }
 
-type TrickId = "same-denominator" | "same-numerator" | "benchmark";
+type TrickId = "same-denominator" | "same-numerator" | "multiple-denominator" | "benchmark";
 type Frac = { n: number; d: number };
 type Challenge = { left: Frac; right: Frac };
 
@@ -53,6 +53,17 @@ function makeChallenge(trick: TrickId): Challenge {
     while (d1 === d2 && tries++ < 20) d2 = randInt(n + 1, 9);
     return { left: { n, d: d1 }, right: { n, d: d2 } };
   }
+  if (trick === "multiple-denominator") {
+    // คู่ตัวส่วนพหุคูณตามตัวชี้วัด ป.4/4 เช่น 3กับ6, 4กับ8, 3กับ9 — ฝั่งซ้ายตัวส่วนน้อย (ตัวที่ต้องแปลง)
+    const d1 = randInt(2, 5);
+    const k = d1 <= 4 ? randInt(2, 3) : 2;   // กันตัวส่วนใหญ่เกิน 12 (5×2=10 พอดีเพดาน)
+    const d2 = d1 * k;
+    const n1 = randInt(1, d1 - 1);
+    let n2 = randInt(1, d2 - 1);
+    let tries = 0;
+    while (n2 === n1 * k && tries++ < 20) n2 = randInt(1, d2 - 1);   // เลี่ยงค่าเท่ากันพอดี (ให้เจอบ้างนาน ๆ ครั้งก็พอ)
+    return { left: { n: n1, d: d1 }, right: { n: n2, d: d2 } };
+  }
   let d = randInt(3, 9);
   let n = randInt(1, d - 1);
   let tries = 0;
@@ -66,6 +77,7 @@ function makeChallenge(trick: TrickId): Challenge {
 const DEFAULT_CHALLENGE: Record<TrickId, Challenge> = {
   "same-denominator": { left: { n: 3, d: 5 }, right: { n: 2, d: 5 } },
   "same-numerator": { left: { n: 1, d: 3 }, right: { n: 1, d: 5 } },
+  "multiple-denominator": { left: { n: 2, d: 3 }, right: { n: 5, d: 6 } },  // คู่ปมจากเกมนักวิ่ง (แผน 7–8)
   benchmark: { left: { n: 3, d: 5 }, right: { n: 1, d: 2 } },
 };
 
@@ -97,8 +109,17 @@ const TRICKS: {
     badgeClass: "bg-amber-100 text-amber-700",
   },
   {
-    id: "benchmark",
+    id: "multiple-denominator",
     icon: "3️⃣",
+    title: "ตัวส่วนเป็นพหุคูณ",
+    rule: "ตัวส่วนไม่เท่ากัน แต่ตัวหนึ่งเป็นพหุคูณของอีกตัว — แปลงตัวส่วนน้อยให้เท่าตัวส่วนมากก่อน แล้วค่อยเทียบตัวเศษ",
+    color: "text-rose-700",
+    activeClass: "border-rose-500 bg-rose-50",
+    badgeClass: "bg-rose-100 text-rose-700",
+  },
+  {
+    id: "benchmark",
+    icon: "4️⃣",
     title: "เทียบกับครึ่ง (1/2)",
     rule: "ใช้เส้นครึ่ง (1/2) เป็นเกณฑ์ — แท่งสูงเกินเส้น = มากกว่าครึ่ง ต่ำกว่าเส้น = น้อยกว่าครึ่ง",
     color: "text-violet-700",
@@ -112,6 +133,7 @@ function detectTricks(c: Challenge): TrickId[] {
   const out: TrickId[] = [];
   if (c.left.d === c.right.d) out.push("same-denominator");
   if (c.left.n === c.right.n) out.push("same-numerator");
+  if (c.left.d !== c.right.d && (c.right.d % c.left.d === 0 || c.left.d % c.right.d === 0)) out.push("multiple-denominator");
   if (c.right.n === 1 && c.right.d === 2) out.push("benchmark");
   return out;
 }
@@ -119,6 +141,7 @@ function detectTricks(c: Challenge): TrickId[] {
 const DETECT_LABEL: Record<TrickId, string> = {
   "same-denominator": "ตัวส่วนเท่ากัน",
   "same-numerator": "ตัวเศษเท่ากัน",
+  "multiple-denominator": "ตัวส่วนเป็นพหุคูณ",
   benchmark: "เทียบกับ 1/2",
 };
 
@@ -235,8 +258,16 @@ function TrickPractice({
 
   const isBenchmark = trick === "benchmark";
   const isSameNum = trick === "same-numerator";
+  const isMultiple = trick === "multiple-denominator";
   const leftColor = colorOf(leftColorId);
   const rightColor = colorOf(rightColorId);
+
+  /* ข้อมูลการแปลงตัวส่วน (ใช้เฉพาะเคล็ดลับพหุคูณ) — ตัวส่วนใหญ่เป็นเป้า แปลงทั้งคู่ให้ตัวส่วนเท่ากัน */
+  const bigD = Math.max(challenge.left.d, challenge.right.d);
+  const leftConvN = challenge.left.n * (bigD / challenge.left.d);
+  const rightConvN = challenge.right.n * (bigD / challenge.right.d);
+  const smallSide: "left" | "right" | null =
+    challenge.left.d < challenge.right.d ? "left" : challenge.right.d < challenge.left.d ? "right" : null;
 
   function choose(sign: Sign) {
     if (picked) return;
@@ -269,6 +300,11 @@ function TrickPractice({
           <VerticalBar frac={challenge.left} fillHex={leftColor.hex} raised={raised} showBenchmark={isBenchmark} highlightTopCell={isSameNum} />
           <StackedFraction numerator={challenge.left.n} denominator={challenge.left.d} className="text-2xl sm:text-3xl" toneClassName={leftColor.text} />
           {isSameNum && <span className="text-[11px] font-bold text-slate-400">ชั้นละ 1/{challenge.left.d}</span>}
+          {isMultiple && picked && smallSide === "left" && (
+            <span className="flex items-center gap-1 rounded-full bg-rose-50 px-2 py-0.5 text-xs font-extrabold text-rose-600">
+              แปลงเป็น <StackedFraction numerator={leftConvN} denominator={bigD} className="text-sm" toneClassName="text-rose-600" />
+            </span>
+          )}
           <ColorSwatches value={leftColorId} onChange={onLeftColor} />
         </div>
 
@@ -278,6 +314,11 @@ function TrickPractice({
           <VerticalBar frac={challenge.right} fillHex={rightColor.hex} raised={raised} showBenchmark={isBenchmark} highlightTopCell={isSameNum} />
           <StackedFraction numerator={challenge.right.n} denominator={challenge.right.d} className="text-2xl sm:text-3xl" toneClassName={rightColor.text} />
           {isSameNum && <span className="text-[11px] font-bold text-slate-400">ชั้นละ 1/{challenge.right.d}</span>}
+          {isMultiple && picked && smallSide === "right" && (
+            <span className="flex items-center gap-1 rounded-full bg-rose-50 px-2 py-0.5 text-xs font-extrabold text-rose-600">
+              แปลงเป็น <StackedFraction numerator={rightConvN} denominator={bigD} className="text-sm" toneClassName="text-rose-600" />
+            </span>
+          )}
           <ColorSwatches value={rightColorId} onChange={onRightColor} />
         </div>
       </div>
@@ -331,6 +372,8 @@ function TrickPractice({
                 `ตัวส่วนเท่ากัน (${challenge.left.d}) กรอบสูงเท่ากัน จึงดูตัวเศษ: ${challenge.left.n} ${signWord(answer)} ${challenge.right.n}`}
               {trick === "same-numerator" &&
                 `ตัวเศษเท่ากัน (ระบายฝั่งละ ${challenge.left.n} ชั้น) แต่ชั้นของ ${challenge.left.d < challenge.right.d ? `1/${challenge.left.d}` : `1/${challenge.right.d}`} สูงกว่า (แบ่งน้อยชั้นกว่า) จึงมีค่ามากกว่า`}
+              {trick === "multiple-denominator" && smallSide &&
+                `ตัวส่วน ${bigD} เป็นพหุคูณของ ${Math.min(challenge.left.d, challenge.right.d)} — แปลง ${smallSide === "left" ? `${challenge.left.n}/${challenge.left.d} เป็น ${leftConvN}/${bigD}` : `${challenge.right.n}/${challenge.right.d} เป็น ${rightConvN}/${bigD}`} (คูณบนล่างด้วย ${bigD / Math.min(challenge.left.d, challenge.right.d)}) ตอนนี้ตัวส่วนเท่ากันแล้ว จึงเทียบตัวเศษ: ${leftConvN} ${signWord(answer)} ${rightConvN}`}
               {trick === "benchmark" &&
                 `ครึ่งหนึ่งของ ${challenge.left.d} คือ ${challenge.left.d / 2} — ตัวเศษ ${challenge.left.n} ${challenge.left.n > challenge.left.d / 2 ? "เกินครึ่ง" : challenge.left.n < challenge.left.d / 2 ? "ไม่ถึงครึ่ง" : "พอดีครึ่ง"} แท่งจึง${signWord(answer)}เส้นครึ่ง`}
             </span>
@@ -344,6 +387,7 @@ function TrickPractice({
 const INITIAL_STATS: Stats = {
   "same-denominator": { correct: 0, total: 0 },
   "same-numerator": { correct: 0, total: 0 },
+  "multiple-denominator": { correct: 0, total: 0 },
   benchmark: { correct: 0, total: 0 },
 };
 
@@ -364,16 +408,16 @@ export function ThreeTricks() {
   return (
     <Card className="overflow-hidden rounded-3xl p-0 shadow-sm">
       <div className="flex items-center gap-3 bg-gradient-to-r from-emerald-600 to-green-500 px-6 py-5 text-white">
-        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/20 text-lg font-extrabold">3</span>
+        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/20 text-lg font-extrabold">4</span>
         <div>
-          <h2 className="text-2xl font-extrabold sm:text-3xl">3 เคล็ดลับเปรียบเทียบ</h2>
+          <h2 className="text-2xl font-extrabold sm:text-3xl">4 เคล็ดลับเปรียบเทียบ</h2>
           <p className="mt-0.5 text-sm font-bold text-emerald-100 sm:text-base">เลือกเคล็ดลับให้เหมาะกับโจทย์ แล้วดูแท่งสูงต่ำเทียบค่าทันที</p>
         </div>
       </div>
 
       <div className="space-y-5 bg-gradient-to-b from-slate-50/40 to-white p-5 sm:p-6">
         {/* แท็บเลือกเคล็ดลับ + สถิติต่อเคล็ดลับ */}
-        <div className="grid gap-3 sm:grid-cols-3">
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           {TRICKS.map((t) => {
             const s = stats[t.id];
             return (

@@ -10,6 +10,7 @@ import { EquivalentPracticeCard } from "@/components/lessons/equivalent/Equivale
 import { EquivalentPracticeGrid } from "@/components/lessons/equivalent/EquivalentPracticeGrid";
 import { EquivalentSummaryCard } from "@/components/lessons/equivalent/EquivalentSummaryCard";
 import { EquivalentVisualCompareCard } from "@/components/lessons/equivalent/EquivalentVisualCompareCard";
+import { StripOverlayProofCard } from "@/components/lessons/equivalent/StripOverlayProofCard";
 import { EquivalentGameHub } from "@/components/lessons/equivalent/EquivalentGameHub";
 import { equivalentLessonMeta } from "@/data/lessonEquivalent";
 import { LessonVideoCard } from "@/components/lessons/LessonVideoCard";
@@ -22,18 +23,19 @@ const VIDEO_URL = lessonVideos["/lessons/equivalent"] ?? "";
 const STEPS = [
   { id: 1, title: "ดูวิดีโอ" },
   { id: 2, title: "แนวคิดเศษส่วนเท่ากัน" },
-  { id: 3, title: "เปรียบเทียบด้วยภาพ" },
-  { id: 4, title: "สร้างเศษส่วนเท่ากัน (คูณ–หาร)" },
-  { id: 5, title: "ตรวจด้วยคูณไขว้" },
-  { id: 6, title: "ฝึกทำ" },
-  { id: 7, title: "สรุปบทเรียน" },
-  { id: 8, title: "แบบทดสอบ" },
-  { id: 9, title: "โซนเกม" },
+  { id: 3, title: "ทาบแถบพิสูจน์" },
+  { id: 4, title: "เปรียบเทียบด้วยภาพ" },
+  { id: 5, title: "สร้างเศษส่วนเท่ากัน (คูณ–หาร)" },
+  { id: 6, title: "ตรวจด้วยคูณไขว้" },
+  { id: 7, title: "ฝึกทำ" },
+  { id: 8, title: "สรุปบทเรียน" },
+  { id: 9, title: "แบบทดสอบ" },
+  { id: 10, title: "โซนเกม" },
 ];
 
 const COMPONENTS = [
   () => <LessonVideoCard lessonPath="/lessons/equivalent" videoUrl={VIDEO_URL} title="วิดีโอ: เศษส่วนที่เท่ากัน" />,
-  EquivalentConceptCard, EquivalentVisualCompareCard, EquivalentBuildCard,
+  EquivalentConceptCard, StripOverlayProofCard, EquivalentVisualCompareCard, EquivalentBuildCard,
   EquivalentCrossCheckCard,
   EquivalentPracticeCard,
   EquivalentSummaryCard,
@@ -66,6 +68,7 @@ export function EquivalentLessonContent() {
               <EquivalentConceptCard />
               <EquivalentVisualCompareCard />
             </div>
+            <StripOverlayProofCard />
             <EquivalentBuildCard />
             <EquivalentCrossCheckCard />
             <EquivalentPracticeCard />

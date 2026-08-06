@@ -70,7 +70,7 @@ export const GAME_REGISTRY: LessonGames[] = [
     accent: "from-emerald-500 to-green-500",
     games: [
       { id: "race", emoji: "🏁", title: "แข่งวิ่งบนเส้นจำนวน", desc: "ใครวิ่งได้ไกลกว่า? มีโหมดครูใช้สอน + โหมดแข่งขัน", concept: "เทียบค่าบนเส้นจำนวน", accent: "from-emerald-500 to-green-500", ready: true },
-      { id: "balance", emoji: "⚖️", title: "ศึกตาชั่งเศษส่วน", desc: "ช่วยพ่อมดฮูกชั่งของวิเศษ! ฝึกเครื่องหมาย > < =", concept: "เครื่องหมาย > < =", accent: "from-sky-500 to-cyan-500", ready: true },
+      { id: "balance", emoji: "⚖️", title: "ศึกตาชั่งเศษส่วน", desc: "ช่วยพ่อมดฮูกชั่งของให้ลูกค้า! ฝึกเครื่องหมาย > < =", concept: "เครื่องหมาย > < =", accent: "from-sky-500 to-cyan-500", ready: true },
       { id: "duel", emoji: "⚔️", title: "ดวลการ์ดเศษส่วน", desc: "พลิกการ์ดเลือกใบที่มากที่สุด จับเวลา + คอมโบ + รอบบอสมังกร", concept: "หาค่ามากที่สุด", accent: "from-fuchsia-500 to-pink-500", ready: true },
       { id: "gates", emoji: "🚪", title: "ประตูเครื่องหมายมหัศจรรย์", desc: "ปีนหอคอย 4 ชั้น เดินเข้าประตู > = < ให้ถูก เก็บดาวเปิดหีบสมบัติ", concept: "เลือกเครื่องหมายให้ถูก", accent: "from-violet-500 to-purple-500", ready: true },
     ],
@@ -106,6 +106,7 @@ export const GAME_REGISTRY: LessonGames[] = [
     icon: "1¼",
     accent: "from-orange-500 to-rose-500",
     games: [
+      { id: "match", emoji: "🔗", title: "จับคู่เศษเกิน–จำนวนคละ", desc: "แตะเศษเกินทางซ้าย แล้วแตะจำนวนคละที่มีค่าเท่ากันทางขวา — สุ่มโจทย์ใหม่ได้ไม่จำกัด", concept: "เศษเกิน = จำนวนคละ (ความเท่ากัน)", accent: "from-pink-600 to-fuchsia-600", ready: true },
       { id: "pizza", emoji: "🍕", title: "ร้านพิซซ่าจำนวนคละ", desc: "แพ็กชิ้นพิซซ่าใส่กล่อง แปลงเศษเกิน → จำนวนคละ ทีละสถานการณ์", concept: "เศษเกิน → จำนวนคละ", accent: "from-orange-500 to-rose-500", ready: true },
       { id: "juice", emoji: "🧃", title: "โรงงานน้ำผลไม้", desc: "เทขวดเป็นแก้ว แปลงจำนวนคละ → เศษเกิน — มีโหมด 2 ทีมแข่ง", concept: "จำนวนคละ → เศษเกิน", accent: "from-lime-500 to-emerald-500", ready: true },
       { id: "mix", emoji: "⚽", title: "เตะบอลจำนวนคละ", desc: "เลือกช่องโกลที่ถูกแล้วซัด! เข้าเสียบตาข่าย GOAL — โจทย์สลับ 2 ทาง + 2 ทีมดวลจุดโทษ", concept: "แปลง 2 ทาง (จับเวลา)", accent: "from-emerald-500 to-lime-500", ready: true },

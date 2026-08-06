@@ -8,7 +8,8 @@ import { randInt } from "@/lib/randomFraction";
 
 /* ── ชนิดข้อมูล ── */
 
-type Frac = { num: number; den: number };
+/** whole = จำนวนเต็มหน้าเศษส่วน (จำนวนคละ) — ไม่ใส่/0 = เศษส่วนธรรมดา */
+type Frac = { num: number; den: number; whole?: number };
 type Side = "left" | "right" | "equal";
 type Phase = "ask" | "weighing" | "result";
 
@@ -38,19 +39,20 @@ const REAL_ITEMS: Item[] = [
   { emoji: "🧃", name: "น้ำผลไม้" },
 ];
 
+/** ของฝากจากลูกค้า (โหมดแข่งขัน) — ของใช้ในชีวิตประจำวัน ไม่เอาของวิเศษ/เวทมนตร์แล้ว */
 const ITEMS: Item[] = [
-  { emoji: "💎", name: "เพชรวิเศษ" },
-  { emoji: "✨", name: "ผงดาว" },
-  { emoji: "🔮", name: "ลูกแก้วมนตรา" },
-  { emoji: "🧪", name: "น้ำยาวิเศษ" },
-  { emoji: "🍄", name: "เห็ดยักษ์" },
-  { emoji: "🪶", name: "ขนนกฟีนิกซ์" },
-  { emoji: "🌙", name: "เศษจันทรา" },
-  { emoji: "⭐", name: "ดาวตก" },
-  { emoji: "🍯", name: "น้ำผึ้งทอง" },
-  { emoji: "🌈", name: "หยดสายรุ้ง" },
-  { emoji: "🪄", name: "ไม้กายสิทธิ์" },
-  { emoji: "🫧", name: "ฟองมนตร์" },
+  { emoji: "🎒", name: "กระเป๋าเป้" },
+  { emoji: "🧸", name: "ตุ๊กตาหมี" },
+  { emoji: "⚽", name: "ลูกฟุตบอล" },
+  { emoji: "📚", name: "หนังสือ" },
+  { emoji: "👟", name: "รองเท้าผ้าใบ" },
+  { emoji: "☂️", name: "ร่ม" },
+  { emoji: "⏰", name: "นาฬิกาปลุก" },
+  { emoji: "✏️", name: "กล่องดินสอ" },
+  { emoji: "🧢", name: "หมวก" },
+  { emoji: "🧴", name: "กระติกน้ำ" },
+  { emoji: "🧣", name: "ผ้าพันคอ" },
+  { emoji: "🪁", name: "ว่าว" },
 ];
 
 const CUSTOMERS = [
@@ -71,7 +73,7 @@ type Question = { l: Frac; r: Frac; li: Item; ri: Item; cust: Customer };
 
 const DENS = [3, 4, 5, 6, 8, 10, 12];
 const QTIME = 25;
-const LEVEL_LABELS: Record<number, string> = { 1: "ตัวส่วนเท่ากัน", 2: "ตัวเศษเท่ากัน", 3: "ท้าทาย! ต่างกันทั้งคู่" };
+const LEVEL_LABELS: Record<number, string> = { 1: "ตัวส่วนเท่ากัน", 2: "ตัวเศษเท่ากัน", 3: "ท้าทาย! มีจำนวนคละ" };
 
 /* ── คณิตศาสตร์ ── */
 
@@ -81,9 +83,14 @@ const lcm = (a: number, b: number) => (a * b) / gcd(a, b);
 /** จัดรูปน้ำหนักกรัม: จำนวนเต็มใส่จุลภาค, ทศนิยมปัด 1 ตำแหน่ง */
 const fmtW = (n: number) => (Number.isInteger(n) ? n.toLocaleString("th-TH") : n.toFixed(1));
 
+/** ตัวเศษเมื่อแปลงจำนวนคละเป็นเศษเกิน เช่น 1 1/8 → 9 (ส่วน 8) */
+const impN = (f: Frac) => (f.whole ?? 0) * f.den + f.num;
+/** ค่าจริงของเศษส่วน (รวมจำนวนเต็ม) */
+const valOf = (f: Frac) => impN(f) / f.den;
+
 function cmp(l: Frac, r: Frac): Side {
-  const a = l.num * r.den;
-  const b = r.num * l.den;
+  const a = impN(l) * r.den;
+  const b = impN(r) * l.den;
   return a > b ? "left" : a < b ? "right" : "equal";
 }
 
@@ -105,8 +112,16 @@ function genFracs(level: number): { l: Frac; r: Frac } {
     if (d2 === d1) d2 = opts[(opts.indexOf(d1) + 1) % opts.length];
     return { l: { num, den: d1 }, r: { num, den: d2 } };
   }
-  // ระดับ 3: มีโอกาส 1 ใน 4 เจอคู่ที่เท่ากัน (เศษส่วนเทียบเท่า)
-  if (randInt(1, 4) === 1) {
+  // ระดับ 3: คละแนว — 1 ใน 3 จำนวนคละ vs เศษส่วนแท้ (เกณฑ์คัดกรองด้วย 1), 1 ใน 3 คู่เทียบเท่า, ที่เหลือต่างกันทั้งคู่
+  const roll = randInt(1, 3);
+  if (roll === 1) {
+    const den = DENS[randInt(0, 4)]; // 3,4,5,6,8 — ครอบคลุมโจทย์แบบ 1 1/8 กก. ในแผน
+    const mixed: Frac = { whole: randInt(1, 2), num: randInt(1, den - 1), den };
+    const d2 = randInt(0, 1) === 0 ? den : den * 2 <= 12 ? den * 2 : den;
+    const proper: Frac = { num: randInt(1, d2 - 1), den: d2 };
+    return randInt(0, 1) === 0 ? { l: mixed, r: proper } : { l: proper, r: mixed };
+  }
+  if (roll === 2) {
     const bases: Frac[] = [
       { num: 1, den: 2 }, { num: 1, den: 3 }, { num: 2, den: 3 },
       { num: 1, den: 4 }, { num: 3, den: 4 }, { num: 2, den: 5 }, { num: 3, den: 5 },
@@ -207,11 +222,19 @@ function Pan({ x, drop, item, frac, tone, weight }: { x: number; drop: number; i
       <line x1={0} y1={0} x2={58} y2={100} stroke="#b45309" strokeWidth={2.8} />
       <circle cx={0} cy={0} r={5} fill="#92400e" />
 
-      {/* ป้ายเศษส่วนลอยอยู่ด้านบน (แยกจากถาด) — ตัวหนา อ่านง่าย */}
-      <g>
-        <rect x={-38} y={8} width={76} height={62} rx={14} fill={isLeft ? "#ecfdf5" : "#eff6ff"} stroke={ringColor} strokeWidth={3} />
-        <SvgFrac x={0} y={35} num={frac.num} den={frac.den} color={isLeft ? "#047857" : "#1d4ed8"} size={26} />
-      </g>
+      {/* ป้ายเศษส่วนลอยอยู่ด้านบน (แยกจากถาด) — ตัวหนา อ่านง่าย (จำนวนคละแสดงเลขเต็มหน้าเศษส่วน) */}
+      {(frac.whole ?? 0) > 0 ? (
+        <g>
+          <rect x={-46} y={8} width={92} height={62} rx={14} fill={isLeft ? "#ecfdf5" : "#eff6ff"} stroke={ringColor} strokeWidth={3} />
+          <text x={-24} y={52} fontSize={36} textAnchor="middle" fontWeight={900} fill={isLeft ? "#047857" : "#1d4ed8"}>{frac.whole}</text>
+          <SvgFrac x={14} y={34} num={frac.num} den={frac.den} color={isLeft ? "#047857" : "#1d4ed8"} size={22} />
+        </g>
+      ) : (
+        <g>
+          <rect x={-38} y={8} width={76} height={62} rx={14} fill={isLeft ? "#ecfdf5" : "#eff6ff"} stroke={ringColor} strokeWidth={3} />
+          <SvgFrac x={0} y={35} num={frac.num} den={frac.den} color={isLeft ? "#047857" : "#1d4ed8"} size={26} />
+        </g>
+      )}
 
       {/* ถาดชั่ง — กว้างและลึกขึ้น รองรับของชัดเจน */}
       <path d="M -74 96 Q 0 128 74 96 L 65 112 Q 0 142 -65 112 Z" fill="url(#scaleGold)" stroke="#b45309" strokeWidth={2} />
@@ -243,8 +266,8 @@ function Pan({ x, drop, item, frac, tone, weight }: { x: number; drop: number; i
 
 /* ── ตาชั่งทอง ── */
 
-function BalanceScale({ l, r, li, ri, tilt, showQ, verdict, wl = null, wr = null }: {
-  l: Frac; r: Frac; li: Item; ri: Item; tilt: number; showQ: boolean; verdict: Side | null; wl?: string | null; wr?: string | null;
+function BalanceScale({ l, r, li, ri, tilt, showQ, verdict, wl = null, wr = null, festive = true }: {
+  l: Frac; r: Frac; li: Item; ri: Item; tilt: number; showQ: boolean; verdict: Side | null; wl?: string | null; wr?: string | null; festive?: boolean;
 }) {
   const rad = (tilt * Math.PI) / 180;
   const dropL = -Math.sin(rad) * 180;
@@ -266,9 +289,13 @@ function BalanceScale({ l, r, li, ri, tilt, showQ, verdict, wl = null, wr = null
         </linearGradient>
       </defs>
 
-      {/* ประกายดาวจาง ๆ ไม่แย่งซีน */}
-      <text x={54} y={44} fontSize={14} fill="#f59e0b" className="spark">✦</text>
-      <text x={628} y={220} fontSize={13} fill="#0ea5e9" className="spark" style={{ animationDelay: "1.2s" }}>✦</text>
+      {/* ประกายดาวจาง ๆ ไม่แย่งซีน — เฉพาะโหมดแข่งขัน โหมดครูตัดออกให้ดูเป็นเครื่องชั่งจริงจัง */}
+      {festive && (
+        <>
+          <text x={54} y={44} fontSize={14} fill="#f59e0b" className="spark">✦</text>
+          <text x={628} y={220} fontSize={13} fill="#0ea5e9" className="spark" style={{ animationDelay: "1.2s" }}>✦</text>
+        </>
+      )}
 
       {/* ฐาน + เสา */}
       <ellipse cx={340} cy={345} rx={140} ry={7} fill="#0000000f" />
@@ -339,21 +366,48 @@ function OwlWizard({ className }: { className?: string }) {
 
 /* ── แท่งเทียบเศษส่วน ── */
 
+/** ป้ายเศษส่วน (รองรับจำนวนคละ — เลขเต็มนำหน้า) */
+function MixedStack({ f, className, toneClassName }: { f: Frac; className?: string; toneClassName?: string }) {
+  if ((f.whole ?? 0) > 0) {
+    return (
+      <span className={cn("inline-flex items-center gap-0.5", className)}>
+        <b className={cn("text-lg leading-none", toneClassName)}>{f.whole}</b>
+        <StackedFraction numerator={f.num} denominator={f.den} className="text-sm" toneClassName={toneClassName} />
+      </span>
+    );
+  }
+  return <StackedFraction numerator={f.num} denominator={f.den} className={className} toneClassName={toneClassName} />;
+}
+
 function CompareBars({ l, r }: { l: Frac; r: Frac }) {
-  const row = (f: Frac, fill: string, ring: string, tone: string) => (
-    <div className="flex items-center gap-2">
-      <StackedFraction numerator={f.num} denominator={f.den} className="w-9 shrink-0 text-sm" toneClassName={tone} />
-      <div className={cn("flex h-7 flex-1 overflow-hidden rounded-lg border-2 bg-white", ring)}>
-        {Array.from({ length: f.den }, (_, i) => (
-          <div key={i} className={cn("flex-1 border-r border-slate-300/70 last:border-r-0", i < f.num && fill)} />
-        ))}
+  // ถ้ามีจำนวนคละ แถบจะยาวหลายหน่วยเต็ม — ทั้งสองแถวใช้ช่วงเท่ากันเพื่อเทียบความยาวกันตรง ๆ
+  const span = Math.max(1, Math.ceil(Math.max(valOf(l), valOf(r)) - 1e-9));
+  const row = (f: Frac, fill: string, ring: string, tone: string) => {
+    const cells = f.den * span;
+    const filled = impN(f);
+    return (
+      <div className="flex items-center gap-2">
+        <MixedStack f={f} className="w-12 shrink-0 justify-end text-sm" toneClassName={tone} />
+        <div className={cn("flex h-7 flex-1 overflow-hidden rounded-lg border-2 bg-white", ring)}>
+          {Array.from({ length: cells }, (_, i) => (
+            <div
+              key={i}
+              className={cn(
+                "flex-1 border-r last:border-r-0",
+                (i + 1) % f.den === 0 && i + 1 < cells ? "border-r-2 border-slate-500" : "border-slate-300/70",
+                i < filled && fill,
+              )}
+            />
+          ))}
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
   return (
     <div className="mx-auto max-w-md space-y-1.5">
       {row(l, "bg-emerald-400", "border-emerald-400", "text-emerald-700")}
       {row(r, "bg-sky-400", "border-sky-400", "text-sky-700")}
+      {span > 1 && <p className="text-center text-[11px] font-bold text-slate-400">เส้นเข้มคือครบ 1 เต็ม — แถบยาว {span} เต็ม</p>}
     </div>
   );
 }
@@ -365,16 +419,26 @@ function symOf(w: Side) { return w === "left" ? ">" : w === "right" ? "<" : "=";
 function Explanation({ l, r, totalW }: { l: Frac; r: Frac; totalW: number }) {
   const w = cmp(l, r);
   const sym = symOf(w);
-  const wl = (l.num / l.den) * totalW;
-  const wr = (r.num / r.den) * totalW;
+  const wl = valOf(l) * totalW;
+  const wr = valOf(r) * totalW;
+  const lw = l.whole ?? 0;
+  const rw = r.whole ?? 0;
   const chip = "flex items-center gap-1.5 rounded-xl bg-white px-2.5 py-1.5 shadow-sm ring-1 ring-slate-200";
   const arrow = <span className="text-xl font-extrabold text-emerald-500">→</span>;
 
   let caseLabel: string;
   let chain: React.ReactNode;
 
-  if (l.den === r.den) {
-    caseLabel = "ตัวส่วนเท่ากัน — ดูตัวเศษได้เลย";
+  if (lw !== rw) {
+    caseLabel = "เกณฑ์คัดกรอง: ดูจำนวนเต็มก่อน — จำนวนคละเกิน 1 ชนะเศษส่วนแท้ทันที";
+    chain = (
+      <>
+        <span className={chip}>จำนวนเต็ม <b className="text-emerald-700">{lw}</b> {sym} <b className="text-sky-700">{rw}</b> — ไม่ต้องเทียบส่วนเศษเลย</span>
+        {arrow}
+      </>
+    );
+  } else if (l.den === r.den) {
+    caseLabel = lw > 0 ? `จำนวนเต็มเท่ากัน (${lw}) — ตัวส่วนเท่ากัน ดูตัวเศษได้เลย` : "ตัวส่วนเท่ากัน — ดูตัวเศษได้เลย";
     chain = (
       <>
         <span className={chip}>ตัวเศษ <b className="text-emerald-700">{l.num}</b> {sym} <b className="text-sky-700">{r.num}</b></span>
@@ -382,7 +446,7 @@ function Explanation({ l, r, totalW }: { l: Frac; r: Frac; totalW: number }) {
       </>
     );
   } else if (l.num === r.num) {
-    caseLabel = "ตัวเศษเท่ากัน — ตัวส่วนน้อยกว่า ชิ้นใหญ่กว่า";
+    caseLabel = lw > 0 ? `จำนวนเต็มเท่ากัน (${lw}) — ตัวเศษเท่ากัน ตัวส่วนน้อยกว่า ชิ้นใหญ่กว่า` : "ตัวเศษเท่ากัน — ตัวส่วนน้อยกว่า ชิ้นใหญ่กว่า";
     chain = (
       <>
         <span className={chip}>แบ่ง <b className="text-emerald-700">{l.den}</b> ส่วน vs แบ่ง <b className="text-sky-700">{r.den}</b> ส่วน</span>
@@ -393,7 +457,7 @@ function Explanation({ l, r, totalW }: { l: Frac; r: Frac; totalW: number }) {
     const L = lcm(l.den, r.den);
     const l2 = { num: l.num * (L / l.den), den: L };
     const r2 = { num: r.num * (L / r.den), den: L };
-    caseLabel = "ทำตัวส่วนให้เท่ากันก่อน";
+    caseLabel = lw > 0 ? `จำนวนเต็มเท่ากัน (${lw}) — ทำตัวส่วนของส่วนเศษให้เท่ากันก่อน` : "ทำตัวส่วนให้เท่ากันก่อน";
     chain = (
       <>
         {l.den !== L && (
@@ -428,9 +492,9 @@ function Explanation({ l, r, totalW }: { l: Frac; r: Frac; totalW: number }) {
         {chain}
         <span className="flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3 py-1.5 text-white shadow">
           <span className="text-sm font-extrabold">ดังนั้น</span>
-          <StackedFraction numerator={l.num} denominator={l.den} className="text-base" toneClassName="text-white" />
+          <MixedStack f={l} className="text-base" toneClassName="text-white" />
           <span className="text-lg font-extrabold">{sym}</span>
-          <StackedFraction numerator={r.num} denominator={r.den} className="text-base" toneClassName="text-white" />
+          <MixedStack f={r} className="text-base" toneClassName="text-white" />
         </span>
       </div>
       <CompareBars l={l} r={r} />
@@ -438,7 +502,7 @@ function Explanation({ l, r, totalW }: { l: Frac; r: Frac; totalW: number }) {
         🧮 คิดเป็นน้ำหนักจริง (เต็มถุง {fmtW(totalW)} กรัม):{" "}
         <b className="text-emerald-700">ซ้าย {fmtW(wl)} กรัม</b> {sym} <b className="text-sky-700">ขวา {fmtW(wr)} กรัม</b>
       </p>
-      {l.den !== r.den && l.num !== r.num && (
+      {lw === 0 && rw === 0 && l.den !== r.den && l.num !== r.num && (
         <p className="text-center text-xs font-bold text-slate-500">
           ⚡ ทางลัดคูณไขว้: {l.num}×{r.den} = {l.num * r.den} และ {r.num}×{l.den} = {r.num * l.den} → {l.num * r.den} {sym} {r.num * l.den}
         </p>
@@ -451,18 +515,28 @@ function Explanation({ l, r, totalW }: { l: Frac; r: Frac; totalW: number }) {
 
 function FracPicker({ f, onChange, tone }: { f: Frac; onChange: (f: Frac) => void; tone: "left" | "right" }) {
   const col = tone === "left" ? "text-emerald-700" : "text-sky-700";
-  function step(part: "num" | "den", d: number) {
+  const whole = f.whole ?? 0;
+  function step(part: "num" | "den" | "whole", d: number) {
     if (part === "den") {
       const den = Math.max(2, Math.min(12, f.den + d));
-      onChange({ den, num: Math.min(f.num, den) });
+      onChange({ ...f, den, num: Math.min(f.num, den) });
+    } else if (part === "whole") {
+      onChange({ ...f, whole: Math.max(0, Math.min(2, whole + d)) });
     } else {
       onChange({ ...f, num: Math.max(1, Math.min(f.den, f.num + d)) });
     }
   }
   const btn = "h-8 w-8 rounded-lg border-2 border-slate-200 bg-white text-base font-extrabold text-slate-600 transition hover:bg-slate-50 active:scale-95";
   return (
-    // แถวบนคุมตัวเศษ แถวล่างคุมตัวส่วน — ลบอยู่ซ้าย บวกอยู่ขวา เสมอ
+    // แถวบนสุดคุมจำนวนเต็ม (จำนวนคละ) ตามด้วยตัวเศษ/ตัวส่วน — ลบอยู่ซ้าย บวกอยู่ขวา เสมอ
     <div className="flex flex-col items-center gap-1">
+      <div className="flex items-center justify-center gap-2">
+        <span className="w-8 text-right text-[10px] font-extrabold text-violet-400">เต็ม</span>
+        <button onClick={() => step("whole", -1)} className={btn}>−</button>
+        <span className={cn("w-10 text-center text-xl font-extrabold leading-none", whole > 0 ? col : "text-slate-300")}>{whole}</span>
+        <button onClick={() => step("whole", 1)} className={btn}>+</button>
+        <span className="w-8 text-left text-[9px] font-bold text-slate-300" title="0 = เศษส่วนธรรมดา">คละ</span>
+      </div>
       <div className="flex items-center justify-center gap-2">
         <span className="w-8 text-right text-[10px] font-extrabold text-slate-400">เศษ</span>
         <button onClick={() => step("num", -1)} className={btn}>−</button>
@@ -620,7 +694,7 @@ export function FractionScaleGame() {
 
   /* น้ำหนักเต็มถุง (กรัม) — ใช้ร่วมทั้งสองโหมด แปลงเศษส่วนเป็นน้ำหนักจริง */
   const [totalW, setTotalW] = useState(1000);
-  const wOf = (f: Frac) => (f.num / f.den) * totalW;
+  const wOf = (f: Frac) => valOf(f) * totalW;
 
   /* ── โหมดแข่งขัน ── */
   const [started, setStarted] = useState(false);
@@ -853,7 +927,7 @@ export function FractionScaleGame() {
           </div>
           <h3 className="text-xl font-extrabold text-slate-800 sm:text-2xl">ศึกตาชั่งเศษส่วน</h3>
           <p className="mx-auto max-w-md text-sm font-bold text-slate-500 sm:text-base">
-            ช่วยพ่อมดฮูกชั่งของวิเศษให้ลูกค้า! ดูเศษส่วนสองฝั่งแล้วทายว่า <b>ฝั่งไหนหนักกว่า</b> ก่อนตาชั่งจะเฉลย
+            ช่วยพ่อมดฮูกชั่งของให้ลูกค้า! ดูเศษส่วนสองฝั่งแล้วทายว่า <b>ฝั่งไหนหนักกว่า</b> ก่อนตาชั่งจะเฉลย
           </p>
           <div className="mx-auto flex max-w-md flex-wrap justify-center gap-2 text-xs font-extrabold text-slate-600">
             <span className="rounded-full bg-amber-100 px-3 py-1">⏱ ข้อละ {QTIME} วิ</span>
@@ -969,7 +1043,7 @@ export function FractionScaleGame() {
           {/* คลังสิ่งของของฉัน — อัปโหลดรูปจริง + ตั้งชื่อ + บันทึกเก็บไว้ */}
           <div className="space-y-2 rounded-2xl border-2 border-amber-200 bg-amber-50/50 p-3">
             <p className="text-center text-xs font-extrabold text-amber-700 sm:text-sm">
-              📦 คลังสิ่งของของฉัน — อัปโหลดรูปจริงมาใช้แทนของวิเศษ กดบันทึกเก็บไว้ใช้สอนครั้งหน้าได้
+              📦 คลังสิ่งของของฉัน — อัปโหลดรูปของจริงมาใช้แทนอีโมจิ กดบันทึกเก็บไว้ใช้สอนครั้งหน้าได้
             </p>
             <div className="flex flex-wrap items-center justify-center gap-2">
               <label className="flex cursor-pointer items-center gap-1.5 rounded-xl border-2 border-dashed border-amber-300 bg-white px-3 py-1.5 text-xs font-extrabold text-amber-700 transition hover:bg-amber-100">
@@ -1045,11 +1119,8 @@ export function FractionScaleGame() {
             </div>
           </div>
 
-          {/* ตาชั่ง + ฮูก */}
-          <div className="relative">
-            <BalanceScale l={tl} r={tr} li={liItem} ri={riItem} tilt={teachTilt} showQ={!tRevealed} verdict={tRevealed ? cmp(tl, tr) : null} wl={tRevealed ? fmtW(wOf(tl)) : null} wr={tRevealed ? fmtW(wOf(tr)) : null} />
-            <OwlWizard className="absolute bottom-0 left-0 hidden h-24 w-20 sm:block" />
-          </div>
+          {/* ตาชั่ง — โหมดครูตัดมาสคอตพ่อมดออก ให้ดูเป็นเครื่องชั่งจริงจังสำหรับสอน */}
+          <BalanceScale l={tl} r={tr} li={liItem} ri={riItem} tilt={teachTilt} showQ={!tRevealed} verdict={tRevealed ? cmp(tl, tr) : null} wl={tRevealed ? fmtW(wOf(tl)) : null} wr={tRevealed ? fmtW(wOf(tr)) : null} festive={false} />
 
           {tRevealed ? (
             <Explanation l={tl} r={tr} totalW={totalW} />

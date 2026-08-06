@@ -54,6 +54,7 @@ export const GAME_COMPONENTS: Record<string, ComponentType> = {
   "simplify-expand:rocket": dynamic(() => import("@/components/lessons/simplify-expand/SimplifyRocketGame").then((m) => m.SimplifyRocketGame), { ssr: false, loading: Loading }),
 
   /* จำนวนคละและเศษเกิน */
+  "mixed-improper:match": dynamic(() => import("@/components/lessons/mixed-improper/MatchMixedGameCard").then((m) => m.MatchMixedGameCard), { ssr: false, loading: Loading }),
   "mixed-improper:pizza": dynamic(() => import("@/components/lessons/mixed-improper/MixedPizzaGame").then((m) => m.MixedPizzaGame), { ssr: false, loading: Loading }),
   "mixed-improper:juice": dynamic(() => import("@/components/lessons/mixed-improper/MixedJuiceGame").then((m) => m.MixedJuiceGame), { ssr: false, loading: Loading }),
   "mixed-improper:mix":   dynamic(() => import("@/components/lessons/mixed-improper/MixedPenaltyGame").then((m) => m.MixedPenaltyGame), { ssr: false, loading: Loading }),
