@@ -719,6 +719,8 @@ export function FractionScaleGame() {
   const [q, setQ] = useState<Question>(() => genQuestion(1));
   const [phase, setPhase] = useState<Phase>("ask");
   const [chosen, setChosen] = useState<Side | null>(null);
+  /** เฉลยตัวเลข (กรัม+วิธีคิด) แยกจากผลถูก/ผิด — ให้ครูถามนักเรียนก่อนค่อยกดเฉลย */
+  const [answerShown, setAnswerShown] = useState(false);
   const [lives, setLives] = useState(3);
   const [score, setScore] = useState(0);
   const [combo, setCombo] = useState(0);
@@ -734,6 +736,7 @@ export function FractionScaleGame() {
 
   function handleAnswer(s: Side | null) {
     setChosen(s);
+    setAnswerShown(false);
     setPhase("weighing");
     play("clink");
     window.setTimeout(() => {
@@ -771,6 +774,7 @@ export function FractionScaleGame() {
     prevLevelRef.current = 1;
     setQ(genQuestion(1));
     setChosen(null);
+    setAnswerShown(false);
     setPhase("ask");
     setTimeLeft(QTIME);
     setStarted(true);
@@ -782,6 +786,7 @@ export function FractionScaleGame() {
     prevLevelRef.current = lv;
     setQ(genQuestion(lv));
     setChosen(null);
+    setAnswerShown(false);
     setPhase("ask");
     setTimeLeft(QTIME);
     setRound((n) => n + 1);
@@ -799,6 +804,8 @@ export function FractionScaleGame() {
   const [tliKey, setTliKey] = useState("b:0");
   const [triKey, setTriKey] = useState("b:1");
   const [tRevealed, setTRevealed] = useState(false);
+  /** เฉลยตัวเลข (กรัม+วิธีคิด) แยกจากการเอียงตาชั่ง — ให้ครูถามนักเรียนก่อนค่อยกดเฉลย */
+  const [tNumbersShown, setTNumbersShown] = useState(false);
   const [teachLevel, setTeachLevel] = useState(3);
 
   /* คลังสิ่งของที่ครูอัปโหลด — โหลด/บันทึกกับ localStorage */
@@ -865,8 +872,13 @@ export function FractionScaleGame() {
   function teachReveal() {
     ensure();
     setTRevealed(true);
+    setTNumbersShown(false);
     play("clink");
-    window.setTimeout(() => play("correct"), 900);
+  }
+  function teachShowNumbers() {
+    ensure();
+    setTNumbersShown(true);
+    play("correct");
   }
   function teachRandom() {
     const { l, r } = genFracs(teachLevel);
@@ -874,6 +886,7 @@ export function FractionScaleGame() {
     setTliKey(`b:${randInt(0, REAL_ITEMS.length - 1)}`);
     setTriKey(`b:${randInt(0, REAL_ITEMS.length - 1)}`);
     setTRevealed(false);
+    setTNumbersShown(false);
   }
 
   const battleTilt = phase === "ask" ? 0 : win === "left" ? -9 : win === "right" ? 9 : 0;
@@ -992,7 +1005,7 @@ export function FractionScaleGame() {
 
           {/* ตาชั่ง + ฮูก */}
           <div className="relative">
-            <BalanceScale l={q.l} r={q.r} li={q.li} ri={q.ri} tilt={battleTilt} showQ={phase === "ask"} verdict={phase === "result" ? win : null} wl={phase === "result" ? fmtW(wOf(q.l)) : null} wr={phase === "result" ? fmtW(wOf(q.r)) : null} />
+            <BalanceScale l={q.l} r={q.r} li={q.li} ri={q.ri} tilt={battleTilt} showQ={phase === "ask"} verdict={phase === "result" ? win : null} wl={phase === "result" && answerShown ? fmtW(wOf(q.l)) : null} wr={phase === "result" && answerShown ? fmtW(wOf(q.r)) : null} />
             <OwlWizard className="absolute bottom-0 left-0 hidden h-24 w-20 sm:block" />
             {phase === "weighing" && <p className="absolute inset-x-0 bottom-1 text-center text-sm font-extrabold text-amber-600">⚖️ กำลังชั่ง...</p>}
           </div>
@@ -1011,7 +1024,16 @@ export function FractionScaleGame() {
                 {ok ? "✅ ถูกต้อง! เก่งมาก" : chosen === null ? "⏰ หมดเวลา!" : "❌ ยังไม่ใช่"}
                 {!ok && <span className="ml-2 text-slate-600">คำตอบคือ {win === "left" ? "ฝั่งซ้ายหนักกว่า" : win === "right" ? "ฝั่งขวาหนักกว่า" : "เท่ากัน"}</span>}
               </p>
-              <Explanation l={q.l} r={q.r} totalW={totalW} />
+              {!answerShown ? (
+                <div className="text-center">
+                  <button onClick={() => setAnswerShown(true)} className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-2.5 text-base font-extrabold text-white shadow-lg transition hover:brightness-105 active:scale-[0.98]">
+                    🔢 แสดงคำตอบเป็นตัวเลข
+                  </button>
+                  <p className="mt-1.5 text-xs font-bold text-slate-400">ให้นักเรียนช่วยกันทายน้ำหนักเป็นกรัมก่อน แล้วค่อยกดเฉลย</p>
+                </div>
+              ) : (
+                <Explanation l={q.l} r={q.r} totalW={totalW} />
+              )}
               <div className="text-center">
                 {lives <= 0 ? (
                   <button onClick={finish} className="inline-flex items-center gap-2 rounded-xl bg-slate-700 px-6 py-2.5 text-base font-extrabold text-white shadow transition hover:bg-slate-800 active:scale-[0.98]">
@@ -1086,12 +1108,12 @@ export function FractionScaleGame() {
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="space-y-2 rounded-2xl border-2 border-emerald-200 bg-emerald-50/50 p-3">
               <p className="text-center text-xs font-extrabold text-emerald-700">ฝั่งซ้าย {liItem.emoji ?? "🖼️"} {liItem.name}</p>
-              <FracPicker f={tl} onChange={(f) => { setTl(f); setTRevealed(false); }} tone="left" />
+              <FracPicker f={tl} onChange={(f) => { setTl(f); setTRevealed(false); setTNumbersShown(false); }} tone="left" />
               <ItemPicker sel={tliKey} onSelect={setTliKey} customs={customs} items={REAL_ITEMS} />
             </div>
             <div className="space-y-2 rounded-2xl border-2 border-sky-200 bg-sky-50/50 p-3">
               <p className="text-center text-xs font-extrabold text-sky-700">ฝั่งขวา {riItem.emoji ?? "🖼️"} {riItem.name}</p>
-              <FracPicker f={tr} onChange={(f) => { setTr(f); setTRevealed(false); }} tone="right" />
+              <FracPicker f={tr} onChange={(f) => { setTr(f); setTRevealed(false); setTNumbersShown(false); }} tone="right" />
               <ItemPicker sel={triKey} onSelect={setTriKey} customs={customs} items={REAL_ITEMS} />
             </div>
           </div>
@@ -1103,9 +1125,16 @@ export function FractionScaleGame() {
                 <Eye size={17} /> ⚖️ ชั่งเลย!
               </button>
             ) : (
-              <button onClick={() => setTRevealed(false)} className="flex items-center gap-2 rounded-xl border-2 border-violet-300 bg-white px-6 py-2.5 text-base font-extrabold text-violet-700 transition hover:bg-violet-50">
-                <EyeOff size={17} /> ซ่อนผล
-              </button>
+              <>
+                {!tNumbersShown && (
+                  <button onClick={teachShowNumbers} className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-2.5 text-base font-extrabold text-white shadow-lg transition hover:brightness-105 active:scale-[0.98]">
+                    🔢 แสดงคำตอบเป็นตัวเลข
+                  </button>
+                )}
+                <button onClick={() => { setTRevealed(false); setTNumbersShown(false); }} className="flex items-center gap-2 rounded-xl border-2 border-violet-300 bg-white px-6 py-2.5 text-base font-extrabold text-violet-700 transition hover:bg-violet-50">
+                  <EyeOff size={17} /> ซ่อนผล
+                </button>
+              </>
             )}
             <button onClick={teachRandom} className="flex items-center gap-1.5 rounded-xl border-2 border-slate-200 bg-white px-4 py-2 text-sm font-extrabold text-slate-600 transition hover:bg-slate-50">
               <Shuffle size={15} /> สุ่มโจทย์
@@ -1120,10 +1149,12 @@ export function FractionScaleGame() {
           </div>
 
           {/* ตาชั่ง — โหมดครูตัดมาสคอตพ่อมดออก ให้ดูเป็นเครื่องชั่งจริงจังสำหรับสอน */}
-          <BalanceScale l={tl} r={tr} li={liItem} ri={riItem} tilt={teachTilt} showQ={!tRevealed} verdict={tRevealed ? cmp(tl, tr) : null} wl={tRevealed ? fmtW(wOf(tl)) : null} wr={tRevealed ? fmtW(wOf(tr)) : null} festive={false} />
+          <BalanceScale l={tl} r={tr} li={liItem} ri={riItem} tilt={teachTilt} showQ={!tRevealed} verdict={tRevealed ? cmp(tl, tr) : null} wl={tNumbersShown ? fmtW(wOf(tl)) : null} wr={tNumbersShown ? fmtW(wOf(tr)) : null} festive={false} />
 
-          {tRevealed ? (
+          {tNumbersShown ? (
             <Explanation l={tl} r={tr} totalW={totalW} />
+          ) : tRevealed ? (
+            <p className="text-center text-sm font-extrabold text-amber-600">⚖️ ตาชั่งเอียงแล้ว! ให้นักเรียนช่วยกันทายน้ำหนักเป็นกรัมก่อน แล้วค่อยกด &quot;แสดงคำตอบเป็นตัวเลข&quot;</p>
           ) : (
             <p className="text-center text-sm font-extrabold text-amber-600">🤔 ให้นักเรียนช่วยกันทายก่อน: ฝั่งไหนหนักกว่า แล้วค่อยกดชั่ง!</p>
           )}

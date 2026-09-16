@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef, type ReactNode } from "react";
+import { useState, useEffect, useRef, Suspense, type ReactNode } from "react";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { ArrowLeft, ArrowRight, Check, Maximize2, Minimize2, List, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { ExtraContentBlocks } from "@/components/lessons/ExtraContentBlocks";
@@ -22,9 +23,19 @@ type LessonStepperProps = {
 
 const DEFAULT_ICONS = ["📹", "📖", "🖼️", "📏", "🧩", "💡", "✏️", "🏆", "⭐", "🎮"];
 
-export function LessonStepper({ steps, renderStep, renderAll, footer, lessonSlug }: LessonStepperProps) {
-  const [currentStep, setCurrentStep] = useState(1);
-  const [visited, setVisited] = useState<Set<number>>(new Set([1]));
+function LessonStepperInner({ steps, renderStep, renderAll, footer, lessonSlug }: LessonStepperProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  /** อ่านขั้นเริ่มต้นจาก query string (?step=N) เพื่อให้แต่ละขั้นมีลิงก์ของตัวเอง คัดลอกไปเปิดตรงขั้นได้เลย */
+  function stepFromUrl() {
+    const n = Number(searchParams.get("step"));
+    return Number.isInteger(n) && n >= 1 && n <= steps.length ? n : 1;
+  }
+
+  const [currentStep, setCurrentStep] = useState(stepFromUrl);
+  const [visited, setVisited] = useState<Set<number>>(() => new Set([stepFromUrl()]));
   const [showAll, setShowAll] = useState(false);
   const [isFullView, setIsFullView] = useState(false);
   const [stepHidden, setStepHidden] = useState(false);
@@ -113,10 +124,23 @@ export function LessonStepper({ steps, renderStep, renderAll, footer, lessonSlug
   function goTo(step: number) {
     setCurrentStep(step);
     setVisited((prev) => new Set(prev).add(step));
+    // เปลี่ยนขั้น = เปลี่ยน URL ด้วย (ลบ ?game เดิมทิ้ง เพราะผูกกับขั้นก่อนหน้า ไม่เกี่ยวกับขั้นใหม่)
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("step", String(step));
+    params.delete("game");
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
     if (!isFullView) {
       contentRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }
+
+  // ตามให้ทันเมื่อ URL เปลี่ยนจากภายนอก (ปุ่มย้อนกลับของเบราว์เซอร์ หรือวางลิงก์ที่คัดลอกมา)
+  useEffect(() => {
+    const s = stepFromUrl();
+    setCurrentStep((prev) => (prev === s ? prev : s));
+    setVisited((prev) => (prev.has(s) ? prev : new Set(prev).add(s)));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   const progressPct = Math.round((visited.size / steps.length) * 100);
   const currentStepDef = steps[currentStep - 1];
@@ -407,5 +431,13 @@ export function LessonStepper({ steps, renderStep, renderAll, footer, lessonSlug
 
       {!isFullView && footer}
     </>
+  );
+}
+
+export function LessonStepper(props: LessonStepperProps) {
+  return (
+    <Suspense fallback={null}>
+      <LessonStepperInner {...props} />
+    </Suspense>
   );
 }

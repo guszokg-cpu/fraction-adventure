@@ -1,7 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect, Suspense } from "react";
 import Link from "next/link";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { ArrowLeft, Play, Lock, Search, BookOpen, Gamepad2 } from "lucide-react";
 import { GameRenderer } from "@/components/games/GameRenderer";
 import { GAME_REGISTRY, totalReadyGames, type GameDef, type LessonGames } from "@/data/gameRegistry";
@@ -38,11 +39,46 @@ function GameCover({ emoji, accent, cover, big = false }: { emoji: string; accen
   );
 }
 
-export function AllGamesContent() {
-  const [selected, setSelected] = useState<Selected>(null);
+function AllGamesContentInner() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  /** อ่านเกมที่เลือกจาก query string (?lesson=...&game=...) ให้แต่ละเกมมีลิงก์ของตัวเอง คัดลอกไปเปิดตรงเกมได้เลย */
+  function selectedFromUrl(): Selected {
+    const lessonSlug = searchParams.get("lesson");
+    const gameId = searchParams.get("game");
+    if (!lessonSlug || !gameId) return null;
+    const lesson = GAME_REGISTRY.find((l) => l.slug === lessonSlug);
+    const game = lesson?.games.find((g) => g.id === gameId);
+    return lesson && game ? { lesson, game } : null;
+  }
+
+  const [selected, setSelected] = useState<Selected>(selectedFromUrl);
   const [q, setQ] = useState("");
   const [lessonFilter, setLessonFilter] = useState<string>("all");
   const { covers } = useGameCovers();
+
+  // ตามให้ทันเมื่อ URL เปลี่ยนจากภายนอก (ปุ่มย้อนกลับของเบราว์เซอร์ หรือวางลิงก์ที่คัดลอกมา)
+  useEffect(() => {
+    setSelected(selectedFromUrl());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
+
+  function openGame(lesson: LessonGames, game: GameDef) {
+    setSelected({ lesson, game });
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("lesson", lesson.slug);
+    params.set("game", game.id);
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  }
+  function closeGame() {
+    setSelected(null);
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("lesson");
+    params.delete("game");
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  }
 
   const readyTotal = totalReadyGames();
 
@@ -79,7 +115,7 @@ export function AllGamesContent() {
             <Link href={lesson.href} className="flex items-center gap-1.5 rounded-xl border-2 border-slate-200 bg-white px-3 py-2 text-sm font-extrabold text-slate-500 transition hover:bg-slate-50">
               <BookOpen size={15} /> ไปบทเรียน
             </Link>
-            <button onClick={() => setSelected(null)} className="flex items-center gap-1.5 rounded-xl bg-slate-800 px-4 py-2 text-sm font-extrabold text-white transition hover:bg-slate-700">
+            <button onClick={closeGame} className="flex items-center gap-1.5 rounded-xl bg-slate-800 px-4 py-2 text-sm font-extrabold text-white transition hover:bg-slate-700">
               <ArrowLeft size={15} /> กลับหน้ารวมเกม
             </button>
           </div>
@@ -176,7 +212,7 @@ export function AllGamesContent() {
             {lesson.games.map((g) => (
               <button
                 key={g.id}
-                onClick={() => g.ready && setSelected({ lesson, game: g })}
+                onClick={() => g.ready && openGame(lesson, g)}
                 disabled={!g.ready}
                 className={cn(
                   "group flex overflow-hidden rounded-2xl border-2 bg-white text-left shadow-sm transition-all duration-200",
@@ -217,5 +253,13 @@ export function AllGamesContent() {
         </section>
       ))}
     </div>
+  );
+}
+
+export function AllGamesContent() {
+  return (
+    <Suspense fallback={null}>
+      <AllGamesContentInner />
+    </Suspense>
   );
 }

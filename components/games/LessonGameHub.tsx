@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { ArrowLeft, Play, Lock } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { GameRenderer } from "@/components/games/GameRenderer";
@@ -40,11 +41,42 @@ type Props = {
   intro: string;
 };
 
-export function LessonGameHub({ slug, stepNo, title, headerGradient, theme, intro }: Props) {
+function LessonGameHubInner({ slug, stepNo, title, headerGradient, theme, intro }: Props) {
   const th = THEME[theme];
   const games = getLessonGames(slug);
-  const [active, setActive] = useState<string | null>(null);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  function gameFromUrl() {
+    const g = searchParams.get("game");
+    return g && games.some((x) => x.id === g) ? g : null;
+  }
+
+  const [active, setActive] = useState<string | null>(gameFromUrl);
   const activeGame = games.find((g) => g.id === active);
+
+  // ตามให้ทันเมื่อ URL เปลี่ยนจากภายนอก (ปุ่มย้อนกลับของเบราว์เซอร์ หรือวางลิงก์ที่คัดลอกมา)
+  useEffect(() => {
+    const g = gameFromUrl();
+    setActive((prev) => (prev === g ? prev : g));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
+
+  /** เลือกเกม = จำ ?step กับ ?game ไว้ในลิงก์ ให้คัดลอกไปเปิดได้ตรงเกมที่ต้องการ */
+  function openGame(id: string) {
+    setActive(id);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("step", String(stepNo));
+    params.set("game", id);
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  }
+  function closeGame() {
+    setActive(null);
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("game");
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  }
 
   return (
     <Card className="overflow-hidden p-0">
@@ -54,7 +86,7 @@ export function LessonGameHub({ slug, stepNo, title, headerGradient, theme, intr
           <h2 className="text-lg font-extrabold">{title}</h2>
         </div>
         {activeGame && (
-          <button onClick={() => setActive(null)} className="flex items-center gap-1.5 rounded-full bg-white/20 px-3 py-1 text-xs font-extrabold transition hover:bg-white/30">
+          <button onClick={closeGame} className="flex items-center gap-1.5 rounded-full bg-white/20 px-3 py-1 text-xs font-extrabold transition hover:bg-white/30">
             <ArrowLeft size={14} /> กลับโซนเกม
           </button>
         )}
@@ -68,7 +100,7 @@ export function LessonGameHub({ slug, stepNo, title, headerGradient, theme, intr
               {games.map((g) => (
                 <button
                   key={g.id}
-                  onClick={() => g.ready && setActive(g.id)}
+                  onClick={() => g.ready && openGame(g.id)}
                   disabled={!g.ready}
                   className={cn(
                     "group relative flex items-center gap-3 overflow-hidden rounded-2xl border-2 p-4 text-left transition",
@@ -110,5 +142,13 @@ export function LessonGameHub({ slug, stepNo, title, headerGradient, theme, intr
         )}
       </div>
     </Card>
+  );
+}
+
+export function LessonGameHub(props: Props) {
+  return (
+    <Suspense fallback={null}>
+      <LessonGameHubInner {...props} />
+    </Suspense>
   );
 }
