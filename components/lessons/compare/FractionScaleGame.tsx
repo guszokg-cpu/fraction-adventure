@@ -30,6 +30,7 @@ const REAL_ITEMS: Item[] = [
   { emoji: "🥩", name: "เนื้อหมู" },
   { emoji: "🍗", name: "น่องไก่" },
   { emoji: "🐟", name: "ปลาทู" },
+  { emoji: "🦐", name: "กุ้ง" },
   { emoji: "🥚", name: "ไข่ไก่" },
   { emoji: "🍚", name: "ข้าวสาร" },
   { emoji: "🥕", name: "แครอท" },
